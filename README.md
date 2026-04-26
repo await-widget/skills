@@ -10,6 +10,7 @@ This repository provides the public Await Widget Skill and widget template used 
 
 ## Links
 
+- [Download Await](https://apps.apple.com/app/id6755678187)
 - [Privacy Policy](PRIVACY.md)
 - [Skill Instructions](SKILL.md)
 - [Template Project](assets/)
