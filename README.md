@@ -21,12 +21,24 @@ This is an installable skill and template repo for AI agents to create Await wid
 
 ## Install As A Skill
 
+Install via [`npx skills`](https://github.com/vercel-labs/skills), which works across Claude Code, Codex, Cursor, OpenCode, Gemini CLI, and 40+ other agents.
+
 ```bash
-mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-git clone https://github.com/maundytime/Await-Widget-Skill.git "${CODEX_HOME:-$HOME/.codex}/skills/await-widget-skill"
+# Project-scoped (committed with your project, shared with team)
+npx skills add maundytime/Await-Widget-Skill
+
+# User-scoped (available across all your projects)
+npx skills add maundytime/Await-Widget-Skill -g
+
+# Install only to a specific agent
+npx skills add maundytime/Await-Widget-Skill -a claude-code -g
 ```
 
-Restart Codex after installing.
+Restart your agent after installing.
+
+The install bundles the full template into your agent's skills directory: `SKILL.md`, type definitions in `assets/runtime/` and `assets/types/`, starter templates (`Minimal`, `Gif`, `Panels`), and Codex's `agents/openai.yaml`. The agent reads `SKILL.md` first, then the `.d.ts` files as the public contract. The skill registers as `await-widget` in your agent's skill list.
+
+See [vercel-labs/skills](https://github.com/vercel-labs/skills) for the full list of supported agents and CLI options.
 
 ## Clone
 

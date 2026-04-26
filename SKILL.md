@@ -1,6 +1,10 @@
 ---
-name: await-widget-skill
-description: Create or modify Await widgets in TSX using the custom SwiftUI-style DSL, native bridge APIs, modifiers, timelines, intents, and @panel controls.
+name: await-widget
+description: Create or modify Await widgets in TSX using the custom SwiftUI-style DSL, native bridge APIs, modifiers, timelines, intents, and @panel controls. Use when the user asks to build, edit, or scaffold an Await widget.
+license: MIT
+version: "1.0.0"
+last_updated: "2026-04-26"
+user_invocable: true
 ---
 
 # Await Widget Skill
