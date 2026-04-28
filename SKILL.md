@@ -50,10 +50,11 @@ This package is both an installable agent skill and a cloneable widget template.
 
 Supported panel types:
 
-- `// @panel`
-- `// @panel {type:'slider',min:number,max:number,step?:number}`
-- `// @panel {type:'menu',items:[...]}`
-- `// @panel {type:'color'}`
+- `// @panel` for string, number, boolean
+- `// @panel {type:'slider',min:number,max:number,step?:number}` for number
+- `// @panel {type:'menu',items:[...]}` for string, number
+- `// @panel {type:'color'}` for string, number
+- `// @panel {type:'password'}` for string
 
 ## Minimal Template
 
