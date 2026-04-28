@@ -53,10 +53,7 @@ Supported panel types:
 - `// @panel`
 - `// @panel {type:'slider',min:number,max:number,step?:number}`
 - `// @panel {type:'menu',items:[...]}`
-- `// @panel {type:'editor'}`
-- `// @panel {type:'toggle'}`
 - `// @panel {type:'color'}`
-- `// @panel {type:'xml'}`
 
 ## Minimal Template
 
