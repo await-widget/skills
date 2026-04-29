@@ -3,7 +3,7 @@ import {
 } from 'await';
 
 // @panel
-const name = 'Await';
+const name = 'World';
 // @panel
 const showBackground = true;
 // @panel {type:'password}
@@ -18,8 +18,7 @@ const foreground = 'ccc';
 const background = '333';
 
 function widget({value, size, family, date, colorScheme, renderingMode}: WidgetEntry<{value: number}>) {
-	print(size, family, date, colorScheme, renderingMode, password.length);
-	const text = `Hello, ${name}`;
+	const text = `Hello, ${name}!`;
 	return (
 		<ZStack>
 			<Color value={showBackground ? background : ''}/>
@@ -40,7 +39,6 @@ function widget({value, size, family, date, colorScheme, renderingMode}: WidgetE
 }
 
 function widgetTimeline({size, family}: TimelineContext) {
-	print(size, family);
 	const value = AwaitStore.num('value');
 	return {
 		entries: [
