@@ -53,7 +53,7 @@ async function widgetTimeline() {
 
 	const res = await AwaitNetwork.fanfou('https://api.fanfou.com/statuses/home_timeline.json', {
 		parameters, username, password,
-	}) as [{text: string; user: {name: string}; photo?: {imageurl: string}; id: string}];
+	}) as [{text: string; user: {name: string}; photo?: {imageurl: string}; id: string}] ?? [{ text: '', user: { name: '' }, id: '' }];;
 	const feed = res[0];
 	const {name} = feed.user;
 	const {text, id} = feed;
