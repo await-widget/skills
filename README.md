@@ -1,10 +1,12 @@
 # Await - Widget Workshop
 
-Await is a widget workshop for people who like crafting small things.
+Await is your personal widget workshop, where crafting small things is an art.
 
-Start from templates or from scratch — arrange layouts, try out interactions, and tune the style with panels. Turn your ideas into home screen widgets, with a bit of your own taste.
+Starting from a template or blank slate, nudge edges, try out interactions, and tune the style with panels. Your ideas evolve into home screen widgets that feel uniquely yours.
 
-Await is local-first. Your widgets and data stay with you.
+Stored locally, Await is all about focusing on creation. Craft it small, keep it close, and shape your set to reflect your world.
+
+[![Download on the App Store](https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg)](https://apps.apple.com/app/id6755678187)
 
 This repository provides the Await Widget skill and template used to create iOS widgets.
 

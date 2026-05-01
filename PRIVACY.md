@@ -2,7 +2,7 @@
 
 Last updated: April 22, 2026
 
-This policy applies to Await, its widget extension, and the Await Widget.
+This policy applies to Await, its widget extension and skills.
 
 ## Summary
 
@@ -49,7 +49,7 @@ Await can make network requests in these cases:
 - Remote image loading for widget rendering.
 - Requests made by widgets through `AwaitNetwork`.
 
-When a widget makes a request, the destination service receives the request data according to that service's own privacy policy. Only use widgets from sources you trust when privacy matters.
+When a widget makes a request, the destination service will process the data according to its own privacy policy. Only send requests to reliable services.
 
 ## Purchases
 
@@ -67,7 +67,7 @@ You can delete widgets and their local stored data from within Await. Deleting t
 
 Await lets you create widgets based on your own preferences. Depending on the features you choose, a widget may use local widget files, store local widget state, access supported permission-based features, or make network requests to services you configure.
 
-Only use widgets from sources you trust when privacy matters.
+Please ensure that any widgets you create or import do not contain potential security risks. You are responsible for any risks associated with running widgets from unverified sources or writing insecure code.
 
 ## Changes
 
