@@ -97,7 +97,7 @@ Await.define({
 - Prefer a single entry unless the widget needs continuous time-based changes.
 - More entries increase rendering cost. Avoid entries that do not change user-visible output.
 - For continuous changes, cover at least about `15m04s + buffer` of timeline entries.
-- If the goal is to refresh as fast as the system allows, use `update: new Date()`. Do not hardcode minute intervals below the practical system limit(15 minutes 4 seconds ~ 15 minutes 10 seconds).
+- If the goal is to refresh as fast as the system allows, use `update: 'rapid'`. Do not hardcode minute intervals below the practical system limit(15 minutes 4 seconds ~ 15 minutes 10 seconds).
 
 ## Intents
 

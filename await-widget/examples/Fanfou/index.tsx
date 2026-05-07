@@ -48,7 +48,6 @@ const font: Mods = {
 };
 
 async function widgetTimeline() {
-	const date = new Date();
 	const parameters = {count: 1, format: 'html', mode: 'lite'};
 
 	const res = await AwaitNetwork.fanfou('https://api.fanfou.com/statuses/home_timeline.json', {
@@ -62,8 +61,8 @@ async function widgetTimeline() {
 
 	return {
 		entries: [{
-			date, name, content, image, id,
-		}], update: date,
+			date: new Date(), name, content, image, id,
+		}], update: 'rapid' as const,
 	};
 }
 
