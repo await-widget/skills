@@ -13,6 +13,8 @@ This package is both an installable agent skill and a cloneable widget template.
 
 `examples/` is the template project root.
 
+For deeper developer documentation, read `../docs/README.md`. Keep this skill concise; use the docs for API reference, guides, examples, and AI prompt patterns.
+
 ## Workflow
 
 1. Locate the target widget.

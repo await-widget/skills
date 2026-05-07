@@ -1,0 +1,5 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "await-widget-docs",
+  "pages_build_output_dir": "docs/.vitepress/dist"
+}

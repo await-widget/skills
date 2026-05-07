@@ -2,6 +2,7 @@
 node_modules
 package-lock.json
 yarn.lock
+docs/.vitepress/dist
 
 # OS X
 .DS_Store
