@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "vitepress": "^1.6.4",
-    "wrangler": "^4.0.0"
+    "vitepress": "^1.6.4"
   }
 }
