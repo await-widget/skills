@@ -1,6 +1,6 @@
 # Bridge APIs
 
-Bridge APIs are globals provided by Await. Use the generated [Bridge APIs Reference](../reference/bridge-apis.md) for exact signatures.
+Bridge APIs are globals provided by Await. Use the generated [Bridge Reference](../reference/bridge.md) for exact signatures.
 
 ## Common APIs
 
@@ -56,4 +56,3 @@ async function widgetTimeline(): Promise<Timeline<EntryData>> {
 ## File Boundaries
 
 `AwaitFile` can interact only with files located within the widget directory. Do not access hidden paths or parent directories.
-

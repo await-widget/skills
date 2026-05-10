@@ -47,9 +47,8 @@ Await.define({
 
 ## AI Checklist
 
-- Use only components listed in [Components](../reference/components.md).
-- Use only props and modifiers listed in [Props And Modifiers](../reference/props-and-modifiers.md).
+- Use only components listed in [Await](../reference/await.md).
+- Use only props and modifiers listed in [Prop](../reference/prop.md).
 - Put `padding` before `background` when the background should include the padded area.
 - Use `maxSides` on the root when the widget should fill the available size.
 - Add stable `id` values for animated or changing visual entities.
-

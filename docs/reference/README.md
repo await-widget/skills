@@ -20,9 +20,9 @@ Manual sections outside those markers are preserved.
 
 ## Pages
 
-- [Components](components.md)
-- [Props And Modifiers](props-and-modifiers.md)
-- [Bridge APIs](bridge-apis.md)
-- [Global Types](global-types.md)
-- [JSX Runtime](jsx-runtime.md)
-
+- [Await](await.md)
+- [Bridge](bridge.md)
+- [JSX](jsx.md)
+- [Meta](meta.md)
+- [Model](model.md)
+- [Prop](prop.md)

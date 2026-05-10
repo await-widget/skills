@@ -1,31 +1,11 @@
-# Components
+# Await
 
-Import components only from `await`. The generated section below is sourced from `runtime/types/await.d.ts`.
-
-## Usage
-
-```tsx
-import {Text, VStack} from 'await';
-```
-
-All components return `NativeView`. Container components accept `children`; leaf components usually declare `children?: never`.
-
-## Groups
-
-- Layout: `VStack`, `HStack`, `ZStack`, `Spacer`, `Group`, `Fragment`.
-- Interaction: `Button`, `FullButton`, `Link`.
-- Text and media: `Text`, `Time`, `Image`, `Icon`, `Svg`, `Gif`.
-- Shapes: `Color`, `RoundedRectangle`, `UnevenRoundedRectangle`, `Rectangle`, `Sector`, `Ellipse`, `Circle`, `Polygon`, `Diamond`, `Capsule`.
-- Utility: `Modifier`, `EmptyView`, `Stamp`.
-
-Use component-specific value props plus shared modifiers from [Props And Modifiers](props-and-modifiers.md).
+The generated section below is sourced from `runtime/types/await.d.ts`.
 
 <!-- GENERATED:START -->
 ## Generated Component Signatures
 
 ### VStack
-
-Source: `runtime/types/await.d.ts:11`
 
 ```ts
 export function VStack(
@@ -39,8 +19,6 @@ export function VStack(
 
 ### HStack
 
-Source: `runtime/types/await.d.ts:18`
-
 ```ts
 export function HStack(
     props: HStackValue &
@@ -52,8 +30,6 @@ export function HStack(
 ```
 
 ### ZStack
-
-Source: `runtime/types/await.d.ts:25`
 
 ```ts
 export function ZStack(
@@ -67,8 +43,6 @@ export function ZStack(
 
 ### Link
 
-Source: `runtime/types/await.d.ts:32`
-
 ```ts
 export function Link(
     props: LinkValue &
@@ -80,8 +54,6 @@ export function Link(
 ```
 
 ### Button
-
-Source: `runtime/types/await.d.ts:39`
 
 ```ts
 export function Button(
@@ -95,8 +67,6 @@ export function Button(
 
 ### Color
 
-Source: `runtime/types/await.d.ts:46`
-
 ```ts
 export function Color(
     props: ColorValue &
@@ -108,8 +78,6 @@ export function Color(
 ```
 
 ### Text
-
-Source: `runtime/types/await.d.ts:53`
 
 ```ts
 export function Text(
@@ -123,8 +91,6 @@ export function Text(
 
 ### Time
 
-Source: `runtime/types/await.d.ts:60`
-
 ```ts
 export function Time(
     props: TimeValue &
@@ -136,8 +102,6 @@ export function Time(
 ```
 
 ### Image
-
-Source: `runtime/types/await.d.ts:67`
 
 ```ts
 export function Image(
@@ -151,8 +115,6 @@ export function Image(
 
 ### Icon
 
-Source: `runtime/types/await.d.ts:74`
-
 ```ts
 export function Icon(
     props: IconValue &
@@ -165,8 +127,6 @@ export function Icon(
 
 ### Svg
 
-Source: `runtime/types/await.d.ts:81`
-
 ```ts
 export function Svg(
     props: SvgValue &
@@ -178,8 +138,6 @@ export function Svg(
 ```
 
 ### RoundedRectangle
-
-Source: `runtime/types/await.d.ts:88`
 
 ```ts
 export function RoundedRectangle(
@@ -194,8 +152,6 @@ export function RoundedRectangle(
 
 ### UnevenRoundedRectangle
 
-Source: `runtime/types/await.d.ts:96`
-
 ```ts
 export function UnevenRoundedRectangle(
     props: UnevenRoundedRectangleValue &
@@ -209,8 +165,6 @@ export function UnevenRoundedRectangle(
 
 ### Rectangle
 
-Source: `runtime/types/await.d.ts:104`
-
 ```ts
 export function Rectangle(
     props: ShapeValue &
@@ -222,8 +176,6 @@ export function Rectangle(
 ```
 
 ### Sector
-
-Source: `runtime/types/await.d.ts:111`
 
 ```ts
 export function Sector(
@@ -238,8 +190,6 @@ export function Sector(
 
 ### Ellipse
 
-Source: `runtime/types/await.d.ts:119`
-
 ```ts
 export function Ellipse(
     props: ShapeValue &
@@ -252,8 +202,6 @@ export function Ellipse(
 
 ### Circle
 
-Source: `runtime/types/await.d.ts:126`
-
 ```ts
 export function Circle(
     props: ShapeValue &
@@ -265,8 +213,6 @@ export function Circle(
 ```
 
 ### Polygon
-
-Source: `runtime/types/await.d.ts:133`
 
 ```ts
 export function Polygon(
@@ -281,8 +227,6 @@ export function Polygon(
 
 ### Diamond
 
-Source: `runtime/types/await.d.ts:141`
-
 ```ts
 export function Diamond(
     props: ShapeValue &
@@ -294,8 +238,6 @@ export function Diamond(
 ```
 
 ### Capsule
-
-Source: `runtime/types/await.d.ts:148`
 
 ```ts
 export function Capsule(
@@ -310,8 +252,6 @@ export function Capsule(
 
 ### Spacer
 
-Source: `runtime/types/await.d.ts:156`
-
 ```ts
 export function Spacer(
     props: SpacerValue &
@@ -324,8 +264,6 @@ export function Spacer(
 
 ### Group
 
-Source: `runtime/types/await.d.ts:163`
-
 ```ts
 export function Group(
     props: ID &
@@ -336,8 +274,6 @@ export function Group(
 ```
 
 ### Modifier
-
-Source: `runtime/types/await.d.ts:169`
 
 ```ts
 export function Modifier(
@@ -350,8 +286,6 @@ export function Modifier(
 
 ### EmptyView
 
-Source: `runtime/types/await.d.ts:175`
-
 ```ts
 export function EmptyView(
     props: ID &
@@ -362,8 +296,6 @@ export function EmptyView(
 ```
 
 ### FullButton
-
-Source: `runtime/types/await.d.ts:181`
 
 ```ts
 export function FullButton(
@@ -377,8 +309,6 @@ export function FullButton(
 
 ### Stamp
 
-Source: `runtime/types/await.d.ts:188`
-
 ```ts
 export function Stamp(
     props: ID &
@@ -389,8 +319,6 @@ export function Stamp(
 ```
 
 ### Gif
-
-Source: `runtime/types/await.d.ts:194`
 
 ```ts
 export function Gif(

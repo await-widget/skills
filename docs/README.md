@@ -54,11 +54,12 @@ For TypeScript developers:
 ## Reference
 
 - [Reference Overview](reference/index.md)
-- [Components](reference/components.md)
-- [Props And Modifiers](reference/props-and-modifiers.md)
-- [Bridge APIs](reference/bridge-apis.md)
-- [Global Types](reference/global-types.md)
-- [JSX Runtime](reference/jsx-runtime.md)
+- [Await](reference/await.md)
+- [Bridge](reference/bridge.md)
+- [JSX](reference/jsx.md)
+- [Meta](reference/meta.md)
+- [Model](reference/model.md)
+- [Prop](reference/prop.md)
 
 ## Examples
 

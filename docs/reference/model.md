@@ -1,37 +1,11 @@
-# Global Types
+# Model
 
-Shared widget, timeline, media, system, and data types. The generated section below is sourced from `runtime/types/global.d.ts`.
-
-## Usage
-
-These types are available through `@await-widget/runtime` when the widget project includes:
-
-```json
-{
-  "compilerOptions": {
-    "types": ["@await-widget/runtime"]
-  }
-}
-```
-
-Most widget code uses `WidgetEntry<T>`, `Timeline<T>`, and `TimelineContext` directly in function signatures.
-
-```tsx
-type EntryData = {
-	label: string;
-};
-
-function widget(entry: WidgetEntry<EntryData>) {
-	// render entry.label
-}
-```
+The generated section below is sourced from `runtime/types/model.d.ts`.
 
 <!-- GENERATED:START -->
 ## Generated Type Declarations
 
 ### AudioOption
-
-Source: `runtime/types/global.d.ts:8`
 
 ```ts
 type AudioOption = "mix" | "duckOthers" | "solo";
@@ -39,66 +13,29 @@ type AudioOption = "mix" | "duckOthers" | "solo";
 
 ### ColorScheme
 
-Source: `runtime/types/global.d.ts:9`
-
 ```ts
 type ColorScheme = "light" | "dark";
 ```
 
 ### RenderingMode
 
-Source: `runtime/types/global.d.ts:10`
-
 ```ts
 type RenderingMode = "fullColor" | "accented" | "vibrant";
 ```
 
-### TemplateRenderingMode
-
-Source: `runtime/types/global.d.ts:11`
-
-```ts
-type TemplateRenderingMode = "original" | "template";
-```
-
 ### Update
-
-Source: `runtime/types/global.d.ts:12`
 
 ```ts
 type Update = Date | "end" | "rapid" | "never";
 ```
 
-### Size
-
-Source: `runtime/types/global.d.ts:23`
-
-```ts
-type Size = { width: number; height: number };
-```
-
 ### NativeView
-
-Source: `runtime/types/global.d.ts:34`
 
 ```ts
 type NativeView = SingleNativeView | NativeView[];
 ```
 
-### IntentInfo
-
-Source: `runtime/types/global.d.ts:36`
-
-```ts
-type IntentInfo = {
-  name: string;
-  args: Encodable[];
-};
-```
-
 ### AudioConfig
-
-Source: `runtime/types/global.d.ts:41`
 
 ```ts
 type AudioConfig = {
@@ -116,8 +53,6 @@ type AudioConfig = {
 
 ### SoundFontManualMapping
 
-Source: `runtime/types/global.d.ts:53`
-
 ```ts
 type SoundFontManualMapping = {
   path: string;
@@ -126,8 +61,6 @@ type SoundFontManualMapping = {
 ```
 
 ### SoundFontBuildConfig
-
-Source: `runtime/types/global.d.ts:58`
 
 ```ts
 type SoundFontBuildConfig = {
@@ -140,8 +73,6 @@ type SoundFontBuildConfig = {
 
 ### SoundFontCompressConfig
 
-Source: `runtime/types/global.d.ts:65`
-
 ```ts
 type SoundFontCompressConfig = {
   fromPath: string;
@@ -151,8 +82,6 @@ type SoundFontCompressConfig = {
 ```
 
 ### SoundFontBuildResult
-
-Source: `runtime/types/global.d.ts:71`
 
 ```ts
 type SoundFontBuildResult = {
@@ -165,8 +94,6 @@ type SoundFontBuildResult = {
 
 ### AwaitWeatherConfig
 
-Source: `runtime/types/global.d.ts:78`
-
 ```ts
 type AwaitWeatherConfig = {
   latitude?: number;
@@ -177,8 +104,6 @@ type AwaitWeatherConfig = {
 ```
 
 ### AwaitWeatherCurrent
-
-Source: `runtime/types/global.d.ts:85`
 
 ```ts
 type AwaitWeatherCurrent = {
@@ -198,8 +123,6 @@ type AwaitWeatherCurrent = {
 
 ### AwaitWeatherHourly
 
-Source: `runtime/types/global.d.ts:99`
-
 ```ts
 type AwaitWeatherHourly = {
   date: string;
@@ -215,8 +138,6 @@ type AwaitWeatherHourly = {
 
 ### AwaitWeatherDaily
 
-Source: `runtime/types/global.d.ts:110`
-
 ```ts
 type AwaitWeatherDaily = {
   date: string;
@@ -231,11 +152,12 @@ type AwaitWeatherDaily = {
 
 ### AwaitWeatherResult
 
-Source: `runtime/types/global.d.ts:120`
-
 ```ts
 type AwaitWeatherResult = {
-  location: { latitude: number; longitude: number };
+  location: {
+    latitude: number;
+    longitude: number;
+  };
   current: AwaitWeatherCurrent;
   hourly: AwaitWeatherHourly[];
   daily: AwaitWeatherDaily[];
@@ -243,8 +165,6 @@ type AwaitWeatherResult = {
 ```
 
 ### AwaitHealthInfo
-
-Source: `runtime/types/global.d.ts:127`
 
 ```ts
 type AwaitHealthInfo = {
@@ -256,8 +176,6 @@ type AwaitHealthInfo = {
 
 ### AwaitLocationConfig
 
-Source: `runtime/types/global.d.ts:133`
-
 ```ts
 type AwaitLocationConfig = {
   desiredAccuracyMeters?: number;
@@ -266,8 +184,6 @@ type AwaitLocationConfig = {
 ```
 
 ### AwaitLocationInfo
-
-Source: `runtime/types/global.d.ts:138`
 
 ```ts
 type AwaitLocationInfo = {
@@ -282,8 +198,6 @@ type AwaitLocationInfo = {
 
 ### AwaitNowPlayingConfig
 
-Source: `runtime/types/global.d.ts:147`
-
 ```ts
 type AwaitNowPlayingConfig = {
   artworkSize?: number;
@@ -291,8 +205,6 @@ type AwaitNowPlayingConfig = {
 ```
 
 ### AwaitNowPlayingInfo
-
-Source: `runtime/types/global.d.ts:151`
 
 ```ts
 type AwaitNowPlayingInfo = {
@@ -321,15 +233,11 @@ type AwaitNowPlayingInfo = {
 
 ### AwaitMusicPlayerCommand
 
-Source: `runtime/types/global.d.ts:174`
-
 ```ts
 type AwaitMusicPlayerCommand = "start" | "toggle" | "next" | "previous";
 ```
 
 ### AwaitCalendarConfig
-
-Source: `runtime/types/global.d.ts:200`
 
 ```ts
 type AwaitCalendarConfig = {
@@ -340,8 +248,6 @@ type AwaitCalendarConfig = {
 ```
 
 ### AwaitCalendarItem
-
-Source: `runtime/types/global.d.ts:206`
 
 ```ts
 type AwaitCalendarItem = {
@@ -358,8 +264,6 @@ type AwaitCalendarItem = {
 
 ### AwaitReminderConfig
 
-Source: `runtime/types/global.d.ts:217`
-
 ```ts
 type AwaitReminderConfig = {
   type?: "all" | "incomplete" | "completed";
@@ -368,8 +272,6 @@ type AwaitReminderConfig = {
 ```
 
 ### AwaitReminderItem
-
-Source: `runtime/types/global.d.ts:222`
 
 ```ts
 type AwaitReminderItem = {
@@ -385,8 +287,6 @@ type AwaitReminderItem = {
 ```
 
 ### AwaitSystemInfo
-
-Source: `runtime/types/global.d.ts:233`
 
 ```ts
 type AwaitSystemInfo = {
@@ -415,8 +315,6 @@ type AwaitSystemInfo = {
 
 ### AwaitAlarmScheduleConfig
 
-Source: `runtime/types/global.d.ts:256`
-
 ```ts
 type AwaitAlarmScheduleConfig = {
   title?: string;
@@ -428,23 +326,17 @@ type AwaitAlarmScheduleConfig = {
 
 ### WidgetEntry
 
-Source: `runtime/types/global.d.ts:263`
-
 ```ts
 type WidgetEntry<T extends Record<string, unknown> = Record<string, unknown>> =
-  {
-    colorScheme: ColorScheme;
-    renderingMode: RenderingMode;
-    size: Size;
-    family: WidgetFamily;
-  } & {
-    date: Date;
-  } & T;
+  TimelineContext &
+    T & {
+      date: Date;
+      colorScheme: ColorScheme;
+      renderingMode: RenderingMode;
+    };
 ```
 
 ### TimelineContext
-
-Source: `runtime/types/global.d.ts:273`
 
 ```ts
 type TimelineContext = {
@@ -454,8 +346,6 @@ type TimelineContext = {
 ```
 
 ### Timeline
-
-Source: `runtime/types/global.d.ts:278`
 
 ```ts
 type Timeline<T extends Record<string, unknown> = Record<string, unknown>> = {

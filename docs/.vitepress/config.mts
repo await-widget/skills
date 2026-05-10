@@ -1,4 +1,50 @@
+import {readdirSync, readFileSync} from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {defineConfig} from 'vitepress';
+
+const docsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const referenceDir = path.join(docsDir, 'reference');
+const referenceItems = [
+	{text: 'Reference Overview', link: '/reference/'},
+	...generatedReferenceItems(),
+];
+
+function generatedReferenceItems() {
+	const items = referenceItemsFromIndex();
+	if (items.length > 0) {
+		return items;
+	}
+
+	return readdirSync(referenceDir)
+		.filter(file => file.endsWith('.md') && file !== 'index.md' && file !== 'README.md')
+		.sort((a, b) => a.localeCompare(b))
+		.map(referenceItem);
+}
+
+function referenceItemsFromIndex() {
+	const source = readFileSync(path.join(referenceDir, 'index.md'), 'utf8');
+	return [...source.matchAll(/^- \[([^\]]+)\]\(([^)]+\.md)\)$/gmu)]
+		.map(match => ({
+			text: match[1],
+			link: `/reference/${match[2].replace(/\.md$/u, '')}`,
+		}));
+}
+
+function referenceItem(file: string) {
+	return {
+		text: titleFromReferenceFile(file),
+		link: `/reference/${file.replace(/\.md$/u, '')}`,
+	};
+}
+
+function titleFromReferenceFile(file: string) {
+	return file
+		.replace(/\.md$/u, '')
+		.split('-')
+		.map(part => `${part[0].toUpperCase()}${part.slice(1)}`)
+		.join(' ');
+}
 
 export default defineConfig({
 	title: 'Await Widget',
@@ -36,14 +82,7 @@ export default defineConfig({
 			},
 			{
 				text: 'Reference',
-				items: [
-					{text: 'Reference Overview', link: '/reference/'},
-					{text: 'Components', link: '/reference/components'},
-					{text: 'Props And Modifiers', link: '/reference/props-and-modifiers'},
-					{text: 'Bridge APIs', link: '/reference/bridge-apis'},
-					{text: 'Global Types', link: '/reference/global-types'},
-					{text: 'JSX Runtime', link: '/reference/jsx-runtime'},
-				],
+				items: referenceItems,
 			},
 			{
 				text: 'Prompts',
