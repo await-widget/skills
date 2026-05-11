@@ -29,13 +29,13 @@ Install the `await-widget` skill via [`npx skills`](https://github.com/vercel-la
 
 ```bash
 # Project-scoped
-npx skills add await-widget/skills --skill await-widget
+npx skills add await-widget/skills
 
 # User-scoped
-npx skills add await-widget/skills --skill await-widget -g
+npx skills add await-widget/skills -g
 
 # Install only to a specific agent
-npx skills add await-widget/skills --skill await-widget -a claude-code -g
+npx skills add await-widget/skills -a claude-code -g
 ```
 
 Restart your agent after installing. The skill registers as `await-widget` and bundles `await-widget/SKILL.md` plus `await-widget/examples/`.
