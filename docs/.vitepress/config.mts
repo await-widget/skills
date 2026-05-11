@@ -48,7 +48,7 @@ function titleFromReferenceFile(file: string) {
 
 export default defineConfig({
 	title: 'Await Widget',
-	description: 'AI-first developer documentation for Await widgets.',
+	description: 'Developer documentation for Await widgets.',
 	cleanUrls: true,
 	lastUpdated: true,
 	themeConfig: {

@@ -2,7 +2,7 @@
 
 Await widgets are iOS widget experiences written in TSX with a SwiftUI-style component DSL. They run in the Await App host, use components from `await`, and rely on `@await-widget/runtime` for public TypeScript declarations.
 
-These docs are AI-first. They are written for TypeScript developers and for people who describe what they want while an AI agent writes the widget code.
+These docs are written for TypeScript developers and for people who describe what they want while an AI agent writes the widget code.
 
 ## The Await Widget Ecosystem
 
