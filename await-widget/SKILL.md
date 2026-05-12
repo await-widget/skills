@@ -3,7 +3,7 @@ name: await-widget
 description: Create or modify Await widgets in TSX using the custom SwiftUI-style DSL, native bridge APIs, modifiers, timelines, intents, and @panel controls. Use when the user asks to build, edit, or scaffold an Await widget.
 license: MIT
 version: "1.0.0"
-last_updated: "2026-05-10"
+last_updated: "2026-05-13"
 user_invocable: true
 ---
 
@@ -11,7 +11,7 @@ user_invocable: true
 
 This is the compact execution rulebook for agents. Treat `@await-widget/runtime` declarations as the public API contract.
 
-For deeper guides, generated API reference, and prompt patterns, read `../docs/README.md`.
+For deeper guides and prompt patterns, read `docs-source/README.md`.
 
 ## Workflow
 
@@ -84,3 +84,7 @@ Supported panel comments:
 3. Check `node_modules/@await-widget/runtime/types/bridge.d.ts` for bridge APIs.
 4. Check `node_modules/@await-widget/runtime/types/model.d.ts` and `node_modules/@await-widget/runtime/types/meta.d.ts` for shared type details.
 5. If it is not in the runtime declarations, treat it as unavailable.
+
+## Deeper Docs
+
+Read `docs-source/README.md` for guide and prompt source content. Public `docs/reference` pages are generated from `@await-widget/runtime` declarations.
