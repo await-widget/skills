@@ -1,10 +1,12 @@
-# Await Widget Skills
+<p align="center"><img width="128" src="https://raw.githubusercontent.com/await-widget/.github/refs/heads/main/assets/app-icon.webp" /></p>
 
-Await is a widget workshop for makers of small, thoughtful creations. Start from templates or build from scratch, tune styles with panels, and create iOS widgets with AI-assisted TSX.
+<h1 align="center">Await Widget Skills</h1>
 
-[![Download on the App Store](https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg)](https://apps.apple.com/app/id6755678187)
+<p align="center">Await is a widget workshop for makers of small, thoughtful creations. Start from templates or build from scratch, tune styles with panels, and create iOS widgets with AI-assisted TSX.</p>
 
-This repository is the installable `await-widget` agent skill and the developer docs source for Await widgets.
+<p align="center"><a href="https://apps.apple.com/app/id6755678187"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" /></a></p>
+
+<p align="center">This repository is the installable <code>await-widget</code> agent skill and the developer docs source for Await widgets.</p>
 
 ## Links
 
@@ -63,13 +65,13 @@ Configure TypeScript to use the Await JSX runtime and declarations:
 Import widget components from `await`:
 
 ```tsx
-import {Text} from "await";
+import { Text } from "await";
 
 function widget() {
   return <Text value="Hello, World!" />;
 }
 
-Await.define({widget});
+Await.define({ widget });
 ```
 
 ## Clone The Template
