@@ -5,7 +5,7 @@
 		"test": "tsc --noEmit"
 	},
 	"devDependencies": {
-		"@await-widget/runtime": "^0.0.8",
+		"@await-widget/runtime": "^0.0.9",
 		"typescript": "^6.0.2"
 	}
 }
