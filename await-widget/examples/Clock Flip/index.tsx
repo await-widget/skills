@@ -6,15 +6,17 @@ import {
 	ZStack,
 } from 'await';
 
-const background = 0.1;
-const foreground = 0.6;
+const background = 0.2;
+const foreground = 0.8;
+const padding = 12;
+const cornerRadius = 86 / 3 - padding;
 
 const font: Mods = {
 	font: {
 		name: 'SF Adaptive Soft Numeric',
-		size: 72,
+		size: 96,
 		wght: 900,
-		SOFT: 0,
+		SOFT: 32,
 		monospacedDigit: true,
 	},
 	minimumScaleFactor: 0.1,
@@ -38,7 +40,6 @@ type EntryData = {
 
 type PageViewData = {
 	frame: Frame;
-	cornerRadius: number;
 	data: PageData;
 };
 
@@ -48,8 +49,8 @@ function makePage(info: Info, infoPrev: Info, infoNext: Info, delta: number): Pa
 	const prevNum = infoPrev[1];
 	const nextNum = infoNext[1];
 	const changed = currNum !== prevNum || currNum !== nextNum;
-	const curr = <Text contentTransition='identity' {...font} value={String(currNum).padStart(2, '0')} padding={8} maxSides background={background} reverseMask={<Color value={0} height={2}/>}/>;
-	const prev = <Text contentTransition='identity' {...font} value={String(prevNum).padStart(2, '0')} padding={8} maxSides background={background} reverseMask={<Color value={0} height={2}/>}/>;
+	const curr = <Text contentTransition='identity' {...font} value={String(currNum).padStart(2, '0')} padding={8} maxSides background={background} reverseMask={<Color value={0} height={2}/>} cornerRadius={cornerRadius}/>;
+	const prev = <Text contentTransition='identity' {...font} value={String(prevNum).padStart(2, '0')} padding={8} maxSides background={background} reverseMask={<Color value={0} height={2}/>} cornerRadius={cornerRadius}/>;
 	return {
 		index,
 		curr,
@@ -76,15 +77,12 @@ function makePages({curr, prev, next}: EntryData): PageData[] {
 	return infoCurr.map((info, index) => makePage(info, infoPrev[index]!, infoNext[index]!, delta));
 }
 
-const padding = 12;
-
-function Page({data, frame, cornerRadius}: PageViewData) {
+function Page({data, frame}: PageViewData) {
 	if (data.changed) {
 		return (
 			<VFlip
 				index={data.index}
 				delta={data.delta}
-				cornerRadius={cornerRadius}
 				curr={data.curr}
 				frame={frame}
 				prev={data.prev}
@@ -111,10 +109,9 @@ function widget(entry: WidgetEntry<EntryData>) {
 	const w_total = Math.floor(width / 2 - padding) * 2;
 	const spacing = 4;
 	const w = (w_total - spacing) / 2;
-	const h = Math.floor(height / 2 - padding * 3) * 2;
+	const h = Math.floor(height / 2 - padding) * 2;
 	const frame = {width: w, height: h};
 	const rawPages = makePages(entry);
-	const cornerRadius = 86 / 3 - padding;
 	return (
 		<HStack
 			spacing={spacing}
@@ -123,8 +120,8 @@ function widget(entry: WidgetEntry<EntryData>) {
 			foreground={foreground}
 			pixelPerfectCenter
 		>
-			<Page data={rawPages[0]!} frame={frame} cornerRadius={cornerRadius}/>
-			<Page data={rawPages[1]!} frame={frame} cornerRadius={cornerRadius}/>
+			<Page data={rawPages[0]!} frame={frame}/>
+			<Page data={rawPages[1]!} frame={frame}/>
 		</HStack>
 	);
 }
