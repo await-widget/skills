@@ -28,7 +28,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 		return <SmallWidget entry={entry}/>;
 	}
 
-	if (entry.family === 'large' || entry.family === 'extraLarge' || entry.family === 'extraLargePortrait') {
+	if (entry.family === 'large' || entry.family === 'extraLarge') {
 		return <LargeWidget entry={entry}/>;
 	}
 
