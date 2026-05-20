@@ -1,24 +1,37 @@
 import {
 	Color,
 	HStack,
+	Spacer,
 	Text,
 	VFlip,
 	ZStack,
 } from 'await';
 
-const background = 0.2;
+// @panel {type:'color'}
+const widgetBackground = 0;
+// @panel {type:'color'}
 const foreground = 0.8;
-const padding = 12;
+// @panel {type:'color'}
+const background = 0.1;
+// @panel
+const showBackground = false;
+const padding = 10;
 const cornerRadius = 86 / 3 - padding;
 
 const font: Mods = {
-	font: {
-		name: 'SF Adaptive Soft Numeric',
-		size: 96,
-		wght: 900,
-		SOFT: 32,
-		monospacedDigit: true,
-	},
+	// font: {
+	// 	name: 'SF Adaptive Soft Numeric',
+	// 	size: 90,
+	// 	wght: 800,
+	// 	wdth: 80,
+	// 	SOFT: 40,
+	// 	monospacedDigit: true,
+	// },
+	fontSize: 90,
+	fontWeight: 800,
+	fontWidth: 80,
+	fontDesign: 'monospaced',
+	monospacedDigit: true,
 	minimumScaleFactor: 0.1,
 };
 
@@ -29,7 +42,7 @@ type PageData = {
 	curr: NativeView;
 	prev: NativeView;
 	changed: boolean;
-	delta: number; // 1 正向 -1 负向
+	delta: number;
 };
 
 type EntryData = {
@@ -107,9 +120,9 @@ function Page({data, frame}: PageViewData) {
 function widget(entry: WidgetEntry<EntryData>) {
 	const {size: {width, height}} = entry;
 	const w_total = Math.floor(width / 2 - padding) * 2;
-	const spacing = 4;
-	const w = (w_total - spacing) / 2;
+	const spacing = 10;
 	const h = Math.floor(height / 2 - padding) * 2;
+	const w = (w_total - spacing) / 2;
 	const frame = {width: w, height: h};
 	const rawPages = makePages(entry);
 	return (
@@ -119,6 +132,9 @@ function widget(entry: WidgetEntry<EntryData>) {
 			textAlignment='center'
 			foreground={foreground}
 			pixelPerfectCenter
+			padding={{horizontal: padding}}
+			maxSides
+			background={showBackground ? widgetBackground : undefined}
 		>
 			<Page data={rawPages[0]!} frame={frame}/>
 			<Page data={rawPages[1]!} frame={frame}/>

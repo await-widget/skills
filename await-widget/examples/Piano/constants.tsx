@@ -87,3 +87,18 @@ export const chords: Record<number, number[] | undefined> = {
 	7: [0, 4, 7], // G
 	9: [0, 3, 7], // A
 };
+
+export const sounds: Sound[] = [
+	{
+		path: '/assets/sounds/Gran.sf2', velocity: 127, name: 'GRAN', isChord: false,
+	},
+	{
+		path: '/assets/sounds/Gran.sf2', velocity: 127, name: 'GRAN CH', isChord: true,
+	},
+	{
+		path: '/assets/sounds/Elec.sf2', velocity: 64, name: 'ELEC', isChord: false,
+	},
+	{
+		path: '/assets/sounds/Elec.sf2', velocity: 64, name: 'ELEC CH', isChord: true,
+	},
+];

@@ -13,6 +13,7 @@ import {
 	type Data,
 	type Notes,
 	type Sound,
+	sounds,
 	allBlackNotes,
 	allWhiteNotes,
 	blackKeyStyle,
@@ -109,21 +110,6 @@ function getSound(): Sound {
 	return sounds[soundIndex % sounds.length]!;
 }
 
-const sounds: Sound[] = [
-	{
-		path: '/assets/sounds/Gran.sf2', velocity: 127, name: 'GRAN', isChord: false,
-	},
-	{
-		path: '/assets/sounds/Gran.sf2', velocity: 127, name: 'GRAN CH', isChord: true,
-	},
-	{
-		path: '/assets/sounds/Elec.sf2', velocity: 64, name: 'ELEC', isChord: false,
-	},
-	{
-		path: '/assets/sounds/Elec.sf2', velocity: 64, name: 'ELEC CH', isChord: true,
-	},
-];
-
 function switchSound() {
 	const soundIndex = AwaitStore.num('soundIndex');
 	AwaitStore.set('soundIndex', soundIndex + 1);
@@ -194,11 +180,11 @@ function WhiteKeys(data: Data) {
 				>
 					<ZStack padding={{horizontal: 1}}>
 						<UnevenRoundedRectangle
-							fill={{gradient: 'linear', colors: [0.8 * 0.9, 0.9 * 0.9]}}
+							fill={{gradient: 'linear', colors: [0.9 * 0.9, 1 * 0.9]}}
 							rectRadius={{bottom: 4}}
 						/>
 						<UnevenRoundedRectangle
-							fill={{gradient: 'linear', colors: [0.8, 0.9]}}
+							fill={{gradient: 'linear', colors: [0.9, 1]}}
 							rectRadius={{bottom: 2}}
 							padding={{horizontal: 2, bottom: 2}}
 						/>
@@ -213,11 +199,10 @@ function BlackKeys(data: Data) {
 	const {blackNotes, blackKeyWidth, blackKeysWidth, blackKeyHeight, shift, sound} = data;
 	const x = blackKeyHeight / (blackKeyHeight + 10);
 	return (
-	// 用blackKeysWidth强迫扩大黑键区域
 		<HStack frame={{height: blackKeyHeight, width: blackKeysWidth}}>
 			{blackNotes.map(note => (
 				note === undefined
-					? <Color/> // Spacer优先级不如Shape，会被压缩到0，Color优先级和Shape一样
+					? <Color/>
 					: (
 						<Button
 							id={note * 100}
@@ -235,11 +220,6 @@ function BlackKeys(data: Data) {
 									fill={darkest}
 									rectRadius={{bottom: 8}}
 								/>
-								{/* <UnevenRoundedRectangle
-									fill={0.2}
-									rectRadius={{bottom: 6}}
-									padding={{horizontal: 2, bottom: 2}}
-								/> */}
 								<UnevenRoundedRectangle
 									fill={{gradient: 'linear', colors: [0.3, 0.4]}}
 									rectRadius={{bottom: 4}}
