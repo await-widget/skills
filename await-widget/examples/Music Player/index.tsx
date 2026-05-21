@@ -10,7 +10,7 @@ import {
 	ZStack,
 } from 'await';
 
-const artworkSize = 256;
+const artworkSize = 400;
 const defaultStation: AwaitMusicPlayConfig = {source: 'station', type: 'user'};
 const outerPadding = 16;
 const columnGap = 18;
@@ -18,10 +18,10 @@ const widgetRadius = 86 / 3;
 const artworkRadius = widgetRadius - outerPadding;
 const smallPadding = 10;
 const largePadding = 16;
+const controlSide = 40;
 
-type EntryData = {
-	nowPlaying: AwaitNowPlayingInfo;
-};
+type EntryData = {nowPlaying: AwaitNowPlayingInfo};
+type PlayerInfo = ReturnType<typeof getPlayerInfo>;
 
 function widget(entry: WidgetEntry<EntryData>) {
 	if (entry.family === 'small') {
@@ -60,20 +60,13 @@ function MediumWidget({entry}: {
 }) {
 	const {nowPlaying} = entry;
 	const {width, height} = entry.size;
-	const background = nowPlaying.backgroundColor ?? '24211F';
-	const primary = nowPlaying.primaryTextColor ?? 'F6EADA';
-	const secondary = nowPlaying.secondaryTextColor ?? 'BBAE9D';
-	const tertiary = nowPlaying.tertiaryTextColor ?? secondary;
-	const isPlaying = nowPlaying.state === 'playing';
+	const player = getPlayerInfo(nowPlaying);
 	const artworkSide = Math.round(Math.min(height - outerPadding * 2, width * 0.39));
 	const contentWidth = width - artworkSide - outerPadding * 2 - columnGap;
 	const titleSize = Math.min(28, height * 0.155);
-	const title = displayText(nowPlaying.title, 'Untitled');
-	const artist = displayText(nowPlaying.artistName, 'Unknown Artist');
-	const album = displayText(nowPlaying.albumTitle, 'Await Media');
 
 	return (
-		<ZStack maxSides background={background}>
+		<ZStack maxSides background={player.background}>
 			<HStack
 				maxSides
 				spacing={columnGap}
@@ -84,45 +77,15 @@ function MediumWidget({entry}: {
 				<Artwork
 					url={nowPlaying.artworkURL}
 					side={artworkSide}
-					background={background}
+					background={player.background}
 					radius={artworkRadius}
 				/>
 				<VStack width={contentWidth} maxHeight alignment='leading' spacing={10}>
-					<VStack alignment='leading' spacing={7}>
-						<Text
-							value={title}
-							foreground={primary}
-							fontSize={titleSize}
-							fontWeight={900}
-							lineHeight='tight'
-							lineLimit={2}
-							minimumScaleFactor={0.62}
-						/>
-						<Text
-							value={artist}
-							foreground={secondary}
-							fontSize={12}
-							fontWeight={700}
-							lineLimit={1}
-							minimumScaleFactor={0.7}
-						/>
-						<Text
-							value={album.toUpperCase()}
-							foreground={tertiary}
-							fontSize={10}
-							fontWeight={600}
-							lineLimit={1}
-							minimumScaleFactor={0.65}
-						/>
-					</VStack>
+					<TrackText player={player} titleSize={titleSize} artistSize={12} spacing={7}/>
 					<Spacer/>
 					<HStack width={contentWidth} spacing={8} alignment='center'>
 						<Spacer/>
-						<HStack spacing={7}>
-							<ControlButton icon='backward.fill' intent={app.command('previous')} foreground={primary} background={background}/>
-							<ControlButton icon={isPlaying ? 'pause.fill' : 'play.fill'} intent={app.command('toggle', defaultStation)} foreground={primary} background={background} primary/>
-							<ControlButton icon='forward.fill' intent={app.command('next')} foreground={primary} background={background}/>
-						</HStack>
+						<PlayerControls player={player} spacing={8}/>
 					</HStack>
 				</VStack>
 			</HStack>
@@ -135,20 +98,13 @@ function LargeWidget({entry}: {
 }) {
 	const {nowPlaying} = entry;
 	const {width, height} = entry.size;
-	const background = nowPlaying.backgroundColor ?? '24211F';
-	const primary = nowPlaying.primaryTextColor ?? 'F6EADA';
-	const secondary = nowPlaying.secondaryTextColor ?? 'BBAE9D';
-	const tertiary = nowPlaying.tertiaryTextColor ?? secondary;
-	const isPlaying = nowPlaying.state === 'playing';
+	const player = getPlayerInfo(nowPlaying);
 	const artworkSide = Math.round(Math.min(width - largePadding * 2, height * 0.5));
 	const contentWidth = artworkSide;
 	const titleSize = Math.min(30, height * 0.084);
-	const title = displayText(nowPlaying.title, 'Untitled');
-	const artist = displayText(nowPlaying.artistName, 'Unknown Artist');
-	const album = displayText(nowPlaying.albumTitle, 'Await Media');
 
 	return (
-		<ZStack maxSides background={background}>
+		<ZStack maxSides background={player.background}>
 			<VStack
 				maxSides
 				alignment='center'
@@ -159,44 +115,95 @@ function LargeWidget({entry}: {
 				<Artwork
 					url={nowPlaying.artworkURL}
 					side={artworkSide}
-					background={background}
+					background={player.background}
 					radius={widgetRadius - largePadding}
 				/>
-				<VStack width={contentWidth} alignment='leading' spacing={6}>
-					<Text
-						value={title}
-						foreground={primary}
-						fontSize={titleSize}
-						fontWeight={900}
-						lineHeight='tight'
-						lineLimit={1}
-						minimumScaleFactor={0.6}
-					/>
-					<Text
-						value={artist}
-						foreground={secondary}
-						fontSize={14}
-						fontWeight={700}
-						lineLimit={1}
-						minimumScaleFactor={0.7}
-					/>
-					<Text
-						value={album.toUpperCase()}
-						foreground={tertiary}
-						fontSize={10}
-						fontWeight={600}
-						lineLimit={1}
-						minimumScaleFactor={0.65}
-					/>
-				</VStack>
+				<TrackText player={player} width={contentWidth} titleSize={titleSize} artistSize={14} spacing={6}/>
 				<Spacer/>
-				<HStack spacing={10}>
-					<ControlButton icon='backward.fill' intent={app.command('previous')} foreground={primary} background={background}/>
-					<ControlButton icon={isPlaying ? 'pause.fill' : 'play.fill'} intent={app.command('toggle', defaultStation)} foreground={primary} background={background} primary/>
-					<ControlButton icon='forward.fill' intent={app.command('next')} foreground={primary} background={background}/>
-				</HStack>
+				<PlayerControls player={player} spacing={10} favorite/>
 			</VStack>
 		</ZStack>
+	);
+}
+
+function getPlayerInfo(nowPlaying: AwaitNowPlayingInfo) {
+	const secondary = nowPlaying.secondaryTextColor ?? 'BBAE9D';
+
+	return {
+		background: nowPlaying.backgroundColor ?? '24211F',
+		primary: nowPlaying.primaryTextColor ?? 'F6EADA',
+		secondary,
+		tertiary: nowPlaying.tertiaryTextColor ?? secondary,
+		isPlaying: nowPlaying.state === 'playing',
+		isFavorite: nowPlaying.isFavorite,
+		title: displayText(nowPlaying.title, 'Untitled'),
+		artist: displayText(nowPlaying.artistName, 'Unknown Artist'),
+		album: displayText(nowPlaying.albumTitle, 'Unknown Album').toUpperCase(),
+	};
+}
+
+function TrackText({
+	player,
+	width,
+	titleSize,
+	artistSize,
+	spacing,
+}: {
+	player: PlayerInfo;
+	width?: number;
+	titleSize: number;
+	artistSize: number;
+	spacing: number;
+}) {
+	const frame = width === undefined ? {} : {width};
+
+	return (
+		<VStack {...frame} alignment='leading' spacing={spacing}>
+			<Text
+				value={player.title}
+				foreground={player.primary}
+				fontSize={titleSize}
+				fontWeight={900}
+				lineHeight='tight'
+				lineLimit={2}
+				minimumScaleFactor={0.1}
+			/>
+			<Text
+				value={player.artist}
+				foreground={player.secondary}
+				fontSize={artistSize}
+				fontWeight={700}
+				lineLimit={1}
+				minimumScaleFactor={0.1}
+			/>
+			<Text
+				value={player.album}
+				foreground={player.tertiary}
+				fontSize={10}
+				fontWeight={600}
+				lineLimit={2}
+				minimumScaleFactor={0.1}
+			/>
+		</VStack>
+	);
+}
+
+function PlayerControls({
+	player,
+	spacing,
+	favorite = false,
+}: {
+	player: PlayerInfo;
+	spacing: number;
+	favorite?: boolean;
+}) {
+	return (
+		<HStack spacing={spacing}>
+			<ControlButton icon='backward.fill' intent={app.command('previous')} foreground={player.primary} background={player.background}/>
+			<ControlButton icon={player.isPlaying ? 'pause.fill' : 'play.fill'} intent={app.command('toggle', defaultStation)} foreground={player.primary} background={player.background} primary/>
+			<ControlButton icon='forward.fill' intent={app.command('next')} foreground={player.primary} background={player.background}/>
+			{favorite ? <ControlButton icon={player.isFavorite ? 'heart.fill' : 'heart'} intent={app.command(player.isFavorite ? 'clearRating' : 'favorite')} foreground={player.primary} background={player.background}/> : undefined}
+		</HStack>
 	);
 }
 
@@ -233,18 +240,15 @@ function ControlButton({
 	background: Color;
 	primary?: boolean;
 }) {
-	const side = 40;
-
 	return (
 		<Button intent={intent} audio>
-			<ZStack sides={side}>
+			<ZStack sides={controlSide} fontWeight={700} fontDesign='rounded' fontSize={14}>
 				<Circle
 					fill={foreground}
 					opacity={primary ? 1 : 0.14}
 				/>
 				<Icon
 					value={icon}
-					fontSize={14}
 					foreground={primary ? background : foreground}
 				/>
 			</ZStack>
@@ -254,7 +258,7 @@ function ControlButton({
 
 async function command(cmd: AwaitMusicPlayerCommand, config?: AwaitMusicPlayConfig) {
 	await AwaitMusic.playerCommand(cmd, config);
-}
+};
 
 async function widgetTimeline(): Promise<Timeline<EntryData>> {
 	const nowPlaying = await AwaitMusic.nowPlaying({artworkSize});
@@ -264,13 +268,7 @@ async function widgetTimeline(): Promise<Timeline<EntryData>> {
 	};
 }
 
-function displayText(value: string | undefined, fallback: string): string {
-	return compactWhitespace(value ?? fallback);
-}
-
-function compactWhitespace(value: string): string {
-	return value.trim().replaceAll(/\s+/g, ' ');
-}
+const displayText = (value: string | undefined, fallback: string) => (value ?? fallback).trim().replaceAll(/\s+/g, ' ');
 
 const app = Await.define({
 	widget,
