@@ -12,7 +12,7 @@ Bridge APIs are globals provided by Await. Use the generated [Bridge Reference](
 - `AwaitReminder`: reminders.
 - `AwaitHealth`: health summary data.
 - `AwaitLocation`: location data.
-- `AwaitMedia`: now playing media and media commands.
+- `AwaitMusic`: now playing music and music commands.
 - `AwaitAudio`: audio, MIDI, sound font, and note APIs.
 - `AwaitSystem`: battery, CPU, memory, and storage data.
 - `AwaitUI`: display scale and haptics.

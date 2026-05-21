@@ -11,7 +11,7 @@ import {
 } from 'await';
 
 const artworkSize = 256;
-const defaultStation: AwaitMediaPlayConfig = {source: 'station', type: 'user'};
+const defaultStation: AwaitMusicPlayConfig = {source: 'station', type: 'user'};
 const outerPadding = 16;
 const columnGap = 18;
 const widgetRadius = 86 / 3;
@@ -252,12 +252,12 @@ function ControlButton({
 	);
 }
 
-async function command(cmd: AwaitMusicPlayerCommand, config?: AwaitMediaPlayConfig) {
-	await AwaitMedia.mediaPlayerCommand(cmd, config);
+async function command(cmd: AwaitMusicPlayerCommand, config?: AwaitMusicPlayConfig) {
+	await AwaitMusic.playerCommand(cmd, config);
 }
 
 async function widgetTimeline(): Promise<Timeline<EntryData>> {
-	const nowPlaying = await AwaitMedia.nowPlayingMedia({artworkSize});
+	const nowPlaying = await AwaitMusic.nowPlaying({artworkSize});
 
 	return {
 		entries: [{date: new Date(), nowPlaying}],

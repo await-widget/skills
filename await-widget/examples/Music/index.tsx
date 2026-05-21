@@ -27,7 +27,7 @@ type EntryData = {
 	action: string;
 };
 
-const source: AwaitMediaPlayConfig = {source: 'station', type: 'discovery'};
+const source: AwaitMusicPlayConfig = {source: 'station', type: 'discovery'};
 
 function widget(entry: WidgetEntry<EntryData>) {
 	return (
@@ -77,7 +77,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 }
 
 async function widgetTimeline(): Promise<Timeline<EntryData>> {
-	const media = await AwaitMedia.nowPlayingMedia({artworkSize: 120});
+	const media = await AwaitMusic.nowPlaying({artworkSize: 120});
 	return {
 		entries: [{
 			date: new Date(),
@@ -94,7 +94,7 @@ const app = Await.define({
 	widgetTimeline,
 	widgetIntents: {
 		async play() {
-			await AwaitMedia.mediaPlayerCommand('toggle', source);
+			await AwaitMusic.playerCommand('toggle', source);
 		},
 	},
 });

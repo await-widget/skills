@@ -30,7 +30,7 @@ For "I describe, AI codes" users:
 
 1. Start with [Create A Widget](guides/create-a-widget.md).
 2. Read [Panels](guides/panels.md) if you want editable settings.
-3. Read [Bridge APIs](guides/bridge-apis.md) if the widget needs store, network, files, weather, calendar, reminders, health, media, audio, or location.
+3. Read [Bridge APIs](guides/bridge-apis.md) if the widget needs store, network, files, weather, calendar, reminders, health, music, audio, or location.
 4. Use the [Prompt Cookbook](prompts/cookbook.md) to brief your AI agent.
 
 For TypeScript developers:

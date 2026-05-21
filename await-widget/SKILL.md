@@ -75,7 +75,7 @@ Supported panel comments:
 
 - Use `AwaitStore` for persistent widget state.
 - Use `AwaitFile` only for files within the widget directory.
-- Use bridge APIs such as weather, calendar, reminder, health, media, audio, and location only when declared in `node_modules/@await-widget/runtime/types/bridge.d.ts`.
+- Use bridge APIs such as weather, calendar, reminder, health, music, audio, and location only when declared in `node_modules/@await-widget/runtime/types/bridge.d.ts`.
 
 ## Decision Order
 
