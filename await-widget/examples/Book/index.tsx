@@ -7,6 +7,7 @@ import {
 	Color,
 } from 'await';
 
+// @panel
 const bookPath = 'sample.txt';
 const perspective = 0.1;
 
