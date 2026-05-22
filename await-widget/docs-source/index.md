@@ -4,6 +4,30 @@ Await widgets are iOS widget experiences written in TSX with a SwiftUI-style com
 
 These docs are written for TypeScript developers and for people who describe what they want while an AI agent writes the widget code.
 
+## Mental Model: Widgets Are Scheduled Snapshots
+
+An iOS widget is not a tiny app that runs continuously. Think of it as a series of scheduled snapshots:
+
+```text
+widgetTimeline()
+      |
+      v
+timeline: [{ date, ...entryData }, { date, ...entryData }]
+      |
+      v
+iOS / WidgetKit picks the entry for "now"
+      |
+      v
+widget(entry) renders one native snapshot
+```
+
+- `entry` is the data for one widget snapshot.
+- `timeline` is the dated list of entries iOS can schedule.
+- `widget(entry)` renders the entry iOS selected for the current moment.
+- `widgetTimeline(context)` optionally builds the schedule.
+
+When debugging, first decide which layer is wrong: the entry data, the timeline dates or update policy, or the rendered view.
+
 ## The Await Widget Ecosystem
 
 - Await App runs widgets on iOS and provides native capabilities.

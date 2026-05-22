@@ -2,6 +2,8 @@
 
 `widgetTimeline(context)` is optional. Use it when a widget needs dated entry data or scheduled visual changes.
 
+A timeline is the schedule behind the widget snapshot. Each entry has a `date`; iOS / WidgetKit chooses the entry for "now" and passes it into `widget(entry)`.
+
 ## Shape
 
 ```tsx

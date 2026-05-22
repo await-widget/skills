@@ -2,6 +2,8 @@
 
 Await widgets are TSX files compiled with the Await JSX runtime. The component tree is a native view description consumed by Await on iOS.
 
+The core loop is: `widgetTimeline()` produces dated entries, iOS chooses the entry for the current moment, and `widget(entry)` renders one native snapshot. If there is no timeline, Await renders the widget from a single current entry.
+
 ## Minimal Shape
 
 ```tsx
