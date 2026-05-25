@@ -4,37 +4,39 @@ Await widgets are iOS widget experiences written in TSX with a SwiftUI-style com
 
 These docs are written for TypeScript developers and for people who describe what they want while an AI agent writes the widget code.
 
-## Mental Model: Widgets Are Scheduled Snapshots
+## Understanding iOS Widget Callbacks
 
-An iOS widget is not a tiny app that runs continuously. Think of it as a series of scheduled snapshots:
+Await widgets provide two callback functions to iOS: `widgetTimeline()` returns dated entries, and `widget(entry)` returns the TSX view for the entry iOS selected.
 
-```text
-widgetTimeline()
-      |
-      v
-timeline: [{ date, ...entryData }, { date, ...entryData }]
-      |
-      v
-iOS / WidgetKit picks the entry for "now"
-      |
-      v
-widget(entry) renders one native snapshot
-```
+iOS decides when to call these functions. Await follows iOS widget guidance and applies runtime optimizations behind the scenes.
 
-- `entry` is the data for one widget snapshot.
-- `timeline` is the dated list of entries iOS can schedule.
-- `widget(entry)` renders the entry iOS selected for the current moment.
-- `widgetTimeline(context)` optionally builds the schedule.
-
-When debugging, first decide which layer is wrong: the entry data, the timeline dates or update policy, or the rendered view.
-
-## The Await Widget Ecosystem
-
-- Await App runs widgets on iOS and provides native capabilities.
-- `library` builds gallery/widget files that the app can download.
-- `skills` provides the installable `await-widget` agent skill.
-- `runtime` publishes `@await-widget/runtime`, the public type declaration package for widget type checking.
-- `docs` explains workflows, prompting, and generated API reference for humans and agents.
+<pre style="overflow-x:auto; padding:16px; border-radius:8px; background:var(--vp-code-block-bg); color:var(--vp-code-block-color); font-family:var(--vp-font-family-mono); font-size:12px; line-height:1.2; white-space:pre;"><code>                │
+                │ iOS decides when to update the widget
+                ▼
+┌───────────────────────────────┐
+│ iOS calls widgetTimeline()    │
+└───────────────┬───────────────┘
+                │
+                │ tsx function return
+                ▼
+┌───────────────────────────────┐
+│ entry @ 09:00                 │
+│ entry @ 09:01                 │
+│ entry @ 09:02                 │
+│ ...                           │
+└───────────────┬───────────────┘
+                │
+                │ iOS pulls the entry @ 09:01
+                ▼
+┌───────────────────────────────┐
+│ iOS calls widget(entry)       │
+└───────────────┬───────────────┘
+                │
+                │ tsx function return
+                ▼
+┌───────────────────────────────┐
+│ &lt;ZStack&gt;...&lt;/ZStack&gt;          │
+└───────────────────────────────┘</code></pre>
 
 ## Ask An AI To Use These Docs
 
