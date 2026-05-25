@@ -68,7 +68,7 @@ Import widget components from `await`:
 import { Text } from "await";
 
 function widget() {
-  return <Text value="Hello, World!" />;
+  return <Text value="Hello world" />;
 }
 
 Await.define({ widget });
