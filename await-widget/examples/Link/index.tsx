@@ -5,21 +5,27 @@ import {
 	VStack,
 } from 'await';
 
-// shortcuts://run-shortcut?name=YourShortcut
-
 function widget() {
 	return (
 		<VStack spacing={16}>
-			<Link url='shortcuts://'>
-				<Text value='Shortcuts'/>
+			<Link url='maps://?q=coffee'>
+				<Text value='Deeplink: Coffee Map'/>
 			</Link>
 			<Button url='https://apple.com'>
-				<Text value='Web'/>
+				<Text value='URL: Website'/>
+			</Button>
+			<Button intent={app.launch('com.apple.AppStore')}>
+				<Text value='Launch: App Store'/>
 			</Button>
 		</VStack>
 	);
 }
 
-Await.define({
+function launch(id: string) {
+	AwaitLaunch.start(id);
+}
+
+const app = Await.define({
 	widget,
+	widgetIntents: {launch},
 });
