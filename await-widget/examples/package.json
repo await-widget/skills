@@ -6,7 +6,7 @@
 		"test": "xo --fix '**/*.tsx' && tsc --noEmit"
 	},
 	"devDependencies": {
-		"@await-widget/runtime": "^0.0.14",
+		"@await-widget/runtime": "latest",
 		"typescript": "^6.0.2",
 		"xo": "^2.0.2"
 	}
