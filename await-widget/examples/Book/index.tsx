@@ -1,15 +1,29 @@
 import {
-	FullButton,
-	HFlip,
-	HStack,
-	Text,
-	ZStack,
-	Color,
+	FullButton, HFlip, HStack, Text, ZStack, Color,
 } from 'await';
 
 // @panel
 const bookPath = 'sample.txt';
-const perspective = 0.1;
+// @panel {type:'slider',min:0,max:1,step:0.05}
+const background = 0.15;
+// @panel {type:'slider',min:0,max:1,step:0.05}
+const foreground = 0.9;
+
+const perspective = 0.15;
+const animation: NativeAnimation = {duration: 0.6, type: 'smooth'};
+const pagePadding = {top: 16, horizontal: 16, bottom: 24};
+const padding = 10;
+const font: Mods = {
+	fontSize: 24,
+	fontWeight: 600,
+	minimumScaleFactor: 1 / 24,
+};
+const fontSmall: Mods = {
+	fontDesign: 'monospaced',
+	fontSize: 10,
+	fontWeight: 600,
+	monospacedDigit: true,
+};
 
 type EntryData = {
 	dataIndex: number;
@@ -37,25 +51,6 @@ type Page = {
 	delta: number;
 };
 
-const animation: NativeAnimation = {duration: 0.6, type: 'smooth'};
-const pagePadding = {top: 16, horizontal: 16, bottom: 24};
-// @panel {type:'slider',min:0,max:1,step:0.05}
-const background = 0.1;
-// @panel {type:'slider',min:0,max:1,step:0.05}
-const foreground = 0.6;
-const padding = 12;
-const font: Mods = {
-	fontSize: 24,
-	fontWeight: 600,
-	minimumScaleFactor: 1 / 24,
-};
-const fontSmall: Mods = {
-	fontDesign: 'monospaced',
-	fontSize: 10,
-	fontWeight: 600,
-	monospacedDigit: true,
-};
-
 function pageContent(index: number, text: string, backPageIndex: number) {
 	return (index <= 0 || index >= backPageIndex)
 		? <Color value={background}/>
@@ -80,9 +75,9 @@ function makePage(data: RawPageData): Page {
 	return {
 		backPageIndex,
 		cornerRadius: 86 / 3 - padding,
-		currContent: pageContent(pageIndex, texts[0]!, backPageIndex),
+		currContent: pageContent(pageIndex, texts[0], backPageIndex),
 		pageIndex,
-		prevContent: pageContent(prevIndex, texts[1]!, backPageIndex),
+		prevContent: pageContent(prevIndex, texts[1], backPageIndex),
 		delta,
 	};
 }
