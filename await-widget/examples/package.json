@@ -1,11 +1,13 @@
 {
 	"name": "await-widget",
 	"private": true,
+	"type": "module",
 	"scripts": {
-		"test": "tsc --noEmit"
+		"test": "xo --fix '**/*.tsx' && tsc --noEmit"
 	},
 	"devDependencies": {
 		"@await-widget/runtime": "^0.0.14",
-		"typescript": "^6.0.2"
+		"typescript": "^6.0.2",
+		"xo": "^2.0.2"
 	}
 }
