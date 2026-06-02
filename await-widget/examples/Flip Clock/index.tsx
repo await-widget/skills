@@ -1,24 +1,29 @@
 import {
-	Color, HStack, Spacer, Text, VFlip, ZStack,
+	Text, ZStack, Color, HStack, VFlip,
 } from 'await';
 
+// @panel {type:'slider',min:0,max:4,step:1}
+const flipSpacing = 3;
+// @panel {type:'slider',min:1,max:96,step:1}
+const fontSize = 96;
+// @panel {type:'slider',min:300,max:800,step:100}
+const fontWeight = 700;
 // @panel {type:'slider',min:0,max:1,step:0.05}
 const widgetBackground = 0;
 // @panel {type:'slider',min:0,max:1,step:0.05}
-const background = 0.15;
+const background = 0.1;
 // @panel {type:'slider',min:0,max:1,step:0.05}
 const foreground = 0.9;
 // @panel
 const showBackground = false;
-const padding = 10;
+
+const padding = 12;
 const cornerRadius = 86 / 3 - padding;
 
 const font: Mods = {
-	fontSize: 90,
-	fontWeight: 800,
-	fontWidth: 80,
 	fontDesign: 'monospaced',
-	monospacedDigit: true,
+	fontSize,
+	fontWeight,
 	minimumScaleFactor: 0.1,
 };
 
@@ -66,7 +71,7 @@ function makePage(
 			padding={8}
 			maxSides
 			background={background}
-			reverseMask={<Color value={0} height={2} />}
+			reverseMask={<Color value={0} height={flipSpacing} />}
 			cornerRadius={cornerRadius}
 		/>
 	);
@@ -78,7 +83,7 @@ function makePage(
 			padding={8}
 			maxSides
 			background={background}
-			reverseMask={<Color value={0} height={2} />}
+			reverseMask={<Color value={0} height={flipSpacing} />}
 			cornerRadius={cornerRadius}
 		/>
 	);
@@ -126,7 +131,7 @@ function Page({ data, frame }: PageViewData) {
 	return (
 		<ZStack frame={frame} transition='identity' id={`s-${data.index}`}>
 			<ZStack
-				reverseMask={<Color value={1} height={2} />}
+				reverseMask={<Color value={1} height={flipSpacing} />}
 				cornerRadius={cornerRadius}
 			>
 				{data.curr}
@@ -140,14 +145,15 @@ function widget(entry: WidgetEntry<EntryData>) {
 		size: { width, height },
 	} = entry;
 	const w_total = Math.floor(width / 2 - padding) * 2;
-	const spacing = 10;
-	const h = Math.floor(height / 2 - padding) * 2;
-	const w = (w_total - spacing) / 2;
+	const pageSpacing = 12;
+	const w = (w_total - pageSpacing) / 2;
+	let h = Math.min(w, height - padding * 2);
+	h = Math.floor(h / 2) * 2;
 	const frame = { width: w, height: h };
 	const rawPages = makePages(entry);
 	return (
 		<HStack
-			spacing={spacing}
+			spacing={pageSpacing}
 			animation={{ type: 'smooth', duration: 0.6 }}
 			textAlignment='center'
 			foreground={foreground}

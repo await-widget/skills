@@ -4,15 +4,13 @@ import {
 
 // @panel
 const bookPath = 'sample.txt';
-// @panel {type:'slider',min:0,max:1,step:0.05}
-const background = 0.15;
-// @panel {type:'slider',min:0,max:1,step:0.05}
-const foreground = 0.9;
-
-const perspective = 0.15;
 const animation: NativeAnimation = {duration: 0.6, type: 'smooth'};
 const pagePadding = {top: 16, horizontal: 16, bottom: 24};
-const padding = 10;
+// @panel {type:'slider',min:0,max:1,step:0.05}
+const background = 0.1;
+// @panel {type:'slider',min:0,max:1,step:0.05}
+const foreground = 0.9;
+const padding = 12;
 const font: Mods = {
 	fontSize: 24,
 	fontWeight: 600,
@@ -75,9 +73,9 @@ function makePage(data: RawPageData): Page {
 	return {
 		backPageIndex,
 		cornerRadius: 86 / 3 - padding,
-		currContent: pageContent(pageIndex, texts[0], backPageIndex),
+		currContent: pageContent(pageIndex, texts[0]!, backPageIndex),
 		pageIndex,
-		prevContent: pageContent(prevIndex, texts[1], backPageIndex),
+		prevContent: pageContent(prevIndex, texts[1]!, backPageIndex),
 		delta,
 	};
 }
@@ -92,7 +90,6 @@ function Book({page}: {page: Page}) {
 			delta={delta}
 			curr={<ZStack cornerRadius={cornerRadius}>{currContent}</ZStack>}
 			leadingHidden={bottomFlag}
-			perspective={perspective}
 			prev={<ZStack cornerRadius={cornerRadius}>{prevContent}</ZStack>}
 			trailingHidden={topFlag}
 		/>
