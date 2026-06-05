@@ -8,10 +8,12 @@ const text = 'Tap';
 const showBackground = true;
 // @panel {type:'password'}
 const password = '12345678';
-// @panel {type:'slider',min:8,max:64,step:1}
-const fontSize = 32;
+// @panel {type:'slider',min:8,max:72,step:1}
+const fontSize = 36;
+// @panel {type:'slider',min:100,max:900,step:100}
+const fontWeight = 600;
 // @panel {type:'menu',items:['monospaced','rounded','serif','default']}
-const fontDesign = 'monospaced';
+const fontDesign = 'default';
 // @panel {type:'color'}
 const foreground = 'ccc';
 // @panel {type:'color'}
@@ -21,7 +23,7 @@ function widget({value}: {value: number}) {
 	return (
 		<ZStack>
 			<Color value={showBackground ? background : ''}/>
-			<VStack spacing={16} foreground={foreground} fontDesign={fontDesign}>
+			<VStack spacing={8} foreground={foreground} fontDesign={fontDesign} fontWeight={fontWeight}>
 				<Text
 					value={value}
 					fontSize={fontSize}

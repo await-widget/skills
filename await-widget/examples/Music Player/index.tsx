@@ -10,13 +10,20 @@ import {
 	ZStack,
 } from 'await';
 
+// @panel
+const query = '';
+// @panel {type:'slider',min:1,max:50,step:1}
+const limit = 25;
+// @panel {type:'menu',items:['song','album','artist','station']}
 const source = 'station';
 // @panel {type:'menu',items:['user','discovery']}
 const type = 'user';
+// @panel
+const id = '';
 
 const artworkSize = 400;
 const defaultStation: AwaitMusicPlayConfig = {
-	source, type,
+	source, query, limit, id, type,
 };
 const outerPadding = 16;
 const columnGap = 18;

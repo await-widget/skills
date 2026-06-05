@@ -6,24 +6,27 @@ import {
 const flipSpacing = 3;
 // @panel {type:'slider',min:1,max:96,step:1}
 const fontSize = 96;
-// @panel {type:'slider',min:300,max:800,step:100}
+// @panel {type:'slider',min:300,max:700,step:1}
 const fontWeight = 700;
-// @panel {type:'slider',min:0,max:1,step:0.05}
-const widgetBackground = 0;
-// @panel {type:'slider',min:0,max:1,step:0.05}
-const background = 0.1;
-// @panel {type:'slider',min:0,max:1,step:0.05}
-const foreground = 0.9;
+// @panel {type:'color'}
+const widgetBackground = '0000';
+// @panel {type:'color'}
+const background = '19';
+// @panel {type:'color'}
+const foreground = 'e5';
 // @panel
-const showBackground = false;
+const monospacedDigit = true;
 
 const padding = 12;
 const cornerRadius = 86 / 3 - padding;
 
 const font: Mods = {
-	fontDesign: 'monospaced',
-	fontSize,
-	fontWeight,
+	font: {
+		name: 'Space Grotesk',
+		size: fontSize,
+		wght: fontWeight,
+	},
+	monospacedDigit,
 	minimumScaleFactor: 0.1,
 };
 
@@ -49,7 +52,7 @@ type PageViewData = {
 };
 
 function clockText(num: number) {
-	return String(num).padStart(2, '0').replaceAll('0', 'O');
+	return String(num).padStart(2, '0');
 }
 
 function makePage(
@@ -145,7 +148,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 		size: { width, height },
 	} = entry;
 	const w_total = Math.floor(width / 2 - padding) * 2;
-	const pageSpacing = 12;
+	const pageSpacing = 6;
 	const w = (w_total - pageSpacing) / 2;
 	let h = Math.min(w, height - padding * 2);
 	h = Math.floor(h / 2) * 2;
@@ -160,7 +163,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 			pixelPerfectCenter
 			padding={{ horizontal: padding }}
 			maxSides
-			background={showBackground ? widgetBackground : undefined}
+			background={widgetBackground}
 		>
 			<Page data={rawPages[0]!} frame={frame} />
 			<Page data={rawPages[1]!} frame={frame} />

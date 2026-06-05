@@ -23,15 +23,15 @@ import {
 	whiteKeyStyle,
 } from './constants';
 
-const darkest = 0.1;
+const darkest = 0.05;
 
 function widget(entry: WidgetEntry) {
 	const {
-		size: { width, height },
+		size: {width, height},
 	} = entry;
 	const sound = getSound();
 	const shift = AwaitStore.num('shift');
-	const { whiteNotes, blackNotes } = getAllNotes();
+	const {whiteNotes, blackNotes} = getAllNotes();
 	const keyWidthWithPadding = (width + 2) / (whiteNotes.length - 2);
 	const keyWidth = keyWidthWithPadding - 2;
 	const whiteKeysWidth = keyWidthWithPadding * whiteNotes.length;
@@ -92,7 +92,7 @@ function getAllNotes(): Notes {
 		startNote,
 		startNote + countPadding + 1,
 	);
-	return { whiteNotes, blackNotes };
+	return {whiteNotes, blackNotes};
 }
 
 function setShift(value: number) {
@@ -129,55 +129,55 @@ function switchSound() {
 	const soundIndex = AwaitStore.num('soundIndex');
 	AwaitStore.set('soundIndex', soundIndex + 1);
 	AwaitStore.set('ttl', Date.now());
-	const { path } = getSound();
-	AwaitAudio.playNote([], { soundFont: path });
+	const {path} = getSound();
+	AwaitAudio.playNote([], {soundFont: path});
 }
 
-function SmallButton({ intent, icon }: { intent: IntentInfo; icon: string }) {
+function SmallButton({intent, icon}: {intent: IntentInfo; icon: string}) {
 	return (
 		<Button intent={intent}>
 			<ZStack width={36} maxHeight>
 				<Circle fill={darkest} sides={28} />
-				<Circle fill={0.2} sides={24} />
+				<Circle fill={0.15} sides={24} />
 				<Svg url={icon} sides={24} />
 			</ZStack>
 		</Button>
 	);
 }
 
-function Buttons({ title, width }: { title: string; width: number }) {
+function Buttons({title, width}: {title: string; width: number}) {
 	const left = [
-		{ intent: app.setOffset(-1), icon: 'assets/right.svg' },
-		{ intent: app.setCount(-1), icon: 'assets/minus.svg' },
-		{ intent: app.setShift(-1), icon: 'assets/fall.svg' },
+		{intent: app.setOffset(-1), icon: 'assets/right.svg'},
+		{intent: app.setCount(-1), icon: 'assets/minus.svg'},
+		{intent: app.setShift(-1), icon: 'assets/fall.svg'},
 	];
 	const right = [
-		{ intent: app.setShift(1), icon: 'assets/lift.svg' },
-		{ intent: app.setCount(1), icon: 'assets/add.svg' },
-		{ intent: app.setOffset(1), icon: 'assets/left.svg' },
+		{intent: app.setShift(1), icon: 'assets/lift.svg'},
+		{intent: app.setCount(1), icon: 'assets/add.svg'},
+		{intent: app.setOffset(1), icon: 'assets/left.svg'},
 	];
 	return (
 		<HStack
-			padding={{ horizontal: 12 }}
-			background={0.2}
-			padding_={{ bottom: 2 }}
-			frame={{ width, height: topHeight }}
+			padding={{horizontal: 12}}
+			background={0.15}
+			padding_={{bottom: 2}}
+			frame={{width, height: topHeight}}
 			buttonStyle='borderless'
-			fontSize={12}
+			fontSize={14}
 			fontDesign='monospaced'
 			fontWeight={800}
 			foreground={0.9}
 			zIndex={1}
 		>
-			{left.map(({ intent, icon }) => (
+			{left.map(({intent, icon}) => (
 				<SmallButton intent={intent} icon={icon} />
 			))}
 			<Button intent={app.switchSound()} audio>
-				<ZStack padding={{ horizontal: 8 }} maxHeight>
+				<ZStack padding={{horizontal: 8}} maxHeight>
 					<Text value={title} maxSides contentTransition='numericText' />
 				</ZStack>
 			</Button>
-			{right.map(({ intent, icon }) => (
+			{right.map(({intent, icon}) => (
 				<SmallButton intent={intent} icon={icon} />
 			))}
 		</HStack>
@@ -185,7 +185,7 @@ function Buttons({ title, width }: { title: string; width: number }) {
 }
 
 function WhiteKeys(data: Data) {
-	const { whiteKeysWidth, whiteNotes, shift, sound } = data;
+	const {whiteKeysWidth, whiteNotes, shift, sound} = data;
 	return (
 		<HStack width={whiteKeysWidth}>
 			{whiteNotes.map(note =>
@@ -201,15 +201,15 @@ function WhiteKeys(data: Data) {
 							intent={app.playNote(getNotes(note, shift, sound), sound)}
 							buttonStyle={whiteKeyStyle}
 						>
-							<ZStack padding={{ horizontal: 1 }}>
+							<ZStack padding={{horizontal: 1}}>
 								<UnevenRoundedRectangle
-									fill={{ gradient: 'linear', colors: [0.9 * 0.9, 1 * 0.9] }}
-									rectRadius={{ bottom: 4 }}
+									fill={{gradient: 'linear', colors: [0.9 * 0.9, 1 * 0.9]}}
+									rectRadius={{bottom: 4}}
 								/>
 								<UnevenRoundedRectangle
-									fill={{ gradient: 'linear', colors: [0.9, 1] }}
-									rectRadius={{ bottom: 2 }}
-									padding={{ horizontal: 2, bottom: 2 }}
+									fill={{gradient: 'linear', colors: [0.9, 1]}}
+									rectRadius={{bottom: 2}}
+									padding={{horizontal: 2, bottom: 2}}
 								/>
 							</ZStack>
 						</Button>
@@ -229,7 +229,7 @@ function BlackKeys(data: Data) {
 	} = data;
 	const x = blackKeyHeight / (blackKeyHeight + 10);
 	return (
-		<HStack frame={{ height: blackKeyHeight, width: blackKeysWidth }}>
+		<HStack frame={{height: blackKeyHeight, width: blackKeysWidth}}>
 			{blackNotes.map(note =>
 				note === undefined
 					? (
@@ -248,25 +248,25 @@ function BlackKeys(data: Data) {
 									fill={{
 										gradient: 'linear',
 										stops: [
-											[[darkest, 0.2], x],
+											[[darkest, 0.15], x],
 											[[darkest, 0], 1],
 										],
 									}}
-									padding={{ bottom: -10 }}
+									padding={{bottom: -10}}
 								/>
 								<UnevenRoundedRectangle
 									fill={darkest}
-									rectRadius={{ bottom: 8 }}
+									rectRadius={{bottom: 8}}
 								/>
 								<UnevenRoundedRectangle
-									fill={{ gradient: 'linear', colors: [0.3, 0.4] }}
-									rectRadius={{ bottom: 4 }}
-									padding={{ horizontal: 4, bottom: 4 }}
+									fill={{gradient: 'linear', colors: [0.2, 0.3]}}
+									rectRadius={{bottom: 4}}
+									padding={{horizontal: 4, bottom: 4}}
 								/>
 								<UnevenRoundedRectangle
-									fill={{ gradient: 'linear', colors: [0.3 * 0.9, 0.4 * 0.9] }}
-									rectRadius={{ bottom: 2 }}
-									padding={{ horizontal: 6, bottom: 6 }}
+									fill={{gradient: 'linear', colors: [0.2 * 0.9, 0.3 * 0.9]}}
+									rectRadius={{bottom: 2}}
+									padding={{horizontal: 6, bottom: 6}}
 								/>
 							</ZStack>
 						</Button>
@@ -277,7 +277,7 @@ function BlackKeys(data: Data) {
 
 function widgetTimeline() {
 	return {
-		entries: [{ date: new Date() }],
+		entries: [{date: new Date()}],
 		skipOnPlayingNote: Date.now() - AwaitStore.num('ttl') > 500,
 	};
 }
