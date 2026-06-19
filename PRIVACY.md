@@ -1,14 +1,14 @@
 # Privacy Policy
 
-Last updated: April 22, 2026
+Last updated: June 19, 2026
 
 This policy applies to Await, its widget extension and skills.
 
 ## Summary
 
-Await is a local-first widget workshop app. The app does not use developer-operated accounts, advertising SDKs, analytics SDKs, or tracking SDKs.
+Await is a local-first widget workshop app. The app does not use developer-operated accounts, advertising SDKs, third-party analytics SDKs, or third-party tracking SDKs.
 
-Most data stays on your device. Some features can send data to Apple services or to network endpoints used by the widgets you create or add.
+Most data stays on your device. Some features may send data to Apple services, to network endpoints used by widgets that you create or add, or to Await's servers for minimal anonymous usage analytics. No personal information is collected, and the analytics are used solely to improve the app.
 
 ## Data Stored On Your Device
 
@@ -17,10 +17,19 @@ Await may store the following data locally:
 - Widget source files, generated widget bundles, imported assets, and exported widget folders.
 - Widget state saved through `AwaitStore`.
 - App settings, preview preferences, permission status-related state, and cached purchase entitlement state.
+- A random anonymous install identifier used for app usage analytics.
 - A recent now-playing media snapshot for widgets that display media state.
 - Cached remote images used by widgets.
 
 This data is stored in the app container or the shared app group container so the main app and widget extension can both access it.
+
+## Anonymous App Analytics
+
+Await sends limited anonymous app usage events to help understand whether people can successfully try the app and create widgets. Events may include app opens, tab views, widget creation/import/open/clone actions, Gallery usage, and purchase flow status.
+
+Analytics events include a random anonymous install identifier, a per-session identifier, app version, build number, iOS version, device model category, locale, country inferred by Cloudflare, event name, event time, and small event properties. Await does not send your email address, Apple ID, contact data, calendar content, Health content, widget source code, widget file contents, or user-entered widget names for analytics.
+
+These analytics are used for product improvement and growth measurement. They are not used for advertising, cross-app tracking, or cross-site tracking.
 
 ## Permissions
 
@@ -43,6 +52,7 @@ Permission-protected data is used to render widgets or perform the action you re
 
 Await can make network requests in these cases:
 
+- Anonymous app usage analytics sent to `stats.awaitwidget.com`.
 - StoreKit requests to Apple for purchases and purchase restoration.
 - WeatherKit requests to Apple for weather data.
 - Apple Music catalog requests for music metadata and artwork.
@@ -61,7 +71,7 @@ You can export widget folders or import folders through the system document pick
 
 ## Deletion
 
-You can delete widgets and their local stored data from within Await. Deleting the app also removes app-local data from the device, subject to OS behavior for system-managed purchase records and external copies you exported.
+You can delete widgets and their local stored data from within Await. Deleting the app also removes app-local data from the device, subject to OS behavior for Keychain items, system-managed purchase records, and external copies you exported.
 
 ## User-Created Widgets
 
