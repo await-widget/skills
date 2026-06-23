@@ -84,7 +84,7 @@ function playNote(notes: number[], sound: Sound) {
 
 function getAllNotes(): Notes {
 	const offset = AwaitStore.num('offset');
-	const count = AwaitStore.num('count', 10);
+	const count = AwaitStore.num('count', 12);
 	const countPadding = count + 2;
 	const startNote = defaultIndex + offset;
 	const whiteNotes = allWhiteNotes.slice(startNote, startNote + countPadding);
@@ -103,7 +103,7 @@ function setShift(value: number) {
 
 function setOffset(value: number) {
 	const offset = AwaitStore.num('offset');
-	const count = AwaitStore.num('count', 10);
+	const count = AwaitStore.num('count', 12);
 	AwaitStore.set(
 		'offset',
 		Math.max(
@@ -115,7 +115,7 @@ function setOffset(value: number) {
 }
 
 function setCount(value: number) {
-	const count = AwaitStore.num('count', 10);
+	const count = AwaitStore.num('count', 12);
 	AwaitStore.set('count', Math.max(3, Math.min(15, count + value)));
 	AwaitStore.set('ttl', Date.now());
 }

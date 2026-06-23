@@ -177,7 +177,6 @@ function TrackText({
 				foreground={player.primary}
 				fontSize={titleSize}
 				fontWeight={900}
-				lineHeight='tight'
 				lineLimit={2}
 				minimumScaleFactor={0.1}
 			/>

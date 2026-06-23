@@ -55,7 +55,7 @@ export const allBlackNotes = [
 /* eslint-enable @stylistic/array-element-newline */
 
 export const defaultIndex = 23;
-export const topHeight = 44;
+export const topHeight = 40;
 
 export const whiteKeyStyle: CustomButtonStyle = {
 	press: <Modifier
