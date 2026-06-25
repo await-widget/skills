@@ -10,11 +10,15 @@ const pagePadding = {top: 16, horizontal: 16, bottom: 24};
 const background = 0.1;
 // @panel {type:'slider',min:0,max:1,step:0.05}
 const foreground = 0.9;
+// @panel {type:'slider',min:1,max:3,step:0.1}
+const fontSizeFactor = 3;
+// @panel {type:'slider',min:100,max:800,step:100}
+const fontWeight = 600;
 const padding = 12;
 const font: Mods = {
-	fontSize: 24,
-	fontWeight: 600,
-	minimumScaleFactor: 1 / 24,
+	fontSize: 32,
+	fontWeight,
+	minimumScaleFactor: 1 / 32,
 };
 const fontSmall: Mods = {
 	fontDesign: 'monospaced',
@@ -145,7 +149,7 @@ function widgetTimeline(context: TimelineContext): Timeline<EntryData> {
 	const pageHeight = height - (padding * 2);
 	const pageFrame = {width: pageWidth, height: pageHeight};
 	const bookSize = AwaitFile.fileSize(bookPath) ?? 0;
-	const pageSize = Math.floor((pageWidth - pagePadding.horizontal) * (pageHeight - pagePadding.bottom - pagePadding.top) / 300);
+	const pageSize = Math.floor((pageWidth - pagePadding.horizontal) * (pageHeight - pagePadding.bottom - pagePadding.top) / fontSizeFactor / 100);
 	const dataIndex = AwaitStore.num('dataIndex');
 	const delta = AwaitStore.num('delta', -1);
 
