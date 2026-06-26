@@ -50,8 +50,10 @@ export const allBlackNotes = [
 	undefined, 97, 99, undefined, 102, 104, 106,
 	undefined,
 	undefined,
-	undefined, // 和白键相同index，代表白键左侧的黑键，由于黑键比白键多取一个，所以末尾会多一个
+	undefined,
 ];
+// Uses the same index as the white key and represents the black key on its left. Since there is one extra black-key position, the array has an extra element at the end.
+
 /* eslint-enable @stylistic/array-element-newline */
 
 export const defaultIndex = 23;

@@ -25,6 +25,9 @@ import {
 
 const darkest = 0.05;
 
+// @panel {type:'slider',min:0,max:0.5}
+const delay = 0;
+
 function widget(entry: WidgetEntry) {
 	const {
 		size: {width, height},
@@ -79,6 +82,7 @@ function playNote(notes: number[], sound: Sound) {
 		duration,
 		soundFont: sound.path,
 		velocity: sound.velocity,
+		delay,
 	});
 }
 
