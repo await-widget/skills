@@ -16,6 +16,8 @@ const background = '19';
 const foreground = 'e5';
 // @panel
 const useTransparent = false;
+// @panel
+const use24Hour = false;
 
 const monospacedDigit = true;
 
@@ -104,7 +106,7 @@ function makePage(
 function getClockInfo(time: number): Info[] {
 	const date = new Date(time);
 	return [
-		[Math.floor(time / 3_600_000), date.getHours() % 12 || 12],
+		[Math.floor(time / 3_600_000), use24Hour ? date.getHours() : date.getHours() % 12 || 12],
 		[Math.floor(time / 60_000), date.getMinutes()],
 		[Math.floor(time / 1000), date.getSeconds()],
 	];
