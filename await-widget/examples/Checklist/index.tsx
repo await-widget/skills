@@ -1,9 +1,14 @@
 import {
-	Button, Rectangle, Text, ZStack, Modifier, Image,
+	Button,
+	Rectangle,
+	Text,
+	ZStack,
+	Modifier,
+	Image,
 } from 'await';
 
 // @panel
-const title = 'Life Checklist';
+const title = 'CHECKLIST';
 
 const information = {
 	title,
@@ -39,38 +44,36 @@ const information = {
 // @panel {type:'slider',min:0,max:4,step:1}
 const lineSize = 1;
 // @panel {type:'slider',min:1,max:20,step:1}
-const fontSize = 14;
+const fontSize = 12;
+// @panel {type:'slider',min:100,max:900,step:100}
+const fontWeight = 700;
+// @panel {type:'menu',items:['monospaced','rounded','serif','default']}
+const fontDesign = 'default';
 // @panel
 const showTitle = true;
 // @panel {type:'menu',items:['weekly','daily']}
 const resetPeriod = 'weekly';
-// @panel {type:'slider',min:0,max:40,step:1}
-const outerPadding = 20;
-// @panel {type:'slider',min:0,max:40,step:1}
-const tablePadding = 16;
+// @panel {type:'slider',min:8,max:24,step:1}
+const padding = 12;
 // @panel {type:'color'}
-const paper = 'fffffff4';
+const paper = 'f9d3e0';
 // @panel {type:'color'}
-const ink = '19';
+const ink = 'e63b7a';
 // @panel {type:'color'}
-const marker = 'ffb04284';
-// @panel {type:'color'}
-const tapeColor = 'ffdabce3';
-// @panel {type:'slider',min:-15,max:15,step:1}
-const tapeAngle = -3;
+const marker = 'feb43f80';
 // @panel
-const image = 'corkboard.jpg';
+const image = '';
 
-const smallFont: Font = {
-	name: 'Space Grotesk',
-	size: fontSize,
-	wght: 600,
+const smallFont: Mods = {
+	fontDesign,
+	fontSize,
+	fontWeight,
 };
 
-const largeFont: Font = {
-	name: 'Space Grotesk',
-	size: fontSize * 1.5,
-	wght: 600,
+const largeFont: Mods = {
+	fontDesign,
+	fontSize: fontSize * 1.5,
+	fontWeight,
 };
 
 function dateKey(date: Date) {
@@ -235,42 +238,30 @@ function VLine({
 function widget(entry: WidgetEntry<{done: number[]}>) {
 	const {width, height} = entry.size;
 	const gutter = Math.round(lineSize);
-	const availableWidth = Math.floor(width - (outerPadding + tablePadding) * 2);
-	const availableHeight = Math.floor(height - (outerPadding + tablePadding) * 2);
-	const cellWidth = Math.floor((availableWidth - gutter * 6) / 5);
-	const contentWidth = cellWidth * 5 + gutter * 4;
-	const tableWidth = contentWidth + gutter * 2;
-	const horizontalLines = showTitle ? 7 : 6;
+	const availableWidth = Math.floor(width - padding * 2);
+	const availableHeight = Math.floor(height - padding * 2);
+	const cellWidth = Math.floor((availableWidth - gutter * 4) / 5);
+	const tableWidth = cellWidth * 5 + gutter * 4;
+	const horizontalLines = showTitle ? 5 : 4;
 	const titleHeight = showTitle
 		? Math.floor((availableHeight - gutter * horizontalLines) * 0.18)
 		: 0;
 	const cellHeight = Math.floor((availableHeight - gutter * horizontalLines - titleHeight) / 5);
-	const titleWidth = tableWidth - gutter * 2;
 	const tableHeight = titleHeight + cellHeight * 5 + gutter * horizontalLines;
-	const titleY = gutter;
-	const titleSeparatorY = gutter + titleHeight;
-	const bodyTop = showTitle ? gutter * 2 + titleHeight : gutter;
+	const bodyTop = showTitle ? titleHeight + gutter : 0;
 	const bodyHeight = cellHeight * 5 + gutter * 4;
-	const paperWidth = tableWidth + tablePadding * 2;
-	const paperHeight = tableHeight + tablePadding * 2;
-	const tapeWidth = Math.max(32, Math.floor(tableWidth * 0.2));
-	const tapeHeight = 16;
 	const rowLines = [1, 2, 3, 4].map(row => bodyTop + cellHeight * row + gutter * (row - 1));
 	const hLines = [
-		{index: 0, y: 0},
-		...(showTitle ? [{index: 1, y: titleSeparatorY}] : []),
-		...rowLines.map((y, index) => ({index: index + 2, y})),
-		{index: 6, y: tableHeight - gutter},
+		...(showTitle ? [{index: 0, y: titleHeight}] : []),
+		...rowLines.map((y, index) => ({index: index + (showTitle ? 1 : 0), y})),
 	];
 
 	return (
-		<ZStack maxSides foreground={ink}>
-			<Image url={image} resizable aspectRatio='fill' />
+		<ZStack maxSides foreground={ink} background={paper}>
+			<Image resizable aspectRatio='fill' url={image}/>
 			<ZStack
 				frame={{width: tableWidth, height: tableHeight}}
-				frame_={{width: paperWidth, height: paperHeight}}
-				background={paper}
-				minimumScaleFactor={0.5}
+				minimumScaleFactor={0.1}
 			>
 				{showTitle
 					? (
@@ -278,16 +269,15 @@ function widget(entry: WidgetEntry<{done: number[]}>) {
 							id='title'
 							value={information.title}
 							frame={{
-								width: titleWidth,
+								width: tableWidth,
 								height: titleHeight,
 							}}
-							offsetX={centeredOffset(tableWidth, titleWidth, gutter)}
-							offsetY={centeredOffset(tableHeight, titleHeight, titleY)}
-							font={largeFont}
+							offsetY={centeredOffset(tableHeight, titleHeight, 0)}
+							{...largeFont}
 						/>
 					)
 					: undefined}
-				<ZStack id='table' font={smallFont}>
+				<ZStack id='table' {...smallFont}>
 					{information.cells.map((label, index) => {
 						const row = Math.floor(index / 5);
 						const col = index % 5;
@@ -301,7 +291,7 @@ function widget(entry: WidgetEntry<{done: number[]}>) {
 								offsetX={centeredOffset(
 									tableWidth,
 									cellWidth,
-									gutter + col * (cellWidth + gutter),
+									col * (cellWidth + gutter),
 								)}
 								offsetY={centeredOffset(
 									tableHeight,
@@ -321,44 +311,18 @@ function widget(entry: WidgetEntry<{done: number[]}>) {
 						gutter={gutter}
 					/>
 				))}
-				<VLine
-					index={0}
-					tableWidth={tableWidth}
-					tableHeight={tableHeight}
-					x={0}
-					y={0}
-					height={tableHeight}
-					gutter={gutter}
-				/>
-				<VLine
-					index={5}
-					tableWidth={tableWidth}
-					tableHeight={tableHeight}
-					x={tableWidth - gutter}
-					y={0}
-					height={tableHeight}
-					gutter={gutter}
-				/>
 				{[1, 2, 3, 4].map(col => (
 					<VLine
 						index={col}
 						tableWidth={tableWidth}
 						tableHeight={tableHeight}
-						x={gutter + cellWidth * col + gutter * (col - 1)}
+						x={cellWidth * col + gutter * (col - 1)}
 						y={bodyTop}
 						height={bodyHeight}
 						gutter={gutter}
 					/>
 				))}
 			</ZStack>
-			<Rectangle
-				id='tape'
-				fill={tapeColor}
-				width={tapeWidth}
-				height={tapeHeight}
-				rotationEffect={tapeAngle}
-				offsetY={centeredOffset(paperHeight, tapeHeight, -tapeHeight / 2)}
-			/>
 		</ZStack>
 	);
 }

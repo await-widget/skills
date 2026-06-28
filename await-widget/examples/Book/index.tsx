@@ -1,5 +1,5 @@
 import {
-	FullButton, HFlip, HStack, Text, ZStack, Color,
+	FullButton, HFlip, HStack, Text, ZStack, Color, Group,
 } from 'await';
 
 // @panel
@@ -14,6 +14,8 @@ const foreground = 0.9;
 const fontSizeFactor = 3;
 // @panel {type:'slider',min:100,max:800,step:100}
 const fontWeight = 600;
+// @panel
+const useTransparent = false;
 const padding = 12;
 const font: Mods = {
 	fontSize: 32,
@@ -101,8 +103,8 @@ function Book({page}: {page: Page}) {
 }
 
 function widget(entry: WidgetEntry<EntryData>) {
-	const {pageSize, bookSize, offset, pageFrame, page} = entry;
-	return (
+	const {pageSize, bookSize, offset, pageFrame, page, renderingMode} = entry;
+	const content = (
 		<ZStack
 			geometryGroup
 			pixelPerfectCenter={{x: offset}}
@@ -116,6 +118,10 @@ function widget(entry: WidgetEntry<EntryData>) {
 			</HStack>
 		</ZStack>
 	);
+	if (renderingMode === 'fullColor' && useTransparent) {
+		return <Group compositingGroup luminanceToAlpha colorInvert>{content}</Group>;
+	}
+	return content;
 }
 
 function change(pageSize: number, bookSize: number, diff: number) {

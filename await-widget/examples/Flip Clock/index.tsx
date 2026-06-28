@@ -1,5 +1,5 @@
 import {
-	Text, ZStack, Color, HStack, VFlip,
+	Text, ZStack, Color, HStack, VFlip, Group,
 } from 'await';
 
 // @panel {type:'slider',min:0,max:4,step:1}
@@ -15,6 +15,8 @@ const background = '19';
 // @panel {type:'color'}
 const foreground = 'e5';
 // @panel
+const useTransparent = false;
+
 const monospacedDigit = true;
 
 const padding = 12;
@@ -146,6 +148,7 @@ function Page({ data, frame }: PageViewData) {
 function widget(entry: WidgetEntry<EntryData>) {
 	const {
 		size: { width, height },
+		renderingMode,
 	} = entry;
 	const w_total = Math.floor(width / 2 - padding) * 2;
 	const pageSpacing = 6;
@@ -154,7 +157,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 	h = Math.floor(h / 2) * 2;
 	const frame = { width: w, height: h };
 	const rawPages = makePages(entry);
-	return (
+	const content = (
 		<HStack
 			spacing={pageSpacing}
 			animation={{ type: 'smooth', duration: 0.6 }}
@@ -169,6 +172,10 @@ function widget(entry: WidgetEntry<EntryData>) {
 			<Page data={rawPages[1]!} frame={frame} />
 		</HStack>
 	);
+	if (renderingMode === 'fullColor' && useTransparent) {
+		return <Group compositingGroup luminanceToAlpha colorInvert>{content}</Group>;
+	}
+	return content;
 }
 
 function widgetTimeline() {
