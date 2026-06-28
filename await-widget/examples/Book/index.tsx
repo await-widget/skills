@@ -4,8 +4,6 @@ import {
 
 // @panel
 const bookPath = 'sample.txt';
-const animation: NativeAnimation = {duration: 0.6, type: 'smooth'};
-const pagePadding = {top: 16, horizontal: 16, bottom: 24};
 // @panel {type:'slider',min:0,max:1,step:0.05}
 const background = 0.1;
 // @panel {type:'slider',min:0,max:1,step:0.05}
@@ -15,8 +13,13 @@ const fontSizeFactor = 3;
 // @panel {type:'slider',min:100,max:800,step:100}
 const fontWeight = 600;
 // @panel
+const withPadding = true;
+// @panel
 const useTransparent = false;
-const padding = 12;
+
+const animation: NativeAnimation = {duration: 0.6, type: 'smooth'};
+const pagePadding = {top: 16, horizontal: 16, bottom: 24};
+const padding = withPadding ? 12 : 0;
 const font: Mods = {
 	fontSize: 32,
 	fontWeight,
@@ -151,14 +154,20 @@ function change(pageSize: number, bookSize: number, diff: number) {
 
 function widgetTimeline(context: TimelineContext): Timeline<EntryData> {
 	const {width, height} = context.size;
-	const pageWidth = Math.floor(width / 2 - padding) * 2;
-	const pageHeight = height - (padding * 2);
-	const pageFrame = {width: pageWidth, height: pageHeight};
+	let pageWidth = Math.ceil(width / 2) * 2;
+	let pageHeight = height;
+	if (withPadding) {
+		pageWidth = Math.floor(width / 2 - padding) * 2;
+		pageHeight -= padding * 2;
+	}
+	const pageFrame = {
+		width: pageWidth,
+		height: pageHeight,
+	};
 	const bookSize = AwaitFile.fileSize(bookPath) ?? 0;
 	const pageSize = Math.floor((pageWidth - pagePadding.horizontal) * (pageHeight - pagePadding.bottom - pagePadding.top) / fontSizeFactor / 100);
 	const dataIndex = AwaitStore.num('dataIndex');
 	const delta = AwaitStore.num('delta', -1);
-
 	const page = makePage({
 		bookSize, dataIndex, delta, pageSize,
 	});
