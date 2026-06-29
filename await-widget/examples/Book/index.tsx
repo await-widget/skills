@@ -9,7 +9,7 @@ const background = 0.1;
 // @panel {type:'slider',min:0,max:1,step:0.05}
 const foreground = 0.9;
 // @panel {type:'slider',min:1,max:3,step:0.1}
-const fontSizeFactor = 3;
+const fontSizeFactor = 2;
 // @panel {type:'slider',min:100,max:800,step:100}
 const fontWeight = 600;
 // @panel
