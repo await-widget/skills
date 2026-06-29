@@ -3,7 +3,7 @@ import {
 } from 'await';
 
 // @panel
-const text = 'Tap';
+const text = '+1';
 // @panel
 const showBackground = true;
 // @panel {type:'password'}
@@ -46,6 +46,12 @@ function widgetTimeline() {
 	};
 }
 
+// @panel {title:'+1'}
+function add1() {
+	const value = AwaitStore.num('value');
+	AwaitStore.set('value', value + 1);
+}
+
 function add(diff: number) {
 	const value = AwaitStore.num('value');
 	AwaitStore.set('value', value + diff);
@@ -54,5 +60,5 @@ function add(diff: number) {
 const app = Await.define({
 	widget,
 	widgetTimeline,
-	widgetIntents: {add},
+	widgetIntents: {add, add1},
 });
