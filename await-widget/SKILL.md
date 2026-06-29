@@ -18,7 +18,7 @@ For deeper guides and prompt patterns, read `docs-source/README.md`.
 1. Locate the target widget file.
    - If the user gives a file, edit that file.
    - If the user is working from this skill repo, edit the relevant `examples/*/index.tsx`.
-   - If the user asks for a new widget project, copy `examples/package.json`, `examples/tsconfig.json`, and the desired example directory before editing.
+   - If the user asks for a new widget project, copy `examples/package.json`, `examples/tsconfig.json`, and the desired example directory before editing. Keep each Await widget in its own subdirectory so one package can manage multiple widget subprojects.
 2. Ensure dependencies exist. Run `npm install` in the widget project only if `node_modules/@await-widget/runtime` is missing.
 3. Read only the runtime declarations needed for the task:
    - `node_modules/@await-widget/runtime/types/await.d.ts`: importable components and `await` module surface.
