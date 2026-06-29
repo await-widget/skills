@@ -45,8 +45,8 @@ Use this prompt when starting a widget task:
 ```text
 Use the await-widget skill.
 Read the await-widget skill first.
-Then read docs/index.md and the guide or reference pages relevant to my request.
-Use only APIs declared in @await-widget/runtime or documented under docs/reference.
+Then read this docs index and the guide pages relevant to my request.
+Use only APIs declared in @await-widget/runtime.
 Do not use HTML tags, CSS, React hooks, React state, fetch, or browser APIs.
 ```
 
@@ -57,14 +57,16 @@ For "I describe, AI codes" users:
 1. Start with [Create A Widget](guides/create-a-widget.md).
 2. Read [Panels](guides/panels.md) if you want editable settings.
 3. Read [Bridge APIs](guides/bridge-apis.md) if the widget needs store, network, files, weather, calendar, reminders, health, music, audio, or location.
-4. Use the [Prompt Cookbook](prompts/cookbook.md) to brief your AI agent.
+4. Use the [Connection Guide](guides/connection.md) to control Await while previewing computer edits in Await.
+5. Use the [Prompt Cookbook](prompts/cookbook.md) to brief your AI agent.
 
 For TypeScript developers:
 
 1. Read [Runtime Model](guides/runtime-model.md).
 2. Read [Timeline](guides/timeline.md) and [Intents](guides/intents.md).
 3. Use the generated [Reference](reference/index.md) for exact declarations.
-4. Check `library/gallery/*/index.tsx` for complete examples.
+4. Use the [Connection Guide](guides/connection.md) while iterating on a widget project.
+5. Check `library/gallery/*/index.tsx` for complete examples.
 
 ## Core Rules
 
@@ -79,6 +81,7 @@ For TypeScript developers:
 
 - [Runtime Model](guides/runtime-model.md)
 - [Create A Widget](guides/create-a-widget.md)
+- [Connection Guide](guides/connection.md)
 - [Modify A Widget](guides/modify-a-widget.md)
 - [Panels](guides/panels.md)
 - [Timeline](guides/timeline.md)

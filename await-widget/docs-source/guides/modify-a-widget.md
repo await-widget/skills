@@ -8,7 +8,8 @@ When changing an existing widget, preserve the existing runtime shape unless the
 2. Identify imports, top-level `@panel` constants, `widget`, optional `widgetTimeline`, optional intent functions, and `Await.define`.
 3. Check the reference before adding components, props, modifiers, or bridge APIs.
 4. Make the smallest code change that satisfies the request.
-5. Run `npm test` in the widget project.
+5. Use the [Connection Guide](connection.md) to control Await and preview computer edits in Await while iterating.
+6. Run `npm test` in the widget project.
 
 ## Keep Stable
 

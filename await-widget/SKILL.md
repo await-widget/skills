@@ -3,7 +3,7 @@ name: await-widget
 description: Create or modify Await widgets in TSX using the custom SwiftUI-style DSL, native bridge APIs, modifiers, timelines, intents, and @panel controls. Use when the user asks to build, edit, or scaffold an Await widget.
 license: MIT
 version: "1.0.0"
-last_updated: "2026-05-13"
+last_updated: "2026-07-02"
 user_invocable: true
 ---
 
@@ -29,6 +29,7 @@ For deeper guides and prompt patterns, read `docs-source/README.md`.
    - `node_modules/@await-widget/runtime/types/jsx.d.ts`: JSX constraints.
 4. Implement the widget.
 5. Run `npm test` in the widget project or in `examples/`.
+6. When a computer connection is available, use `npx await-widget app ...` commands to open Await, wait for previews, inspect build errors, and capture screenshots. Run `npx await-widget --help` for the current command list and input schemas.
 
 ## Hard Rules
 
@@ -88,3 +89,4 @@ Supported panel comments:
 ## Deeper Docs
 
 Read `docs-source/README.md` for guide and prompt source content. Public `docs/reference` pages are generated from `@await-widget/runtime` declarations.
+Read `docs-source/guides/connection.md` when using `npx await-widget` for live sync and Await app commands.

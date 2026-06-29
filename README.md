@@ -11,7 +11,7 @@
 ## Links
 
 - [Download Await](https://apps.apple.com/app/id6755678187)
-- [Developer Docs](docs/index.md)
+- [Developer Docs](await-widget/docs-source/index.md)
 - [Skill Instructions](await-widget/SKILL.md)
 - [Template Project](await-widget/examples/)
 - [Privacy Policy](PRIVACY.md)
@@ -40,7 +40,7 @@ npx skills add await-widget/skills -g
 npx skills add await-widget/skills -a claude-code -g
 ```
 
-Restart your agent after installing. The skill registers as `await-widget` and bundles `await-widget/SKILL.md` plus `await-widget/examples/`.
+Restart your agent after installing. The skill registers as `await-widget` and bundles `await-widget/SKILL.md`, `await-widget/docs-source/`, and `await-widget/examples/`.
 
 ## TypeScript Declarations
 
@@ -74,6 +74,24 @@ function widget() {
 Await.define({ widget });
 ```
 
+## Computer Connection
+
+Run the Await computer connection from a first-level widget folder inside a package that depends on `@await-widget/runtime`:
+
+```bash
+npx await-widget
+```
+
+Paste the printed URL into Await's `Connect Computer` sheet. Agents can then run commands such as:
+
+```bash
+npx await-widget app open-syncing-widget-detail
+npx await-widget app wait-for-widget-ready --widget-id 2
+npx await-widget app capture-current-preview --widget-id 2
+```
+
+Run `npx await-widget --help` for command descriptions and input schemas.
+
 ## Clone The Template
 
 ```bash
@@ -86,10 +104,10 @@ npm test
 ## Use With An AI Agent
 
 ```text
-Use the await-widget skill. Read await-widget/SKILL.md first, then read docs/README.md before writing code.
+Use the await-widget skill. Read await-widget/SKILL.md first, then read await-widget/docs-source/README.md before writing code.
 ```
 
-For full guides, API reference, and AI prompt patterns, open [Developer Docs](docs/index.md).
+For full guides, API reference, and AI prompt patterns, open [Developer Docs](await-widget/docs-source/index.md).
 
 ## License
 

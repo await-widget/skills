@@ -5,7 +5,7 @@ Use these prompts with an AI agent when creating or changing Await widgets.
 ## Read The Docs First
 
 ```text
-Read the await-widget skill, docs/README.md, and the relevant files under docs/reference before writing code.
+Read the await-widget skill, this docs README, and the relevant runtime type declarations before writing code.
 Use runtime/types/*.d.ts as the source of truth.
 ```
 
@@ -17,6 +17,7 @@ Use components only from await.
 Add @panel controls for the main editable values.
 Use widgetTimeline only if the widget needs data or scheduled updates.
 Run npm test after editing.
+If a computer connection is active, use npx await-widget app commands to preview and capture the result.
 ```
 
 ## Modify A Widget
@@ -24,8 +25,9 @@ Run npm test after editing.
 ```text
 Modify this Await widget: [file path].
 Keep the existing structure unless the request requires a change.
-Check docs/reference before adding any component, prop, modifier, or bridge API.
+Check runtime type declarations before adding any component, prop, modifier, or bridge API.
 Do not add HTML, CSS, React hooks, React state, fetch, or browser APIs.
+If a computer connection is active, use npx await-widget app get-build-errors, wait-for-widget-ready, and capture-current-preview while iterating.
 ```
 
 ## Debug TypeScript Errors
@@ -48,7 +50,7 @@ If an API is not declared in runtime/types/*.d.ts, do not use it.
 
 ```text
 Build an Await weather widget.
-Read docs/guides/create-a-widget.md, docs/guides/panels.md, docs/guides/timeline.md, and docs/guides/bridge-apis.md.
+Read the create-a-widget, panels, timeline, and bridge-apis guides.
 Use AwaitWeather.get in widgetTimeline.
 Add a @panel {type:'color'} top-level const for the accent color.
 Render current temperature and condition with components from await.

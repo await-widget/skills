@@ -5,8 +5,18 @@ Start from a small view tree, then add data, panels, timelines, and intents only
 ## Steps
 
 1. Create or open an Await widget project.
-2. Ensure `package.json` includes `@await-widget/runtime` and `typescript`.
-3. Ensure `tsconfig.json` uses:
+2. Keep `package.json` and `tsconfig.json` at the package root, with each Await widget in its own subdirectory. This makes it easier to manage multiple Await widget subprojects in one package:
+
+```text
+MyAwaitWidgets/
+  package.json
+  tsconfig.json
+  YourWidget/
+    index.tsx
+```
+
+3. Ensure `package.json` includes `@await-widget/runtime` and `typescript`.
+4. Ensure `tsconfig.json` uses:
 
 ```json
 {
@@ -18,10 +28,11 @@ Start from a small view tree, then add data, panels, timelines, and intents only
 }
 ```
 
-4. Import components from `await`.
-5. Implement `widget`.
-6. Register it with `Await.define`.
-7. Run `npm test`.
+5. Import components from `await`.
+6. Implement `widget`.
+7. Register it with `Await.define`.
+8. Run `npm test`.
+9. Run `npx await-widget` from the widget folder and connect the matching Await detail page when you want [live preview](connection.md).
 
 ## Starter Template
 
