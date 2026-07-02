@@ -1,5 +1,10 @@
 import {
-	Text, ZStack, Color, HStack, VFlip, Group,
+	Text,
+	ZStack,
+	Color,
+	HStack,
+	VFlip,
+	Group,
 } from 'await';
 
 // @panel {type:'slider',min:0,max:4,step:1}
@@ -105,8 +110,10 @@ function makePage(
 
 function getClockInfo(time: number): Info[] {
 	const date = new Date(time);
+	const hour = date.getHours();
+	const hour12 = hour % 12;
 	return [
-		[Math.floor(time / 3_600_000), use24Hour ? date.getHours() : date.getHours() % 12 || 12],
+		[Math.floor(time / 3_600_000), use24Hour ? hour : (hour12 === 0 ? 12 : hour12)],
 		[Math.floor(time / 60_000), date.getMinutes()],
 		[Math.floor(time / 1000), date.getSeconds()],
 	];

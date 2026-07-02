@@ -47,7 +47,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 			minimumScaleFactor={0.74}
 		/>,
 	];
-	if (entry.due) {
+	if (entry.due !== undefined) {
 		children.push(<Text
 			id='due'
 			value={entry.due}
@@ -58,7 +58,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 			minimumScaleFactor={0.75}
 		/>);
 	}
-	if (entry.list) {
+	if (entry.list !== '') {
 		children.push(<Text
 			id='list'
 			value={entry.list}

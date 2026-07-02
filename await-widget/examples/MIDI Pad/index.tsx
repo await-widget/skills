@@ -59,7 +59,7 @@ const app = Await.define({
 });
 
 function noteName(note: number) {
-	return noteChar[note % 12]! + '\u0307'.repeat(Math.floor(note / 12) - 5);
+	return noteChar[note % 12]! + '\u{307}'.repeat(Math.floor(note / 12) - 5);
 }
 
 const grid = [

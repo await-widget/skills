@@ -14,16 +14,16 @@ export type Notes = {
 	blackNotes: Array<number | undefined>;
 };
 
-export type Data = {
+export type Data = Notes & {
 	blackKeyWidth: number;
 	blackKeysWidth: number;
 	blackKeyHeight: number;
 	shift: number;
 	whiteKeysWidth: number;
 	sound: Sound;
-} & Notes;
+};
 
-/* eslint-disable @stylistic/array-element-newline */
+/* eslint-disable @stylistic/array-element-newline -- Keep piano note maps readable by octave. */
 export const allWhiteNotes = [
 	undefined,
 	21, 23,

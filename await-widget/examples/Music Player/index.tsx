@@ -23,7 +23,7 @@ const id = '';
 
 const artworkSize = 400;
 const defaultStation: AwaitMusicPlayConfig = {
-	source, query, limit, id, type,
+	source, query, id, type,
 };
 const outerPadding = 16;
 const columnGap = 18;
@@ -232,9 +232,9 @@ function Artwork({
 }) {
 	return (
 		<ZStack sides={side} cornerRadius={radius} clipped>
-			{url
-				? <Image url={url} resizable aspectRatio={[1, 'fill']} interpolation='high' sides={side}/>
-				: <Text value='NO COVER' foreground={background} fontSize={12} fontWeight={900} fontDesign='monospaced'/>}
+			{url === undefined
+				? <Text value='NO COVER' foreground={background} fontSize={12} fontWeight={900} fontDesign='monospaced'/>
+				: <Image url={url} resizable aspectRatio={[1, 'fill']} interpolation='high' sides={side}/>}
 		</ZStack>
 	);
 }

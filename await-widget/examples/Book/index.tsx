@@ -1,5 +1,11 @@
 import {
-	FullButton, HFlip, HStack, Text, ZStack, Color, Group,
+	FullButton,
+	HFlip,
+	HStack,
+	Text,
+	ZStack,
+	Color,
+	Group,
 } from 'await';
 
 // @panel

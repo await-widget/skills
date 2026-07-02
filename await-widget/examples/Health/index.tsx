@@ -53,25 +53,25 @@ function widget(entry: WidgetEntry<EntryData>) {
 					lineLimit={1}
 					minimumScaleFactor={0.75}
 				/>
-				{entry.distanceWalkingRunning
-					? <Text
+				{entry.distanceWalkingRunning === undefined
+					? undefined
+					: <Text
 						value={entry.distanceWalkingRunning}
 						fontSize={14}
 						fontWeight={700}
 						lineLimit={2}
 						minimumScaleFactor={0.74}
-					/>
-					: undefined}
-				{entry.flightsClimbed
-					? <Text
+					/>}
+				{entry.flightsClimbed === undefined
+					? undefined
+					: <Text
 						value={entry.flightsClimbed}
 						fontSize={11}
 						fontWeight={600}
 						foreground={tone.muted}
 						lineLimit={1}
 						minimumScaleFactor={0.75}
-					/>
-					: undefined}
+					/>}
 			</VStack>
 		</ZStack>
 	);

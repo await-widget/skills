@@ -111,7 +111,7 @@ function resetKey(date: Date, period: string) {
 }
 
 function nextReset(date: Date) {
-	return isDailyReset(resetPeriod) ? nextDay(date) : nextWeek(date);
+	return (isDailyReset(resetPeriod) ? nextDay : nextWeek)(date);
 }
 
 function syncReset(date: Date) {

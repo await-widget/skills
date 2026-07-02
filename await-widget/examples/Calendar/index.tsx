@@ -64,7 +64,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 			minimumScaleFactor={0.75}
 		/>,
 	];
-	if (entry.calendar) {
+	if (entry.calendar !== '') {
 		children.push(<Text
 			id='calendar'
 			value={entry.calendar}
