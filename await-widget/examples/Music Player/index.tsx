@@ -14,16 +14,15 @@ import {
 const query = '';
 // @panel {type:'slider',min:1,max:50,step:1}
 const limit = 25;
-// @panel {type:'menu',items:['song','album','artist','station']}
+// @panel {type:'menu',items:['song','album','artist','station','playlist']}
 const source = 'station';
-// @panel {type:'menu',items:['user','discovery']}
 const type = 'user';
-// @panel
 const id = '';
 
 const artworkSize = 400;
-const defaultStation: AwaitMusicPlayConfig = {
-	source, query, id, type,
+const musicConfig: AwaitMusicPlayConfig = {
+	// @ts-expect-error limit is OK
+	source, query, id, type, limit,
 };
 const outerPadding = 16;
 const columnGap = 18;
@@ -212,7 +211,7 @@ function PlayerControls({
 	return (
 		<HStack spacing={spacing}>
 			<ControlButton icon='backward.fill' intent={app.command('previous')} foreground={player.primary} background={player.background}/>
-			<ControlButton icon={player.isPlaying ? 'pause.fill' : 'play.fill'} intent={app.command('toggle', defaultStation)} foreground={player.primary} background={player.background} primary/>
+			<ControlButton icon={player.isPlaying ? 'pause.fill' : 'play.fill'} intent={app.command('toggle', musicConfig)} foreground={player.primary} background={player.background} primary/>
 			<ControlButton icon='forward.fill' intent={app.command('next')} foreground={player.primary} background={player.background}/>
 			{favorite ? <ControlButton icon={player.isFavorite ? 'heart.fill' : 'heart'} intent={app.command(player.isFavorite ? 'clearRating' : 'favorite')} foreground={player.primary} background={player.background}/> : undefined}
 		</HStack>
@@ -272,6 +271,11 @@ async function command(cmd: AwaitMusicPlayerCommand, config?: AwaitMusicPlayConf
 	await AwaitMusic.playerCommand(cmd, config);
 };
 
+// @panel
+async function restart() {
+	await AwaitMusic.playerCommand('start', musicConfig);
+};
+
 async function widgetTimeline(): Promise<Timeline<EntryData>> {
 	const nowPlaying = await AwaitMusic.nowPlaying({artworkSize});
 
@@ -286,6 +290,6 @@ const app = Await.define({
 	widget,
 	widgetTimeline,
 	widgetIntents: {
-		command,
+		command, restart,
 	},
 });

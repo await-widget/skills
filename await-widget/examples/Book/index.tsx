@@ -67,22 +67,19 @@ type Page = {
 function pageContent(index: number, text: string, backPageIndex: number) {
 	return (index <= 0 || index >= backPageIndex)
 		? <Color value={background}/>
-		: (
-			<Color
-				value={background}
-				overlay={<Text foreground={foreground} {...font} value={text} padding={pagePadding}/>}
-				overlay_={{
-					alignment: 'bottomTrailing',
-					content: <Text value={`${index}/${backPageIndex - 1}`} {...fontSmall} foreground={[foreground, 0.5]} padding={10}/>,
-				}}
-			/>
-		);
+		: <Color
+			value={background}
+			overlay={<Text foreground={foreground} {...font} value={text} padding={pagePadding}/>}
+			overlay_={{
+				alignment: 'bottomTrailing',
+				content: <Text value={`${index}/${backPageIndex - 1}`} {...fontSmall} foreground={[foreground, 0.5]} padding={10}/>,
+			}}/>;
 }
 
 function makePage(data: RawPageData): Page {
 	const {bookSize, pageSize, dataIndex, delta} = data;
 	const backPageIndex = Math.ceil(bookSize / pageSize) + 1;
-	const pageIndex = dataIndex === bookSize + 1 ? backPageIndex : Math.ceil(dataIndex / pageSize);
+	const pageIndex = dataIndex >= bookSize + 1 ? backPageIndex : (dataIndex <= 0 ? 0 : Math.ceil(dataIndex / pageSize));
 	const prevIndex = pageIndex - delta;
 	const texts = AwaitFile.readTextByPages(bookPath, [pageIndex - 1, pageIndex - delta - 1], pageSize).map(v => v?.trim().replaceAll(/[\n\r]{3,}/g, '\n\n') ?? '');
 	return {
@@ -115,10 +112,10 @@ function widget(entry: WidgetEntry<EntryData>) {
 	const {pageSize, bookSize, offset, pageFrame, page, renderingMode} = entry;
 	const content = (
 		<ZStack
+			frame={pageFrame}
 			geometryGroup
 			pixelPerfectCenter={{x: offset}}
-			animation={animation}
-			frame={pageFrame}
+			animation_={animation}
 		>
 			<Book page={page}/>
 			<HStack>
@@ -135,19 +132,11 @@ function widget(entry: WidgetEntry<EntryData>) {
 
 function change(pageSize: number, bookSize: number, diff: number) {
 	const dataIndex = AwaitStore.num('dataIndex');
-	if (diff > 0 && dataIndex === bookSize + 1) {
-		return;
-	}
-
-	if (diff < 0 && dataIndex === 0) {
-		return;
-	}
-
 	if (dataIndex === bookSize && diff > 0) {
 		AwaitStore.set('dataIndex', bookSize + 1);
-	} else if (dataIndex === bookSize + 1 && diff < 0) {
+	} else if (dataIndex >= bookSize + 1 && diff < 0) {
 		AwaitStore.set('dataIndex', bookSize);
-	} else if (dataIndex === 0 && diff > 0) {
+	} else if (dataIndex <= 0 && diff > 0) {
 		AwaitStore.set('dataIndex', 1);
 	} else if (dataIndex === 1 && diff < 0) {
 		AwaitStore.set('dataIndex', 0);
@@ -161,10 +150,10 @@ function change(pageSize: number, bookSize: number, diff: number) {
 function widgetTimeline(context: TimelineContext): Timeline<EntryData> {
 	const {width, height} = context.size;
 	let pageWidth = Math.ceil(width / 2) * 2;
-	let pageHeight = height;
+	let pageHeight = Math.ceil(height / 2) * 2;
 	if (withPadding) {
 		pageWidth = Math.floor(width / 2 - padding) * 2;
-		pageHeight -= padding * 2;
+		pageHeight = Math.floor(height / 2 - padding) * 2;
 	}
 	const pageFrame = {
 		width: pageWidth,
@@ -173,7 +162,7 @@ function widgetTimeline(context: TimelineContext): Timeline<EntryData> {
 	const bookSize = AwaitFile.fileSize(bookPath) ?? 0;
 	const pageSize = Math.floor((pageWidth - pagePadding.horizontal) * (pageHeight - pagePadding.bottom - pagePadding.top) / fontSizeFactor / 100);
 	const dataIndex = AwaitStore.num('dataIndex');
-	const delta = AwaitStore.num('delta', -1);
+	const delta = dataIndex >= bookSize + 1 ? 1 : (dataIndex <= 0 ? -1 : AwaitStore.num('delta', -1));
 	const page = makePage({
 		bookSize, dataIndex, delta, pageSize,
 	});
