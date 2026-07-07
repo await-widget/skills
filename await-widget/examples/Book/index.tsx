@@ -85,9 +85,9 @@ function makePage(data: RawPageData): Page {
 	return {
 		backPageIndex,
 		cornerRadius: 86 / 3 - padding,
-		currContent: pageContent(pageIndex, texts[0]!, backPageIndex),
+		currContent: pageContent(pageIndex, texts[0], backPageIndex),
 		pageIndex,
-		prevContent: pageContent(prevIndex, texts[1]!, backPageIndex),
+		prevContent: pageContent(prevIndex, texts[1], backPageIndex),
 		delta,
 	};
 }
@@ -127,6 +127,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 	if (renderingMode === 'fullColor' && useTransparent) {
 		return <Group compositingGroup luminanceToAlpha colorInvert>{content}</Group>;
 	}
+
 	return content;
 }
 
@@ -155,6 +156,7 @@ function widgetTimeline(context: TimelineContext): Timeline<EntryData> {
 		pageWidth = Math.floor(width / 2 - padding) * 2;
 		pageHeight = Math.floor(height / 2 - padding) * 2;
 	}
+
 	const pageFrame = {
 		width: pageWidth,
 		height: pageHeight,

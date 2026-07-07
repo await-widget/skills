@@ -40,7 +40,7 @@ function pageContent(image: string) {
 function makePage(data: RawPageData): Page {
 	const {pageIndex, delta} = data;
 	const prevIndex = pageIndex - delta;
-	const files = [...AwaitFile.files('images')].sort((a, b) =>
+	const files = [...AwaitFile.files('images')].toSorted((a, b) =>
 		a.localeCompare(b, undefined, {
 			numeric: true,
 			sensitivity: 'base',
@@ -51,9 +51,9 @@ function makePage(data: RawPageData): Page {
 	const images = [`images/${a}`, `images/${b}`];
 	return {
 		cornerRadius: 86 / 3 - (withPadding ? padding : 0),
-		currContent: pageContent(images[0]!),
+		currContent: pageContent(images[0]),
 		pageIndex,
-		prevContent: pageContent(images[1]!),
+		prevContent: pageContent(images[1]),
 		delta,
 	};
 }
@@ -97,6 +97,7 @@ function widgetTimeline({size}: TimelineContext) {
 		pageWidth = Math.floor(width / 2 - padding) * 2;
 		pageHeight -= padding * 2;
 	}
+
 	const pageFrame = {
 		width: pageWidth,
 		height: pageHeight,

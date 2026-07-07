@@ -29,7 +29,7 @@ function widget() {
 			{grid.map((row, y) => (
 				<HStack spacing={4}>
 					{row.map((_, x) => {
-						const note = grid[y]![x]!;
+						const note = grid[y][x];
 						return <Cell note={note} />;
 					})}
 				</HStack>
@@ -38,9 +38,9 @@ function widget() {
 	);
 }
 
-function Cell({ note }: { note: number }) {
-	const name = noteNames[note]![0];
-	const velocity = noteNames[note]![1] * 127;
+function Cell({note}: {note: number}) {
+	const name = noteNames[note][0];
+	const velocity = noteNames[note][1] * 127;
 	return (
 		<Button fast intent={app.tap(note, velocity)} audio>
 			<ZStack>
@@ -52,7 +52,7 @@ function Cell({ note }: { note: number }) {
 }
 
 function widgetTimeline() {
-	return { entries: [{ date: new Date() }], skipOnPlayingNote: true };
+	return {entries: [{date: new Date()}], skipOnPlayingNote: true};
 }
 
 const app = Await.define({
@@ -92,14 +92,14 @@ const buttonStyle: CustomButtonStyle = {
 		<Modifier
 			geometryGroup
 			scaleEffect={0.9}
-			animation={{ type: 'snappy', duration: 0.1 }}
+			animation={{type: 'snappy', duration: 0.1}}
 		/>
 	),
 	normal: (
 		<Modifier
 			geometryGroup
 			scaleEffect={1}
-			animation={{ type: 'snappy', duration: 0.5 }}
+			animation={{type: 'snappy', duration: 0.5}}
 		/>
 	),
 };

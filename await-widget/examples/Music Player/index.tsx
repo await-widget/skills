@@ -41,6 +41,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 	if (entry.family === 'small') {
 		return <SmallWidget entry={entry}/>;
 	}
+
 	return <MediumWidget entry={entry}/>;
 }
 
@@ -232,12 +233,12 @@ function ControlButton({
 
 async function command(cmd: AwaitMusicPlayerCommand, config?: AwaitMusicPlayConfig) {
 	await AwaitMusic.playerCommand(cmd, config);
-};
+}
 
 // @panel
 async function restart() {
 	await AwaitMusic.playerCommand('start', musicConfig);
-};
+}
 
 async function widgetTimeline(): Promise<Timeline<EntryData>> {
 	const nowPlaying = await AwaitMusic.nowPlaying({artworkSize});

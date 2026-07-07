@@ -93,6 +93,7 @@ async function widgetTimeline(): Promise<Timeline<EntryData>> {
 			update: new Date(Date.now() + 1_800_000),
 		};
 	}
+
 	return {
 		entries: [{
 			date: new Date(),

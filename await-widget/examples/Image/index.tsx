@@ -1,4 +1,4 @@
-import { ZStack, Image } from 'await';
+import {ZStack, Image} from 'await';
 
 // @panel
 const url = 'sample.jpg';

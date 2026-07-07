@@ -6,12 +6,12 @@ import {
 	ZStack,
 } from 'await';
 
-type ContributionLevel
-	= | 'NONE'
-		| 'FIRST_QUARTILE'
-		| 'SECOND_QUARTILE'
-		| 'THIRD_QUARTILE'
-		| 'FOURTH_QUARTILE';
+type ContributionLevel =
+	| 'NONE'
+	| 'FIRST_QUARTILE'
+	| 'SECOND_QUARTILE'
+	| 'THIRD_QUARTILE'
+	| 'FOURTH_QUARTILE';
 
 type CommitDay = {
 	date: string;
@@ -160,21 +160,21 @@ function emptyWeek(): CommitWeek {
 	return Array.from({length: 7}, (): CommitDay | undefined => undefined);
 }
 
-function contributionsURL(login: string, from: Date, to: Date): string {
-	return `https://github.com/users/${login}/contributions?from=${formatDate(from)}&to=${formatDate(to)}`;
+function contributionsURL(loginUser: string, from: Date, to: Date): string {
+	return `https://github.com/users/${loginUser}/contributions?from=${formatDate(from)}&to=${formatDate(to)}`;
 }
 
-function contributionsYearURL(login: string, year: number): string {
-	return contributionsURL(login, new Date(year, 0, 1), new Date(year, 11, 31));
+function contributionsYearURL(loginUser: string, year: number): string {
+	return contributionsURL(loginUser, new Date(year, 0, 1), new Date(year, 11, 31));
 }
 
-function avatarURL(login: string): string {
-	return `https://github.com/${login}.png?size=80`;
+function avatarURL(loginUser: string): string {
+	return `https://github.com/${loginUser}.png?size=80`;
 }
 
 function parseContributionDays(html: string): CommitDay[] {
 	const byDate = new Map<string, CommitDay>();
-	const regex = /data-date="(\d{4}-\d{2}-\d{2})"([^>]*)>/g;
+	const regex = /data-date="(?<date>\d{4}-\d{2}-\d{2})"(?<attrs>[^>]*)>/g;
 
 	while (true) {
 		const match = regex.exec(html);
@@ -182,8 +182,7 @@ function parseContributionDays(html: string): CommitDay[] {
 			break;
 		}
 
-		const date = match[1]!;
-		const attrs = match[2] ?? '';
+		const {date, attrs = ''} = match.groups!;
 		const count = parseContributionCount(attrs);
 		const level = parseContributionLevel(attrs, count);
 		byDate.set(date, {
@@ -193,7 +192,7 @@ function parseContributionDays(html: string): CommitDay[] {
 		});
 	}
 
-	return [...byDate.values()].sort((left, right) => left.date.localeCompare(right.date));
+	return byDate.values().toArray().toSorted((left, right) => left.date.localeCompare(right.date));
 }
 
 function mergeContributionDays(groups: CommitDay[][]): CommitDay[] {
@@ -204,16 +203,16 @@ function mergeContributionDays(groups: CommitDay[][]): CommitDay[] {
 		}
 	}
 
-	return [...byDate.values()].sort((left, right) => left.date.localeCompare(right.date));
+	return byDate.values().toArray().toSorted((left, right) => left.date.localeCompare(right.date));
 }
 
 function parseContributionCount(attrs: string): number | undefined {
-	const dataCount = (/data-count="(\d+)"/.exec(attrs))?.[1];
+	const dataCount = (/data-count="(?<count>\d+)"/.exec(attrs))?.groups?.count;
 	if (dataCount !== undefined) {
 		return Number(dataCount);
 	}
 
-	const label = (/(?:aria-label|title)="([^"]+)"/.exec(attrs))?.[1];
+	const label = (/(?:aria-label|title)="(?<label>[^"]+)"/.exec(attrs))?.groups?.label;
 	if (!label) {
 		return undefined;
 	}
@@ -222,8 +221,8 @@ function parseContributionCount(attrs: string): number | undefined {
 		return 0;
 	}
 
-	const labelCount = (/(\d+)\s+contributions?/i.exec(label))?.[1];
-	if (labelCount !== undefined) {
+	const labelCount = /^\d+/.exec(label)?.[0];
+	if (labelCount !== undefined && /\bcontributions?\b/i.test(label)) {
 		return Number(labelCount);
 	}
 
@@ -231,7 +230,7 @@ function parseContributionCount(attrs: string): number | undefined {
 }
 
 function parseContributionLevel(attrs: string, contributionCount: number | undefined): ContributionLevel {
-	const rawLevel = (/data-level="(\d)"/.exec(attrs))?.[1];
+	const rawLevel = (/data-level="(?<level>\d)"/.exec(attrs))?.groups?.level;
 	if (rawLevel !== undefined) {
 		return levelFromNumber(Number(rawLevel));
 	}
@@ -311,16 +310,14 @@ function buildVisibleWeeks(days: CommitDay[], visibleWeeks: number, now: Date): 
 
 		for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
 			const date = addDays(weekStart, dayOffset);
-			if (date.getTime() > today.getTime()) {
-				continue;
+			if (date.getTime() <= today.getTime()) {
+				const key = formatDate(date);
+				week[dayOffset] = dayMap.get(key) ?? {
+					date: key,
+					contributionCount: 0,
+					level: 'NONE',
+				};
 			}
-
-			const key = formatDate(date);
-			week[dayOffset] = dayMap.get(key) ?? {
-				date: key,
-				contributionCount: 0,
-				level: 'NONE',
-			};
 		}
 
 		weeks.push(week);

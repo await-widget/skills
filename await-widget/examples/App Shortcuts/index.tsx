@@ -9,7 +9,7 @@ import {
 } from 'await';
 
 // @panel
-const showBackground = true;
+const isShowBackground = true;
 
 // @panel {type:'color'}
 const background = '333';
@@ -61,15 +61,15 @@ function widget({size}: WidgetEntry) {
 
 	return (
 		<ZStack>
-			<Color value={showBackground ? background : ''}/>
+			<Color value={isShowBackground ? background : ''}/>
 			<VStack maxSides spacing={gap} padding={inset}>
 				{appRows.map((row, rowIndex) => (
 					<HStack spacing={gap}>
 						{row.map((item, columnIndex) => {
-							const firstRow = rowIndex === 0;
-							const lastRow = rowIndex === appRows.length - 1;
-							const firstColumn = columnIndex === 0;
-							const lastColumn = columnIndex === row.length - 1;
+							const isFirstRow = rowIndex === 0;
+							const isLastRow = rowIndex === appRows.length - 1;
+							const isFirstColumn = columnIndex === 0;
+							const isLastColumn = columnIndex === row.length - 1;
 
 							return (
 								<Button intent={app.launch(item.identifier)} buttonStyle='borderless'>
@@ -78,10 +78,10 @@ function widget({size}: WidgetEntry) {
 										background={item.color}
 										clipShape={(
 											<UnevenRoundedRectangle rectRadius={{
-												topLeft: firstRow && firstColumn ? outerRadius : innerRadius,
-												topRight: firstRow && lastColumn ? outerRadius : innerRadius,
-												bottomRight: lastRow && lastColumn ? outerRadius : innerRadius,
-												bottomLeft: lastRow && firstColumn ? outerRadius : innerRadius,
+												topLeft: isFirstRow && isFirstColumn ? outerRadius : innerRadius,
+												topRight: isFirstRow && isLastColumn ? outerRadius : innerRadius,
+												bottomRight: isLastRow && isLastColumn ? outerRadius : innerRadius,
+												bottomLeft: isLastRow && isFirstColumn ? outerRadius : innerRadius,
 											}}/>
 										)}
 									>

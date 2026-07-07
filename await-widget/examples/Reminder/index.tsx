@@ -58,6 +58,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 			minimumScaleFactor={0.75}
 		/>);
 	}
+
 	if (entry.list !== '') {
 		children.push(<Text
 			id='list'
@@ -69,6 +70,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 			minimumScaleFactor={0.75}
 		/>);
 	}
+
 	return (
 		<ZStack maxSides>
 			<Color value={tone.background}/>
@@ -93,6 +95,7 @@ async function widgetTimeline(): Promise<Timeline<EntryData>> {
 			update: new Date(Date.now() + 1_800_000),
 		};
 	}
+
 	const first = reminders[0];
 	return {
 		entries: [{

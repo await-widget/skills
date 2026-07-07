@@ -119,16 +119,16 @@ function getClockInfo(time: number): Info[] {
 	];
 }
 
-function makePages({ curr, prev, next }: EntryData): PageData[] {
+function makePages({curr, prev, next}: EntryData): PageData[] {
 	const infoCurr = getClockInfo(curr);
 	const infoPrev = getClockInfo(prev);
 	const infoNext = getClockInfo(next);
 	const delta = next > curr ? 1 : -1;
 	return infoCurr.map((info, index) =>
-		makePage(info, infoPrev[index]!, infoNext[index]!, delta));
+		makePage(info, infoPrev[index], infoNext[index], delta));
 }
 
-function Page({ data, frame }: PageViewData) {
+function Page({data, frame}: PageViewData) {
 	if (data.changed) {
 		return (
 			<VFlip
@@ -156,7 +156,7 @@ function Page({ data, frame }: PageViewData) {
 
 function widget(entry: WidgetEntry<EntryData>) {
 	const {
-		size: { width, height },
+		size: {width, height},
 		renderingMode,
 	} = entry;
 	const w_total = Math.floor(width / 2 - padding) * 2;
@@ -164,26 +164,27 @@ function widget(entry: WidgetEntry<EntryData>) {
 	const w = (w_total - pageSpacing) / 2;
 	let h = Math.min(w, height - padding * 2);
 	h = Math.floor(h / 2) * 2;
-	const frame = { width: w, height: h };
+	const frame = {width: w, height: h};
 	const rawPages = makePages(entry);
 	const content = (
 		<HStack
 			spacing={pageSpacing}
-			animation={{ type: 'smooth', duration: 0.6 }}
+			animation={{type: 'smooth', duration: 0.6}}
 			textAlignment='center'
 			foreground={foreground}
 			pixelPerfectCenter
-			padding={{ horizontal: padding }}
+			padding={{horizontal: padding}}
 			maxSides
 			background={widgetBackground}
 		>
-			<Page data={rawPages[0]!} frame={frame} />
-			<Page data={rawPages[1]!} frame={frame} />
+			<Page data={rawPages[0]} frame={frame} />
+			<Page data={rawPages[1]} frame={frame} />
 		</HStack>
 	);
 	if (renderingMode === 'fullColor' && useTransparent) {
 		return <Group compositingGroup luminanceToAlpha colorInvert>{content}</Group>;
 	}
+
 	return content;
 }
 
@@ -191,7 +192,7 @@ function widgetTimeline(): Timeline<EntryData> {
 	const baseDate = new Date();
 	baseDate.setSeconds(0, 0);
 	const time = baseDate.getTime();
-	const entries = Array.from({ length: 16 }, (_, i) => {
+	const entries = Array.from({length: 16}, (_, i) => {
 		const t = time + 1000 * 60 * i;
 		return {
 			date: new Date(t - 500),
@@ -201,7 +202,7 @@ function widgetTimeline(): Timeline<EntryData> {
 		};
 	});
 
-	return { entries, update: 'rapid' };
+	return {entries, update: 'rapid'};
 }
 
 Await.define({

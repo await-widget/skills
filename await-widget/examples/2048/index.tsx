@@ -78,11 +78,11 @@ function makeTileId(): Encodable {
 }
 
 function widget(entry: WidgetEntry<EntryData>) {
-	const small = entry.size.width < 200 || entry.size.height < 200;
-	const layout = getLayoutMetrics(small, entry.size);
+	const isSmall = entry.size.width < 200 || entry.size.height < 200;
+	const layout = getLayoutMetrics(isSmall, entry.size);
 	return (
 		<VStack padding={layout.outer} maxSides buttonStyle='borderless' background={ROOT_FILL}>
-			{small ? undefined : <HeaderBar state={entry} layout={layout}/>}
+			{isSmall ? undefined : <HeaderBar state={entry} layout={layout}/>}
 			<BoardView tiles={entry.renderTiles} side={layout.boardSide}/>
 		</VStack>
 	);
@@ -159,9 +159,9 @@ function BoardView({tiles, side}: {tiles: RenderTile[]; side: number}) {
 		<ZStack frame={{width: boardSide, height: boardSide}} zIndex={-1}>
 			<Rectangle fill={BOARD_FILL}/>
 			<VStack frame={{width: innerSide, height: innerSide}} spacing={gap}>
-				{Array.from({length: GRID_SIZE}, _ => (
+				{Array.from({length: GRID_SIZE}, i => (
 					<HStack spacing={gap}>
-						{Array.from({length: GRID_SIZE}, _ => (
+						{Array.from({length: GRID_SIZE}, j => (
 							<Rectangle fill={EMPTY_FILL} frame={{width: cellSide, height: cellSide}}/>
 						))}
 					</HStack>
@@ -350,36 +350,47 @@ function tileFill(value: number): Color {
 		case 2: {
 			return 'EEE4DA';
 		}
+
 		case 4: {
 			return 'EDE0C8';
 		}
+
 		case 8: {
 			return 'F2B179';
 		}
+
 		case 16: {
 			return 'F59563';
 		}
+
 		case 32: {
 			return 'F67C5F';
 		}
+
 		case 64: {
 			return 'F65E3B';
 		}
+
 		case 128: {
 			return 'EDCF72';
 		}
+
 		case 256: {
 			return 'EDCC61';
 		}
+
 		case 512: {
 			return 'EDC850';
 		}
+
 		case 1024: {
 			return 'EDC53F';
 		}
+
 		case 2048: {
 			return 'EDC22E';
 		}
+
 		default: {
 			return '3C3A32';
 		}
@@ -413,6 +424,7 @@ function getCurrentState(): GameState {
 	if (currentValue) {
 		return currentValue;
 	}
+
 	const init = createInitialState();
 	AwaitStore.set(STORE_STATE_KEY, init);
 	return init;
@@ -482,21 +494,21 @@ function applyMove(state: GameState, direction: Direction) {
 }
 
 function moveTiles(tiles: Tile[], direction: Direction) {
-	let moved = false;
+	let isMoved = false;
 	let gained = 0;
 	const nextTiles: Tile[] = [];
 	const ghostTiles: Tile[] = [];
 
 	for (let lane = 0; lane < GRID_SIZE; lane += 1) {
 		const lineResult = moveLine(getLineTiles(tiles, direction, lane), direction, lane);
-		moved ||= lineResult.moved;
+		isMoved ||= lineResult.moved;
 		gained += lineResult.gained;
 		nextTiles.push(...lineResult.tiles);
 		ghostTiles.push(...lineResult.ghostTiles);
 	}
 
 	return {
-		moved,
+		moved: isMoved,
 		gained,
 		tiles: sortTiles(nextTiles),
 		ghostTiles: sortTiles(ghostTiles),
@@ -504,27 +516,27 @@ function moveTiles(tiles: Tile[], direction: Direction) {
 }
 
 function getLineTiles(tiles: Tile[], direction: Direction, lane: number) {
-	const vertical = direction === 'up' || direction === 'down';
-	const lineTiles = tiles.filter(tile => (vertical ? tile.x === lane : tile.y === lane));
-	const towardStart = direction === 'left' || direction === 'up';
+	const isVertical = direction === 'up' || direction === 'down';
+	const lineTiles = tiles.filter(tile => (isVertical ? tile.x : tile.y) === lane);
+	const isTowardStart = direction === 'left' || direction === 'up';
 
-	return [...lineTiles].sort((left, right) => {
-		const leftAxis = vertical ? left.y : left.x;
-		const rightAxis = vertical ? right.y : right.x;
-		return towardStart ? leftAxis - rightAxis : rightAxis - leftAxis;
+	return [...lineTiles].toSorted((left, right) => {
+		const leftAxis = isVertical ? left.y : left.x;
+		const rightAxis = isVertical ? right.y : right.x;
+		return isTowardStart ? leftAxis - rightAxis : rightAxis - leftAxis;
 	});
 }
 
 function moveLine(lineTiles: Tile[], direction: Direction, lane: number) {
-	const towardStart = direction === 'left' || direction === 'up';
-	let targetAxis = towardStart ? 0 : GRID_SIZE - 1;
-	let moved = false;
+	const isTowardStart = direction === 'left' || direction === 'up';
+	let targetAxis = isTowardStart ? 0 : GRID_SIZE - 1;
+	let isMoved = false;
 	let gained = 0;
 	const tiles: Tile[] = [];
 	const ghostTiles: Tile[] = [];
 
 	for (let index = 0; index < lineTiles.length; index += 1) {
-		const current = lineTiles[index]!;
+		const current = lineTiles[index];
 		const next = lineTiles[index + 1];
 
 		if (current.value === next?.value) {
@@ -538,19 +550,19 @@ function moveLine(lineTiles: Tile[], direction: Direction, lane: number) {
 			tiles.push(merged);
 			ghostTiles.push(ghost);
 			gained += merged.value;
-			moved ||= tileAxis(current, direction) !== targetAxis || tileAxis(next, direction) !== targetAxis;
+			isMoved ||= tileAxis(current, direction) !== targetAxis || tileAxis(next, direction) !== targetAxis;
 			index += 1;
 		} else {
 			const tile = placeTile(current, direction, lane, targetAxis);
 			tiles.push(tile);
-			moved ||= tileAxis(current, direction) !== targetAxis;
+			isMoved ||= tileAxis(current, direction) !== targetAxis;
 		}
 
-		targetAxis += towardStart ? 1 : -1;
+		targetAxis += isTowardStart ? 1 : -1;
 	}
 
 	return {
-		moved,
+		moved: isMoved,
 		gained,
 		tiles,
 		ghostTiles,
@@ -595,7 +607,7 @@ function spawnRandomTile(tiles: Tile[], id = makeTileId()) {
 		return sortTiles(tiles);
 	}
 
-	const [x, y] = emptyCells[Math.floor(Math.random() * emptyCells.length)]!;
+	const [x, y] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
 	const tile: Tile = {
 		id,
 		value: Math.random() < 0.1 ? 4 : 2,
@@ -683,14 +695,14 @@ function buildRenderTiles(
 }
 
 function sortTiles(tiles: Tile[]) {
-	return [...tiles].sort((left, right) => (
+	return [...tiles].toSorted((left, right) => (
 		left.y - right.y
 		|| left.x - right.x
 	));
 }
 
 function sortRenderTiles(tiles: RenderTile[]) {
-	return [...tiles].sort((left, right) => (
+	return [...tiles].toSorted((left, right) => (
 		left.zIndex - right.zIndex
 		|| left.y - right.y
 		|| left.x - right.x
@@ -714,7 +726,7 @@ function hasMoves(tiles: Tile[]) {
 
 	for (let y = 0; y < GRID_SIZE; y += 1) {
 		for (let x = 0; x < GRID_SIZE; x += 1) {
-			const current = board[y]![x]!;
+			const current = board[y][x];
 			if (board[y]?.[x + 1] === current || board[y + 1]?.[x] === current) {
 				return true;
 			}
@@ -728,7 +740,7 @@ function boardFromTiles(tiles: Tile[]) {
 	const board = Array.from({length: GRID_SIZE}, () => Array.from({length: GRID_SIZE}, () => 0));
 
 	for (const tile of tiles) {
-		board[tile.y]![tile.x] = tile.value;
+		board[tile.y][tile.x] = tile.value;
 	}
 
 	return board;

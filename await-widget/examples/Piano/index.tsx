@@ -126,7 +126,7 @@ function setCount(value: number) {
 
 function getSound(): Sound {
 	const soundIndex = AwaitStore.num('soundIndex');
-	return sounds[soundIndex % sounds.length]!;
+	return sounds[soundIndex % sounds.length];
 }
 
 function switchSound() {

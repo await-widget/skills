@@ -75,6 +75,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 			minimumScaleFactor={0.75}
 		/>);
 	}
+
 	return (
 		<ZStack maxSides>
 			<Color value={tone.background}/>
@@ -100,6 +101,7 @@ async function widgetTimeline(): Promise<Timeline<EntryData>> {
 			update: new Date(Date.now() + 1_800_000),
 		};
 	}
+
 	const first = events[0];
 	return {
 		entries: [{

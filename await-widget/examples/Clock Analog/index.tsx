@@ -1,5 +1,10 @@
 import {
-	Capsule, Image, Rectangle, Ticker, VStack, ZStack,
+	Capsule,
+	Image,
+	Rectangle,
+	Ticker,
+	VStack,
+	ZStack,
 } from 'await';
 
 // @panel {type:'color'}
@@ -39,7 +44,7 @@ function MinuteHand({date}: {date: Date}) {
 function SecondHand() {
 	return (
 		<Ticker style='second' size={{width: unit, height: unit}}>
-			{Array.from({length: 60}).map((_, i) => <Image url={`assets/${i}.png`}/>)}
+			{Array.from({length: 60}, (_, i) => <Image url={`assets/${i}.png`}/>)}
 		</Ticker>
 	);
 }
@@ -84,6 +89,7 @@ function widgetTimeline(): Timeline {
 			date: new Date((new Date()).setSeconds(0, 0) + 1000 * 60 * i),
 		});
 	}
+
 	return {entries, update: 'rapid'};
 }
 

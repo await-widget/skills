@@ -1,5 +1,9 @@
 import {
-	HStack, Image, Text, Ticker, ZStack,
+	HStack,
+	Image,
+	Text,
+	Ticker,
+	ZStack,
 } from 'await';
 
 const height = 54;
@@ -65,7 +69,7 @@ function Separator() {
 function SecondText() {
 	return (
 		<Ticker style='second' size={{width: secondWidth, height}}>
-			{Array.from({length: 60}).map((_, i) => <Image url={`assets/${i}.png`}/>)}
+			{Array.from({length: 60}, (_, i) => <Image url={`assets/${i}.png`}/>)}
 		</Ticker>
 	);
 }
