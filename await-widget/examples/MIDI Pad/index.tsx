@@ -56,6 +56,7 @@ const app = Await.define({
 			});
 		},
 	},
+	widgetFamilies: ['medium', 'large', 'extraLarge', 'extraLargePortrait'],
 });
 
 function noteName(note: number) {

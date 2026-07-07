@@ -16,6 +16,8 @@ const query = '';
 const limit = 25;
 // @panel {type:'menu',items:['song','album','artist','station','playlist']}
 const source = 'station';
+// @panel
+const showFavorite = false;
 const type = 'user';
 const id = '';
 
@@ -39,11 +41,6 @@ function widget(entry: WidgetEntry<EntryData>) {
 	if (entry.family === 'small') {
 		return <SmallWidget entry={entry}/>;
 	}
-
-	if (entry.family === 'large' || entry.family === 'extraLarge') {
-		return <LargeWidget entry={entry}/>;
-	}
-
 	return <MediumWidget entry={entry}/>;
 }
 
@@ -97,43 +94,10 @@ function MediumWidget({entry}: {
 					<Spacer/>
 					<HStack width={contentWidth} spacing={8} alignment='center'>
 						<Spacer/>
-						<PlayerControls player={player} spacing={8}/>
+						<PlayerControls player={player} spacing={6}/>
 					</HStack>
 				</VStack>
 			</HStack>
-		</ZStack>
-	);
-}
-
-function LargeWidget({entry}: {
-	entry: WidgetEntry<EntryData>;
-}) {
-	const {nowPlaying} = entry;
-	const {width, height} = entry.size;
-	const player = getPlayerInfo(nowPlaying);
-	const artworkSide = Math.round(Math.min(width - largePadding * 2, height * 0.5));
-	const contentWidth = artworkSide;
-	const titleSize = Math.min(30, height * 0.084);
-
-	return (
-		<ZStack maxSides background={player.background}>
-			<VStack
-				maxSides
-				alignment='center'
-				spacing={16}
-				padding={largePadding}
-				buttonStyle='borderless'
-			>
-				<Artwork
-					url={nowPlaying.artworkURL}
-					side={artworkSide}
-					background={player.background}
-					radius={widgetRadius - largePadding}
-				/>
-				<TrackText player={player} width={contentWidth} titleSize={titleSize} artistSize={14} spacing={6}/>
-				<Spacer/>
-				<PlayerControls player={player} spacing={10} favorite/>
-			</VStack>
 		</ZStack>
 	);
 }
@@ -202,7 +166,6 @@ function TrackText({
 function PlayerControls({
 	player,
 	spacing,
-	favorite = false,
 }: {
 	player: PlayerInfo;
 	spacing: number;
@@ -213,7 +176,7 @@ function PlayerControls({
 			<ControlButton icon='backward.fill' intent={app.command('previous')} foreground={player.primary} background={player.background}/>
 			<ControlButton icon={player.isPlaying ? 'pause.fill' : 'play.fill'} intent={app.command('toggle', musicConfig)} foreground={player.primary} background={player.background} primary/>
 			<ControlButton icon='forward.fill' intent={app.command('next')} foreground={player.primary} background={player.background}/>
-			{favorite ? <ControlButton icon={player.isFavorite ? 'heart.fill' : 'heart'} intent={app.command(player.isFavorite ? 'clearRating' : 'favorite')} foreground={player.primary} background={player.background}/> : undefined}
+			{showFavorite ? <ControlButton icon={player.isFavorite ? 'heart.fill' : 'heart'} intent={app.command(player.isFavorite ? 'clearRating' : 'favorite')} foreground={player.primary} background={player.background}/> : undefined}
 		</HStack>
 	);
 }
@@ -292,4 +255,5 @@ const app = Await.define({
 	widgetIntents: {
 		command, restart,
 	},
+	widgetFamilies: ['small', 'medium'],
 });

@@ -68,6 +68,7 @@ const app = Await.define({
 			});
 		},
 	},
+	widgetFamilies: ['medium', 'large'],
 });
 
 const noteNames: Record<number, [string, number]> = {

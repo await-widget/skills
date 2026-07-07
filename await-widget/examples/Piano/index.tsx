@@ -296,4 +296,5 @@ const app = Await.define({
 		switchSound,
 		setCount,
 	},
+	widgetFamilies: ['medium'],
 });

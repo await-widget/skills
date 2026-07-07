@@ -207,4 +207,5 @@ function widgetTimeline() {
 Await.define({
 	widget,
 	widgetTimeline,
+	widgetFamilies: ['small', 'medium'],
 });

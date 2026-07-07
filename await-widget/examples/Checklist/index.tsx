@@ -355,4 +355,5 @@ const app = Await.define({
 	widget,
 	widgetTimeline,
 	widgetIntents: {toggle},
+	widgetFamilies: ['small', 'medium', 'large', 'extraLarge', 'extraLargePortrait'],
 });
