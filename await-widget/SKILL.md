@@ -1,92 +1,41 @@
 ---
 name: await-widget
-description: Create or modify Await widgets in TSX using the custom SwiftUI-style DSL, native bridge APIs, modifiers, timelines, intents, and @panel controls. Use when the user asks to build, edit, or scaffold an Await widget.
-license: MIT
-version: "1.0.0"
-last_updated: "2026-07-02"
-user_invocable: true
+description: Build and debug widgets for Await. Use this skill when setting up an Await workspace, building Await widgets, running Await type checks, syncing or debugging via the Await CLI, or seeking guidance on widget development.
 ---
 
-# Await Widget
+## Routing
 
-This is the compact execution rulebook for agents. Treat `@await-widget/runtime` declarations as the public API contract.
+Treat this skill as a routing layer rather than a complete reference.
 
-For deeper guides and prompt patterns, read `docs-source/README.md`.
+Combine it with the user's installed `@await-widget/runtime` declarations and the task-specific docs in `docs-source/`. See `docs-source/index.md` for the guides directory, then read only the guide needed for the current task.
 
-## Workflow
+For visual widget work, read both `guides/design.md` and `guides/resources.md` before implementing. Use the design guide to choose between basic shapes and media assets. When the chosen motif depends on texture, photography, illustration, or material detail, follow the resources guide to inspect local assets and actively download or generate a suitable asset when one is missing.
 
-1. Locate the target widget file.
-   - If the user gives a file, edit that file.
-   - If the user is working from this skill repo, edit the relevant `examples/*/index.tsx`.
-   - If the user asks for a new widget project, copy `examples/package.json`, `examples/tsconfig.json`, and the desired example directory before editing. Keep each Await widget in its own subdirectory so one package can manage multiple widget subprojects.
-2. Ensure dependencies exist. Run `npm install` in the widget project only if `node_modules/@await-widget/runtime` is missing.
-3. Read only the runtime declarations needed for the task:
-   - `node_modules/@await-widget/runtime/types/await.d.ts`: importable components and `await` module surface.
-   - `node_modules/@await-widget/runtime/types/bridge.d.ts`: global bridge APIs and `Await.define`.
-   - `node_modules/@await-widget/runtime/types/model.d.ts`: shared runtime data models.
-   - `node_modules/@await-widget/runtime/types/meta.d.ts`: primitive style, layout, drawing, and value types.
-   - `node_modules/@await-widget/runtime/types/prop.d.ts`: component props and modifiers.
-   - `node_modules/@await-widget/runtime/types/jsx.d.ts`: JSX constraints.
-4. Implement the widget.
-5. Run `npm test` in the widget project or in `examples/`.
-6. When a computer connection is available, use `npx await-widget app ...` commands to open Await, wait for previews, inspect build errors, and capture screenshots. Run `npx await-widget --help` for the current command list and input schemas.
+## Overview
 
-## Hard Rules
+Await widgets are written in TSX syntax with SwiftUI-style naming, but they are not React, DOM, or SwiftUI. The syntax and naming are borrowed, but the API contract is defined entirely by `@await-widget/runtime` types.
 
-- Import components only from `await`.
-- Register widgets with `Await.define({...})`.
-- Do not write HTML tags, CSS, `style` objects, React hooks, React state, browser DOM code, or browser `fetch`.
-- Use `AwaitNetwork.request(...)` for networking.
-- If a component, prop, modifier, or bridge API is not declared in `@await-widget/runtime`, treat it as unavailable.
-- Widgets run in a widget environment. Keep view trees and timelines small unless visible behavior needs more complexity.
-- Design permission-related behavior as "already authorized by the host" or "currently unavailable". Do not put first-run authorization flows inside the widget.
-- Modifier order is semantic. Later modifiers wrap earlier modifiers; for label-like blocks, put `padding` before `background` when the background should include the padded area.
+Await provides two callback functions to iOS: `widgetTimeline()` returns dated entries, and `widget(entry)` returns the view for the entry specified by iOS. iOS decides when to call these functions and may reject overly frequent timeline refresh requests for battery efficiency.
 
-## Widget Patterns
+```text
+[1] iOS decides when to update the widget
+     │
+     ▼ calls
+[2] widgetTimeline()
+     │
+     ▼ returns Entry[]
+[3] { entry@09:00, entry@09:01, entry@09:02, ... }
+     │
+     ▼ iOS specifies entry@09:01, calls
+[4] widget(entry)
+     │
+     ▼ returns the widget view
+```
 
-- Use `maxSides` on the root view when it must fill the widget.
-- Use `minimumScaleFactor` when text needs to adapt across widget sizes.
-- Give animated or changing visual entities stable `id` values.
-- `undefined` children are dropped, and `Fragment` only flattens children.
+## Core Rules
 
-## Panels
-
-- `@panel` is a source comment convention. Put it immediately above the top-level `const` it controls.
-- Value panels require literal initializers: string, number, boolean, or a color string/number literal with `type:'color'`.
-- Do not put `@panel` on `let`, `var`, local variables, computed initializers, or private implementation details.
-- When generating a widget, add a small `@panel` surface for the main tunable values unless the user says not to.
-
-Supported panel comments:
-
-- `// @panel`
-- `// @panel {type:'slider',min:number,max:number,step?:number}`
-- `// @panel {type:'menu',items:[...]}`
-- `// @panel {type:'color'}`
-- `// @panel {type:'password'}`
-
-## Timeline And Intents
-
-- `widgetTimeline(context)` is optional. Use it only for time-driven data.
-- Return `{entries, update?}`. `update` can be a `Date`, `"end"`, `"rapid"`, or `"never"`.
-- Prefer a single timeline entry unless multiple entries create visible value.
-- Register interaction functions under `widgetIntents`, and pass encodable arguments only.
-- Generate `intent` values from the result returned by `Await.define(...)`.
-
-## Data And Capabilities
-
-- Use `AwaitStore` for persistent widget state.
-- Use `AwaitFile` only for files within the widget directory.
-- Use bridge APIs such as weather, calendar, reminder, health, music, audio, and location only when declared in `node_modules/@await-widget/runtime/types/bridge.d.ts`.
-
-## Decision Order
-
-1. Check `node_modules/@await-widget/runtime/types/await.d.ts` for components.
-2. Check `node_modules/@await-widget/runtime/types/prop.d.ts` for props and modifiers.
-3. Check `node_modules/@await-widget/runtime/types/bridge.d.ts` for bridge APIs.
-4. Check `node_modules/@await-widget/runtime/types/model.d.ts` and `node_modules/@await-widget/runtime/types/meta.d.ts` for shared type details.
-5. If it is not in the runtime declarations, treat it as unavailable.
-
-## Deeper Docs
-
-Read `docs-source/README.md` for guide and prompt source content. Public `docs/reference` pages are generated from `@await-widget/runtime` declarations.
-Read `docs-source/guides/connection.md` when using `npx await-widget` for live sync and Await app commands.
+* All available APIs and types are defined in `node_modules/@await-widget/runtime/types/*.d.ts`. Treat these files as the source of truth. Do not use any APIs or features outside these declarations, including the HTML DOM, browser and Node APIs (including `fetch`), CSS, or React-style hooks and state.
+* TSX components are imported from the `await` module (e.g. `import {Text, ZStack} from 'await';`). Component, prop, modifier definitions live in `node_modules/@await-widget/runtime/types/await.d.ts`.
+* Bridge APIs are host-provided globals (`Await`, `AwaitStore`, `AwaitNetwork`, `AwaitMusic`, etc.). Use them directly; do not import them. Their signatures live in `node_modules/@await-widget/runtime/types/bridge.d.ts`.
+* Component attributes are either init attributes or modifiers. Modifiers can be repeated on the same component, and their order matters—just like SwiftUI modifiers. When a TSX element needs the same modifier more than once, append a unique suffix (for example `frame_` or `frame_1`) to the attribute name to avoid TSX syntax errors.
+* Keep widget view trees minimal: no extra views, nesting, or timeline entries beyond what is needed. iOS widgets run under tight memory limits. Widget cost is roughly proportional to `timeline entries * view tree node count`, so prefer a single timeline entry unless the widget must display visibly different states over time.

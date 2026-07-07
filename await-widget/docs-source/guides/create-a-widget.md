@@ -1,65 +1,19 @@
 # Create A Widget
 
-Start from a small view tree, then add data, panels, timelines, and intents only when needed.
-
 ## Steps
 
-1. Create or open an Await widget project.
-2. Keep `package.json` and `tsconfig.json` at the package root, with each Await widget in its own subdirectory. This makes it easier to manage multiple Await widget subprojects in one package:
-
+1. To start a new workspace, copy `package.json` and `tsconfig.json` from `examples/` into the workspace root, then run `npm install`. `xo.config.js` and `xo` in `package.json` are optional.
+2. Keep `package.json` and `tsconfig.json` at the package root, with each widget in a first-level subdirectory:
 ```text
 MyAwaitWidgets/
   package.json
   tsconfig.json
   YourWidget/
     index.tsx
+  AnotherWidget/
+    index.tsx
 ```
-
-3. Ensure `package.json` includes `@await-widget/runtime` and `typescript`.
-4. Ensure `tsconfig.json` uses:
-
-```json
-{
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "await",
-    "types": ["@await-widget/runtime"]
-  }
-}
-```
-
-5. Import components from `await`.
-6. Implement `widget`.
-7. Register it with `Await.define`.
-8. Run `npm test`.
-9. Run `npx await-widget` from the widget folder and connect the matching Await detail page when you want [live preview](connection.md).
-
-## Starter Template
-
-```tsx
-import {Text, VStack} from 'await';
-
-// @panel {type:'color'}
-const accent = 'blue';
-
-function widget() {
-	return (
-		<VStack spacing={8} maxSides padding={16} background='background'>
-			<Text value='Await' fontSize={18} fontWeight='semibold'/>
-			<Text value='Small things, close at hand' foreground={accent} minimumScaleFactor={0.7}/>
-		</VStack>
-	);
-}
-
-Await.define({
-	widget,
-});
-```
-
-## AI Checklist
-
-- Use only components listed in [Await](../reference/await.md).
-- Use only props and modifiers listed in [Prop](../reference/prop.md).
-- Put `padding` before `background` when the background should include the padded area.
-- Use `maxSides` on the root when the widget should fill the available size.
-- Add stable `id` values for animated or changing visual entities.
+3. Implement `widget` with components imported from `await`.
+4. Register it with `Await.define`.
+5. Check runtime declarations before using unfamiliar components, attributes, or bridge APIs.
+6. Run `npm test`.
