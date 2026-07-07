@@ -27,7 +27,7 @@ Modify this Await widget: [file path].
 Keep the existing structure unless the request requires a change.
 Check runtime type declarations before adding any component, prop, modifier, or bridge API.
 Do not add HTML, CSS, React hooks, React state, fetch, or browser APIs.
-If a computer connection is active, use npx await-widget app get-build-errors, wait-for-widget-ready, and capture-current-preview while iterating.
+If a computer connection is active, use npx await-widget app get-build-errors, wait-for-widget-ready, and capture-current-preview while iterating. Use get-recent-widget-logs for print() output only when Lifetime Pro is unlocked in Await.
 ```
 
 ## Debug TypeScript Errors

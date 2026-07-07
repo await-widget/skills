@@ -94,8 +94,9 @@ A typical agent workflow is:
 2. Run `npx await-widget app open-syncing-widget-detail` to bring the connected widget detail page forward in Await.
 3. Run `npx await-widget app wait-for-widget-ready --widget-id <id>` after a sync or preview mode change.
 4. Run `npx await-widget app get-build-errors --widget-id <id>` when the preview does not look right.
-5. Run `npx await-widget app set-preview-mode --mode small --widget-id <id>` to inspect small, medium, large, or extra large layouts.
-6. Run `npx await-widget app capture-current-preview --widget-id <id>` to review the rendered widget image.
+5. Run `npx await-widget app get-recent-widget-logs --widget-id <id>` for `print()` output when Lifetime Pro is unlocked in Await.
+6. Run `npx await-widget app set-preview-mode --mode small --widget-id <id>` to inspect small, medium, large, or extra large layouts.
+7. Run `npx await-widget app capture-current-preview --widget-id <id>` to review the rendered widget image.
 
 Useful app commands include:
 
@@ -107,6 +108,7 @@ Useful app commands include:
 - `get-widget-status --widget-id <id>`
 - `wait-for-widget-ready --widget-id <id> [--timeout-ms <ms>]`
 - `get-build-errors --widget-id <id>`
+- `get-recent-widget-logs --widget-id <id>` (requires Lifetime Pro in Await)
 - `list-widget-intents --widget-id <id>`
 - `call-widget-intent --widget-id <id> --intent-id <id> [--input <json-array>]`
 
