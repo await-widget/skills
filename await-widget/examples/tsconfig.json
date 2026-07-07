@@ -1,14 +1,7 @@
 {
 	"compilerOptions": {
-		"target": "ES2022",
-		"module": "ESNext",
-		"moduleResolution": "Bundler",
 		"jsx": "react-jsx",
 		"jsxImportSource": "await",
-		"types": ["@await-widget/runtime"],
-		"strict": true,
-		"noEmit": true,
-		"skipLibCheck": true
-	},
-	"include": ["**/*.tsx"]
+		"types": ["@await-widget/runtime"]
+	}
 }
