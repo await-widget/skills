@@ -22,14 +22,8 @@ const muted = {
 	dark: mutedDark,
 };
 
-function widget({date}: {date: Date}) {
-	return (
-		<ZStack sides={unit}>
-			<HourHand date={date}/>
-			<MinuteHand date={date}/>
-			<SecondHand/>
-		</ZStack>
-	);
+function widget() {
+	return <ZStack/>;
 }
 
 function HourHand({date}: {date: Date}) {
@@ -83,14 +77,14 @@ function preRender() {
 
 preRender();
 
-function widgetTimeline() {
+function widgetTimeline(): Timeline {
 	const entries = [];
 	for (let i = 0; i <= 15; i += 1) {
 		entries.push({
 			date: new Date((new Date()).setSeconds(0, 0) + 1000 * 60 * i),
 		});
 	}
-	return {entries, update: 'rapid' as const};
+	return {entries, update: 'rapid'};
 }
 
 Await.define({

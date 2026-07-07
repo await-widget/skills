@@ -14,10 +14,10 @@ function widget(entry: {icon: string}) {
 	);
 }
 
-function widgetTimeline() {
+function widgetTimeline(): Timeline<{icon: string}> {
 	const icons = AwaitFile.readJSON('simple-icons.json') as Array<{slug: string}>;
 	const icon = icons[Math.floor(Math.random() * icons.length)]!.slug;
-	return {update: 'rapid' as const, entries: [{date: new Date(), icon}]};
+	return {update: 'rapid', entries: [{date: new Date(), icon}]};
 }
 
 Await.define({

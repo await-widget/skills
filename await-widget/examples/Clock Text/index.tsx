@@ -100,7 +100,7 @@ function pad(value: number) {
 
 preRender();
 
-function widgetTimeline() {
+function widgetTimeline(): Timeline {
 	const time = (new Date()).setSeconds(0, 0);
 	const entries = [];
 
@@ -110,7 +110,7 @@ function widgetTimeline() {
 		});
 	}
 
-	return {entries, update: 'rapid' as const};
+	return {entries, update: 'rapid'};
 }
 
 Await.define({

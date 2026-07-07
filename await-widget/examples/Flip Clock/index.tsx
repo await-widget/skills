@@ -187,7 +187,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 	return content;
 }
 
-function widgetTimeline() {
+function widgetTimeline(): Timeline<EntryData> {
 	const baseDate = new Date();
 	baseDate.setSeconds(0, 0);
 	const time = baseDate.getTime();
@@ -201,7 +201,7 @@ function widgetTimeline() {
 		};
 	});
 
-	return { entries, update: 'rapid' as const };
+	return { entries, update: 'rapid' };
 }
 
 Await.define({
