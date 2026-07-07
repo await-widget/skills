@@ -86,8 +86,8 @@ Paste the printed URL into Await's `Connect Computer` sheet. Agents can then run
 
 ```bash
 npx await-widget app open-syncing-widget-detail
-npx await-widget app wait-for-widget-ready --widget-id 2
-npx await-widget app capture-current-preview --widget-id 2
+npx await-widget app wait-for-widget-ready --widget-id YourWidget
+npx await-widget app capture-current-preview --widget-id YourWidget
 ```
 
 Run `npx await-widget --help` for command descriptions and input schemas.

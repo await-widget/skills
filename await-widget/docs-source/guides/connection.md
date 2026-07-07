@@ -78,8 +78,8 @@ Run app commands from the package root, widget folder, or any subfolder under th
 
 ```sh
 npx await-widget app open-syncing-widget-detail
-npx await-widget app wait-for-widget-ready --widget-id 2
-npx await-widget app capture-current-preview --widget-id 2
+npx await-widget app wait-for-widget-ready --widget-id YourWidget
+npx await-widget app capture-current-preview --widget-id YourWidget
 ```
 
 Commands read `.await/bridge.json` from the nearest package root. Pass `--workspace /path/to/package-or-widget` when running from another directory.
