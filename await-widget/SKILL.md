@@ -1,6 +1,6 @@
 ---
 name: await-widget
-description: Build and debug widgets for Await. Use this skill when setting up an Await workspace, building Await widgets, running Await type checks, syncing or debugging via the Await CLI, or seeking guidance on widget development.
+description: Develop user-authored widgets with Await's public TSX runtime and CLI. Use when creating widget projects, writing widget TSX, checking types, syncing local files, inspecting widget build errors, or capturing previews.
 ---
 
 ## Routing
