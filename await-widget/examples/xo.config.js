@@ -11,6 +11,7 @@ export default [
 			'@stylistic/no-mixed-operators': 'off',
 			'@typescript-eslint/naming-convention': 'off',
 			'@typescript-eslint/strict-boolean-expressions': 'off',
+			'capitalized-comments': 'off',
 			'require-unicode-regexp': 'off',
 			'unicorn/consistent-boolean-name': 'off',
 			'unicorn/filename-case': 'off',
