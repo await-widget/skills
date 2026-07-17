@@ -7,7 +7,7 @@
 		"update": "npm install @await-widget/runtime@latest"
 	},
 	"devDependencies": {
-		"@await-widget/runtime": "^0.0.33",
+		"@await-widget/runtime": "^0.0.34",
 		"typescript": "^6.0.3",
 		"xo": "^4.0.0"
 	}
