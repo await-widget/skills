@@ -136,6 +136,14 @@ Since the widget size is available as the `size` parameter, you can also write:
 
 This also fills the entire widget layout.
 
+### Account for Every Inset
+
+Every inset should be added deliberately and serve a clear design purpose. Treat any remaining space or gap without a clear role as a layout error, not intentional whitespace.
+
+Stacks center undersized content by default, so unallocated space can quietly turn into gaps around the content.
+
+When content extends to the widget edge and clipping it to the widget boundary and corners does not compromise information, interaction areas, or the recognizability of the subject, let the outer widget perform the clipping. Do not unconsciously add another layer of inset or corner radius.
+
 ### Widget Corners
 
 Widgets are rounded rectangles. The exact corner radius can vary by system version and device. As a reference, widget corner radius on iOS 26/27 is `86 / 3` pt.
@@ -145,8 +153,6 @@ Interior views near the widget edge usually look more natural when their corners
 ```tsx
 const cornerRadius = 86 / 3 - padding;
 ```
-
-If readability and interaction are not affected, content can fill the widget container and be clipped naturally by the widget corner. For example, piano keys at the edge of a piano widget can be clipped by the rounded corner if that does not affect tapping.
 
 ### Stack Views
 
