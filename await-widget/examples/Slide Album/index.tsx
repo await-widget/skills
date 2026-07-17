@@ -51,6 +51,7 @@ function widget({size, index}: WidgetEntry<EntryData>) {
 						clipped
 						opacity={opacities[i]}
 						id={ids[i]}
+						accented='fullColor'
 					/>
 				))}
 			</HStack>
@@ -62,6 +63,7 @@ function widget({size, index}: WidgetEntry<EntryData>) {
 				aspectRatio={mode}
 				transition='blurReplace'
 				id={images[2]}
+				accented='fullColor'
 			/>
 		);
 
@@ -106,4 +108,5 @@ const app = Await.define({
 	widget,
 	widgetTimeline,
 	widgetIntents: {change},
+	autoAccented: false,
 });

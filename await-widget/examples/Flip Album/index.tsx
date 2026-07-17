@@ -35,7 +35,7 @@ type Page = {
 };
 
 function pageContent(image: string) {
-	return <Color overlay={<Image url={image} resizable aspectRatio='fill'/>}/>;
+	return <Color overlay={<Image url={image} resizable aspectRatio='fill' accented='fullColor'/>}/>;
 }
 
 function makePage(data: RawPageData): Page {
@@ -127,4 +127,5 @@ const app = Await.define({
 	widgetTimeline,
 	widgetIntents: {change},
 	widgetFamilies: ['small', 'medium', 'large', 'extraLarge', 'extraLargePortrait'],
+	autoAccented: false,
 });
