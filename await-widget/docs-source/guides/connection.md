@@ -4,15 +4,15 @@ Use the computer bridge when a local widget folder needs live sync with Await, o
 
 ## Project Shape
 
-Use the workspace layout from [Create A Widget](create-a-widget.md). Start the bridge from the widget folder you want to preview.
+Use the workspace layout from [Create A Widget](create-a-widget.md). Start the bridge from either the package root or a first-level widget folder. The package root opens a directory selector; a widget folder connects that widget directly.
 
 ## Start And Connect
 
 1. Start the bridge:
 ```sh
-cd YourWidget
 npx await-widget
 ```
+Select the widget directory when prompted. To skip the selector, run the same command from that widget's first-level folder.
 2. Open the matching widget detail page in Await.
 3. Choose `Connect Computer` from the detail menu.
 4. Paste the primary URL printed by the terminal.

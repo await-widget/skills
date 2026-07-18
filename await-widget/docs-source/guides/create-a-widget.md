@@ -5,7 +5,7 @@
 1. To start a new workspace, copy `package.json` and `tsconfig.json` from `examples/` into the workspace root, then run `npm install`. `xo.config.js` and `xo` in `package.json` are optional.
 2. Keep `package.json` and `tsconfig.json` at the package root, with each widget in a first-level subdirectory:
 ```text
-MyAwaitWidgets/
+Widgets/
   package.json
   tsconfig.json
   YourWidget/
