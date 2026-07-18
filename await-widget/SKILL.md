@@ -1,6 +1,6 @@
 ---
 name: await-widget
-description: Develop user-authored widgets with Await's public TSX runtime and CLI. Use when creating widget projects, writing widget TSX, checking types, syncing local files, inspecting widget build errors, or capturing previews.
+description: Develop and review user-authored widgets with Await's public TSX runtime and CLI. Use when creating widget projects, analyzing visual references, designing or reviewing widget layouts, writing widget TSX, checking types, syncing local files, inspecting widget build errors, or capturing previews.
 ---
 
 ## Routing
@@ -9,7 +9,7 @@ Treat this skill as a routing layer rather than a complete reference.
 
 Combine it with the user's installed `@await-widget/runtime` declarations and the task-specific docs in `docs-source/`. See `docs-source/index.md` for the guides directory, then read only the guide needed for the current task.
 
-For visual widget work, read both `guides/design.md` and `guides/resources.md` before implementing. Use the design guide to choose between basic shapes and media assets. When the chosen motif depends on texture, photography, illustration, or material detail, follow the resources guide to inspect local assets and actively download or generate a suitable asset when one is missing.
+For visual widget work, read `guides/design.md`. When visual references are supplied, also read `guides/reference.md` before implementing. Read `guides/resources.md` when the motif depends on external assets. After capturing a real preview, read `guides/review.md`.
 
 ## Overview
 

@@ -5,7 +5,6 @@
 - [Layout Rules](#layout-rules)
 - [Visual Design](#visual-design)
 - [Implementation Notes](#implementation-notes)
-- [Validation And Iteration](#validation-and-iteration)
 
 ## Visual Direction
 
@@ -284,6 +283,8 @@ Use implementation examples to learn API usage, interaction behavior, data mappi
 
 Use photographs or physical references to study construction, proportions, materials, highlights, shadows, and edge behavior. Compare multiple references when lighting or perspective may distort the result.
 
+Use [Reference](reference.md) before implementing from visual references and [Review](review.md) after capturing the real widget preview.
+
 Separate these questions before implementing:
 
 - **How is it built?** Answer with runtime declarations and implementation examples.
@@ -342,39 +343,3 @@ Use `Button` when it has a child view to display. Use a custom `buttonStyle` to 
 Use transparent or layout-neutral views for positions that should occupy space without drawing content. Do not use a visible shape as a spacer or placeholder.
 
 Inspect both populated and empty branches in repeated layouts. A mapping can be mathematically correct while an empty branch still renders an unintended fill, hit area, or alignment artifact.
-
-## Validation And Iteration
-
-### Build QA
-
-A successful type check or build proves that the widget is executable, not that it is visually complete. Treat visual acceptance as a separate step.
-
-Check before capturing screenshots:
-
-- The widget has a clear user-facing purpose.
-- The widget has a clear usage flow and a plausible way for its content or state to update, unless it is intentionally static.
-
-### Visual Checkpoints
-
-Capture a baseline before a visual revision. Change one relationship at a time when diagnosing material, spacing, hierarchy, or lighting problems, then compare the new result at the widget's actual display size.
-
-Keep useful screenshots as visual checkpoints. Record the screenshot path and the important implementation values so a later regression can be restored without reconstructing every intermediate edit.
-
-When a revision becomes worse, restore the strongest checkpoint first and continue from it. Do not keep layering compensating effects onto a weak intermediate state.
-
-### Screenshot QA
-
-Check every screenshot:
-
-- Every informational text and graphic is fully visible and not unintentionally clipped.
-- Every visible element has a clear role—information, interaction, structure, material expression, or decoration—and supports the same overall concept.
-- Non-tappable decorative elements do not look like tappable controls.
-- The root view fills the widget area unless transparent margins are intentional.
-- The content fits the widget's logical dimensions.
-- Expressive or shareable widgets satisfy the motif and visual-hook criteria in Screenshot Appeal.
-- Interactive widgets include a visible, intentional feedback moment.
-- Primary copy remains understandable without relying on atmospheric wording.
-- Repeated and conditional layouts render empty positions without unintended shapes or fills.
-- Highlights, gradients, and shadows follow one coherent lighting model.
-- Skeuomorphic depth comes from plausible construction, thickness, edge behavior, and contact before surface effects.
-- When the chosen motif depends on a material or image asset, that asset is present in the widget project instead of being approximated with many basic shapes.
