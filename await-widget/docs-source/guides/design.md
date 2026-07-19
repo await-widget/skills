@@ -235,6 +235,8 @@ Use text roles instead of one undifferentiated text treatment. When the widget b
 
 When the content benefits from hierarchy, consider using three text scales: primary, secondary, and micro text. Adjust fontWeight when it helps reinforce the hierarchy.
 
+Do not use the `fontWidth` modifier unless the user explicitly requests it. It imposes a strong, conspicuous visual character, so never treat it as a routine fitting or hierarchy tool. When uncertain, omit the modifier.
+
 Since widgets have limited space and text is often constrained by the layout, prefer `minimumScaleFactor={0.1}` or `minimumScaleFactor={1 / fontSize}` for informational text that must remain visible. This makes it practical to start with a larger font size and let the system shrink it only when space becomes tight.
 
 The `fontDesign` modifier supports `default`, `rounded`, `serif`, and `monospaced`. Custom fonts are not supported directly, but text can be converted into image or SVG assets instead.
