@@ -1,20 +1,42 @@
 # Design
 
+- [Explore Before Committing](#explore-before-committing)
 - [Visual Direction](#visual-direction)
 - [Widget Layout](#widget-layout)
 - [Layout Rules](#layout-rules)
 - [Visual Design](#visual-design)
 - [Implementation Notes](#implementation-notes)
 
+## Explore Before Committing
+
+Treat a function explicitly requested by the user as fixed. This fixes the required information and behavior, not an untested visual solution. When the user supplies a visual direction without a function, leave the function open and explore the visual composition first.
+
+Use this constraint order:
+
+1. explicit user requirements;
+2. reference evidence and user-supplied style labels;
+3. the target widget carrier;
+4. agent-invented functions, content, copy, and motif names.
+
+Do not name an invented product concept or commit to a production layout before the visual evidence has met the actual widget carrier. Describe any unvalidated route as an exploration hypothesis, not a named or locked direction. Build an exploratory candidate at the real widget family and display size around the subject, silhouette, scale, negative space, typography relationships, and visual centroid established in [Reference](reference.md). Keep distinct reference clusters as distinct hypotheses when necessary; do not predetermine a number of candidates or functional concepts.
+
+Treat all agent-invented text, data, functions, and assets in an exploratory candidate as disposable. Their presence in TSX does not make them requirements. Implement only enough representative content and behavior to judge the visual relationships; defer production data wiring when it does not affect that judgment. Do not turn the exploratory implementation into a production brief or force the composition to explain a product concept the user never requested.
+
+Lock the visual direction only after a real preview at the target family passes the applicable gates in [Review](review.md#use-review-gates). A reference-led direction must also pass the reference-vocabulary gate before locking; carrier-level similarity alone is insufficient. Before that lock, discard or replace a weak subject, composition, primitive, asset, or agent-invented semantic direction instead of polishing it.
+
+After the visual direction is locked, choose a familiar purpose and content model that naturally reuses the established hierarchy. Before final acceptance, the widget needs a clear purpose and a plausible update path unless it is intentionally static. If an agent-invented function degrades the locked visual relationships, replace it or return to exploration. Never discard or weaken a function explicitly required by the user.
+
 ## Visual Direction
 
-Every widget needs a specific purpose and a clear way for users to understand or use it. If the information hierarchy does not communicate that purpose, refine the concept before designing further. Every informational, interactive, and decorative element should support the same concept.
+Once the purpose is fixed—by the user or after visual exploration—make it clear how users understand or use the widget. If the information hierarchy does not communicate that purpose, refine the concept before final acceptance. Every informational, interactive, and decorative element should support the same concept.
 
-Before implementing, choose a specific motif with a strong visual vocabulary. A good motif can be recognized at a glance from only a few characteristic elements.
+Before production implementation, commit to a specific visual direction with a strong vocabulary. Preserve the exact style or motif name supplied by the user and describe how the references express it instead of replacing it or combining it with the function into a new product name. An agent-invented name is only an exploration label until the direction is locked. A good direction can be recognized at a glance from only a few characteristic elements.
 
 Every motif comes with its own visual vocabulary—a consistent set of shapes, colors, materials, textures, symbols, typography, composition, and level of detail. This vocabulary, rather than the motif's name itself, should guide every visual decision.
 
 **How to find or invent a motif**
+
+Use this process only when the user has not already supplied a named direction. When a name is supplied, investigate its reference-specific vocabulary first.
 
 Don't default to picking from a list. Work through it instead:
 
@@ -34,7 +56,7 @@ Motifs can come from:
 
 ...and any other culturally recognizable theme with a distinctive visual language, including ones not listed here — prefer a motif built for the specific brief over a default pulled from this list.
 
-**Name the motif explicitly**
+**Name or preserve the motif explicitly**
 
 State the motif and list the 3–5 characteristic visual elements you'll actually use (shapes, colors, materials, typography, symbols). If you can't name them concretely, the motif isn't specific enough yet — narrow it further.
 
@@ -245,7 +267,7 @@ Because emoji render as fixed, full-color glyphs and cannot be tinted to match t
 
 Repeated symbols are one way to introduce rhythm and subtle visual texture to a layout.
 
-The examples below show different visual languages, not a fixed set of marks. Borrow or invent whatever best fits the motif's visual vocabulary.
+The examples below show different visual languages, not a fixed set of marks. Without visual references, borrow or invent whatever best fits the motif's visual vocabulary. With visual references, select marks through the [visual-primitive inventory](reference.md#inventory-visual-primitives) and preserve its protected properties.
 
 - **Text Symbols**
   - **Minimal** — subtle, quiet: `·` `•` `∙` `◦`
@@ -325,6 +347,8 @@ When the asset is a photo or illustration, it can be loaded directly into the vi
 Use basic shapes only when the metaphor should feel more like flat graphic design. For example, a stamp can be represented by a simple shape with text on top.
 
 When using basic shapes to express a physical metaphor, keep the design simple. Avoid building rich material effects from many basic shapes, as the result usually becomes both more complicated and less convincing.
+
+For a protected reference primitive, follow the substitution decision in the [visual-primitive inventory](reference.md#inventory-visual-primitives) before choosing basic shapes.
 
 ## Implementation Notes
 

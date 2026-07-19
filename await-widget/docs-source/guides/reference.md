@@ -1,20 +1,35 @@
 # Reference
 
 - [Purpose](#purpose)
+- [Separate Evidence From Decisions](#separate-evidence-from-decisions)
 - [Classify Reference Inputs](#classify-reference-inputs)
 - [Segment Reference Collections](#segment-reference-collections)
 - [Run A Pre-Semantic Pass](#run-a-pre-semantic-pass)
 - [Record A Reference Signature](#record-a-reference-signature)
+- [Inventory Visual Primitives](#inventory-visual-primitives)
 - [Translate Into The Widget Carrier](#translate-into-the-widget-carrier)
 - [Reference Brief Template](#reference-brief-template)
 
 ## Purpose
 
-Use this workflow before designing or implementing a widget from visual references. Produce a reference map, per-example gestalt signatures, and a carrier-translation brief for [Review](review.md).
+Use this workflow before designing or implementing a widget from visual references. Produce a reference map, per-example gestalt signatures, and a carrier-translation brief for exploration in [Design](design.md) and later acceptance in [Review](review.md).
 
-Do not begin with labels such as “weather,” “calendar,” “industrial,” or “retro.” Those labels describe content or style vocabulary and can hide differences in composition.
+Do not begin by inventing labels such as “weather,” “calendar,” “industrial,” or “retro.” Those labels describe content or style vocabulary and can hide differences in composition.
 
 Treat this analysis as an evidence chain, not as a claim of human-equivalent perception. Reduce semantic influence with fixed image transforms, record global relationships explicitly, and preserve distinct examples instead of averaging them.
+
+## Separate Evidence From Decisions
+
+Preserve style names and other explicit labels supplied by the user, including terms in the prompt, URL query, page title, and filename. Treat those labels as evidence to investigate in the references, not as names to silently replace with an invented motif.
+
+Separate the brief into four kinds of information:
+
+- **Fixed requirements:** choices the user made, such as function, family, content, interaction, or named visual direction.
+- **Open decisions:** choices the user left unspecified. Keep them open during reference analysis.
+- **Reference evidence:** visible relationships supported by specific examples or clusters.
+- **Agent hypotheses:** proposed carrier translations, content, functions, or motif names that remain disposable until visual exploration validates them.
+
+Do not convert an open decision into a requirement merely to make the brief feel complete. When the user supplies a visual direction but no widget function, leave the function open. The reference brief should describe visual evidence and carrier hypotheses, not an untested product concept.
 
 ## Classify Reference Inputs
 
@@ -91,9 +106,26 @@ Record these properties for each example:
 
 Do not optimize every value toward uniformity. Record structure and relative rhythm. Treat masks, thresholds, saliency estimates, and numeric ratios as supporting evidence rather than replacements for judgment.
 
+## Inventory Visual Primitives
+
+Crop and label every local primitive that materially contributes to the reference vocabulary, such as barcodes, dense code-like textures, ruled frames, line clusters, stamps, arrows, repeated glyphs, or distinctive typographic fragments. Assign each primitive to a specific vocabulary donor instead of deriving it from the collection average.
+
+For each primitive, record:
+
+- its compositional role and actual-size crop;
+- outer silhouette and aspect ratio;
+- internal topology, including intersections, enclosures, and focal marks;
+- stroke or cell count range, thickness, spacing, frequency, and fill ratio;
+- color placement and contrast;
+- properties that must remain protected and properties that may adapt to widget content.
+
+Compare any proposed substitute beside the donor crop at the actual output size. Treat a high-frequency texture as a visual shape, not merely as a semantic category. Do not replace a dense barcode, code field, or repeated-line texture with a few thick bars or sparse text glyphs because both representations have the same name. Do not add a new focal mark inside a protected primitive, such as a center target inside a plain crossed frame.
+
+When faithful construction would require many widget nodes, prefer an SVG or image asset allowed by the runtime instead of lowering the primitive's frequency, topology, or density. The minimal-view-tree rule does not authorize vocabulary loss.
+
 ## Translate Into The Widget Carrier
 
-Record explicit user requirements before deriving targets from the reference.
+Record fixed requirements and open decisions before deriving targets from the reference.
 
 Use two coordinate spaces:
 
@@ -112,24 +144,30 @@ For a reference collection, assign roles explicitly:
 
 If no composition anchor is clear, keep the clusters as separate design directions or ask the user to select one when the choice would materially change the result. Do not silently blend all examples.
 
-Set useful target ranges before viewing a candidate. Do not move them after seeing a weak result merely to pass it.
+Set evidence-based visual target ranges before exploration. Treat carrier hypotheses and agent-invented semantics as provisional until the actual-size exploration in [Design](design.md#explore-before-committing). Revise them only when the carrier reveals new evidence, not to excuse a weak candidate. Once the visual direction is locked, freeze the targets for [Review](review.md).
 
 ## Reference Brief Template
 
 ```text
-User requirements:
+User-supplied style labels:
+Fixed requirements:
+Open decisions:
+Agent hypotheses:
 Reference type: single composition / collection / sheet-level reference
 Example map or bounds:
 Reference clusters:
 Composition anchor:
 Vocabulary donors:
 Excluded traits:
+Visual-primitive inventory:
+Protected primitive properties:
 
 Reference invariants:
-Carrier adaptations:
+Carrier hypotheses:
 Do not copy:
 Target geometric first impression:
 Target ranges:
+Lock status: exploratory
 
 Per-example gestalt signatures:
 ```

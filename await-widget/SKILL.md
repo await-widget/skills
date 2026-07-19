@@ -9,7 +9,7 @@ Treat this skill as a routing layer rather than a complete reference.
 
 Combine it with the user's installed `@await-widget/runtime` declarations and the task-specific docs in `docs-source/`. See `docs-source/index.md` for the guides directory, then read only the guide needed for the current task.
 
-For visual widget work, read `guides/design.md`. When visual references are supplied, also read `guides/reference.md` before implementing. Read `guides/resources.md` when the motif depends on external assets. After capturing a real preview, read `guides/review.md`.
+For visual widget work, read `guides/design.md`. When visual references are supplied, read `guides/reference.md` first and complete its visual-primitive inventory. If the user supplies a visual direction without a widget function, keep the function open until the actual-size exploration in `guides/design.md` establishes the visual direction. Read `guides/resources.md` when the motif depends on external assets. After capturing a real preview, read `guides/review.md`: pass its reference-vocabulary gate before locking a reference-led direction, then run the full acceptance workflow after the direction is locked.
 
 ## Overview
 
