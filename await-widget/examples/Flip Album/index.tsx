@@ -119,9 +119,11 @@ function widgetTimeline({size}: TimelineContext) {
 	const page = makePage({pageIndex, delta});
 	const entries = [{
 		date: new Date(), pageIndex, delta, page, pageFrame,
-		update: new Date(Date.now() + changeTime * 60 * 1000),
 	}];
-	return {entries};
+	return {
+		entries,
+		update: new Date(Date.now() + changeTime * 60 * 1000),
+	};
 }
 
 const app = Await.define({
