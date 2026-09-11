@@ -15,13 +15,19 @@ const password = '12345678';
 // @panel {type:'slider',min:8,max:72,step:1,title:'Font Size',title_zh:'字体大小'}
 const fontSize = 36;
 // @panel {type:'slider',min:100,max:900,step:100,title:'Font Weight',title_zh:'字体粗细'}
-const fontWeight = 600;
+const fontWeight = 800;
 // @panel {type:'menu',items:['monospaced','rounded','serif','default'],title:'Font Design',title_zh:'字体风格'}
-const fontDesign = 'default';
+const fontDesign = 'serif';
 // @panel {type:'color',title:'Foreground',title_zh:'前景'}
 const foreground = 'ccc';
 // @panel {type:'color',title:'Background',title_zh:'背景'}
 const background = '333';
+// @panel {type:'strings',title:'List',title_zh:'列表'}
+const array = [
+	'One',
+	'Two',
+	'Three',
+];
 
 function widget({value}: {value: number}) {
 	return (

@@ -9,37 +9,18 @@ import {
 
 // @panel {title:'Title',title_zh:'标题'}
 const title = 'CHECKLIST';
-
-const information = {
-	title,
-	cells: [
-		'Eat Fish',
-		'Drink Milk',
-		'Eat Eggs',
-		'Eat Veggies',
-		'Eat Fruit',
-		'Eat Beef',
-		'Whole Grains',
-		'Eat Nuts',
-		'Hydrate',
-		'Less Sugar',
-		'Cook At Home',
-		'Skip Takeout',
-		'Watch Movie',
-		'Watch Anime',
-		'Read Novel',
-		'Listen Music',
-		'Take Walk',
-		'Get Sunlight',
-		'Fresh Air',
-		'Do Laundry',
-		'Change Sheets',
-		'Tidy Room',
-		'Play With Cat',
-		'Change Cat Water',
-		'Clean Litter',
-	],
-};
+// @panel {type:'strings',title:'Tasks',title_zh:'事项',min:1,max:25}
+const cells = [
+	'Eat Veggies',
+	'Drink Water',
+	'Exercise',
+	'Sleep Well',
+	'Read Books',
+	'Meditate',
+	'Walk Outside',
+	'Eat Fruit',
+	'Limit Screen Time',
+];
 
 // @panel {type:'slider',min:0,max:4,step:1,title:'Line Size',title_zh:'线条粗细'}
 const lineSize = 1;
@@ -238,23 +219,27 @@ function VLine({
 function widget(entry: WidgetEntry<{done: number[]}>) {
 	const {width, height} = entry.size;
 	const gutter = Math.round(lineSize);
+	const cellCount = cells.length;
+	const gridSize = Math.ceil(Math.sqrt(cellCount));
 	const availableWidth = Math.floor(width - padding * 2);
 	const availableHeight = Math.floor(height - padding * 2);
-	const cellWidth = Math.floor((availableWidth - gutter * 4) / 5);
-	const tableWidth = cellWidth * 5 + gutter * 4;
-	const horizontalLines = showTitle ? 5 : 4;
+	const cellWidth = Math.floor((availableWidth - gutter * (gridSize - 1)) / gridSize);
+	const tableWidth = cellWidth * gridSize + gutter * (gridSize - 1);
+	const horizontalLines = showTitle ? gridSize : gridSize - 1;
 	const titleHeight = showTitle
 		? Math.floor((availableHeight - gutter * horizontalLines) * 0.18)
 		: 0;
-	const cellHeight = Math.floor((availableHeight - gutter * horizontalLines - titleHeight) / 5);
-	const tableHeight = titleHeight + cellHeight * 5 + gutter * horizontalLines;
+	const cellHeight = Math.floor((availableHeight - gutter * horizontalLines - titleHeight) / gridSize);
+	const tableHeight = titleHeight + cellHeight * gridSize + gutter * horizontalLines;
 	const bodyTop = showTitle ? titleHeight + gutter : 0;
-	const bodyHeight = cellHeight * 5 + gutter * 4;
-	const rowLines = [1, 2, 3, 4].map(row => bodyTop + cellHeight * row + gutter * (row - 1));
+	const bodyHeight = cellHeight * gridSize + gutter * (gridSize - 1);
+	const rowLines = Array.from({length: gridSize - 1}, (_, i) =>
+		bodyTop + cellHeight * (i + 1) + gutter * i);
 	const hLines = [
 		...(showTitle ? [{index: 0, y: titleHeight}] : []),
 		...rowLines.map((y, index) => ({index: index + (showTitle ? 1 : 0), y})),
 	];
+	const items = cells.slice(0, gridSize * gridSize);
 
 	return (
 		<ZStack maxSides foreground={ink} background={paper}>
@@ -267,7 +252,7 @@ function widget(entry: WidgetEntry<{done: number[]}>) {
 					? (
 						<Text
 							id='title'
-							value={information.title}
+							value={title}
 							frame={{
 								width: tableWidth,
 								height: titleHeight,
@@ -278,9 +263,9 @@ function widget(entry: WidgetEntry<{done: number[]}>) {
 					)
 					: undefined}
 				<ZStack id='table' {...smallFont}>
-					{information.cells.map((label, index) => {
-						const row = Math.floor(index / 5);
-						const col = index % 5;
+					{items.map((label, index) => {
+						const row = Math.floor(index / gridSize);
+						const col = index % gridSize;
 						return (
 							<BingoCell
 								index={index}
@@ -311,12 +296,12 @@ function widget(entry: WidgetEntry<{done: number[]}>) {
 						gutter={gutter}
 					/>
 				))}
-				{[1, 2, 3, 4].map(col => (
+				{Array.from({length: gridSize - 1}, (_, col) => (
 					<VLine
-						index={col}
+						index={col + 1}
 						tableWidth={tableWidth}
 						tableHeight={tableHeight}
-						x={cellWidth * col + gutter * (col - 1)}
+						x={cellWidth * (col + 1) + gutter * col}
 						y={bodyTop}
 						height={bodyHeight}
 						gutter={gutter}
