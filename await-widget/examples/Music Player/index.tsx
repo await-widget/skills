@@ -5,6 +5,7 @@ import {
 	HStack,
 	Icon,
 	Image,
+	Modifier,
 	Spacer,
 	Text,
 	VStack,
@@ -39,12 +40,16 @@ const controlSide = 40;
 type EntryData = {nowPlaying: AwaitNowPlayingInfo};
 type PlayerInfo = ReturnType<typeof getPlayerInfo>;
 
-function widget(entry: WidgetEntry<EntryData>) {
-	if (entry.family === 'small') {
-		return <SmallWidget entry={entry}/>;
-	}
+const buttonStyle: CustomButtonStyle = {normal: <Modifier/>, press: <Modifier/>};
 
-	return <MediumWidget entry={entry}/>;
+function widget(entry: WidgetEntry<EntryData>) {
+	const url = entry.nowPlaying.id === undefined ? 'music://music.apple.com' : `music://music.apple.com/us/song/${entry.nowPlaying.id}`;
+	const content = entry.family === 'small'
+		? <SmallWidget entry={entry}/>
+		: <MediumWidget entry={entry}/>;
+	return (
+		<Button buttonStyle={buttonStyle} url={url}>{content}</Button>
+	);
 }
 
 function SmallWidget({entry}: {
