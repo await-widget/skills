@@ -1,7 +1,12 @@
-import {Text, Image} from 'await';
+import {
+	Text,
+	Image,
+	Button,
+	Icon,
+} from 'await';
 
 // @panel {title:'Text',title_zh:'文本'}
-const value = 'To give us new colors to see';
+const value = 'A little calm awaits.';
 // @panel {type:'color',title:'Text Color',title_zh:'文本颜色'}
 const foreground = 'fff';
 // @panel {type:'slider',min:8,max:72,step:1,title:'Font Size',title_zh:'字体大小'}
@@ -9,13 +14,13 @@ const fontSize = 17;
 // @panel {type:'slider',min:100,max:900,step:100,title:'Font Weight',title_zh:'字体粗细'}
 const fontWeight = 600;
 // @panel {type:'menu',items:['monospaced','rounded','serif','default'],title:'Font Design',title_zh:'字体风格'}
-const fontDesign = 'serif';
+const fontDesign = 'monospaced';
 // @panel {title:'Font URL',title_zh:'字体路径'}
 const fontURL = '';
 // @panel {type:'menu',items:['center','leading','trailing'],title:'Text Alignment',title_zh:'文字对齐'}
-const textAlignment = 'leading';
+const textAlignment = 'center';
 // @panel {type:'slider',min:0,max:32,step:1,title:'Padding',title_zh:'边距'}
-const padding = 0;
+const padding = 16;
 
 const font: Mods = fontURL === ''
 	? {
@@ -27,7 +32,7 @@ const font: Mods = fontURL === ''
 		font: {url: fontURL, size: fontSize, wght: fontWeight},
 	};
 
-function widget({size}: WidgetEntry) {
+function quote(size?: Size) {
 	const content = <Text
 		value={value}
 		minimumScaleFactor={1 / fontSize}
@@ -40,4 +45,24 @@ function widget({size}: WidgetEntry) {
 	return fontURL === '' ? content : <Image resizable aspectRatio='fit'>{content}</Image>;
 }
 
-Await.define({widget});
+function widget({size}: WidgetEntry) {
+	return (
+		<Button intent={app.toggleLive()} live>
+			{quote(size)}
+		</Button>
+	);
+}
+
+async function toggleLive() {
+	await AwaitLive.start({
+		lockscreen: quote(),
+		center: quote(),
+		compactLeading: <Icon value='quote.opening' fontSize={17}/>,
+	});
+	AwaitUI.goHome();
+}
+
+const app = Await.define({
+	widget,
+	widgetIntents: {toggleLive},
+});

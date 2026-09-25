@@ -108,6 +108,7 @@ function widget(entry: WidgetEntry<Frame>) {
 				value={[new Date(entry.start), new Date(entry.deadline)]}
 				progressViewStyle='circular'
 				sides={circleSize * 2}
+				tint={1}
 				background={0}
 				compositingGroup
 				luminanceToAlpha
