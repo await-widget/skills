@@ -1,6 +1,6 @@
 ---
 name: await-widget
-description: Develop and review user-authored widgets with Await's public TSX runtime and CLI. Use when creating widget projects, analyzing visual references, designing or reviewing widget layouts, writing widget TSX, checking types, syncing local files, inspecting widget build errors, or capturing previews.
+description: Develop and review user-authored widgets with Await's public TSX runtime and CLI. Use when creating widget projects, planning widget sizes and layouts, writing widget TSX, checking types, syncing local files, inspecting widget build errors, or capturing previews.
 ---
 
 ## Routing
@@ -9,7 +9,7 @@ Treat this skill as a routing layer rather than a complete reference.
 
 Combine it with the user's installed `@await-widget/runtime` declarations and the task-specific docs in this skill's `docs-source/` directory. Resolve these paths relative to this `SKILL.md` file, not the user's workspace. See `docs-source/index.md` for the guides directory, then read only the guide needed for the current task.
 
-For visual widget work, read `docs-source/guides/design.md`. When visual references are supplied, read `docs-source/guides/reference.md` first and complete its visual-primitive inventory. If the user supplies a visual direction without a widget function, keep the function open until the actual-size exploration in `docs-source/guides/design.md` establishes the visual direction. Read `docs-source/guides/resources.md` when the motif depends on external assets. After capturing a real preview, read `docs-source/guides/review.md`: pass its reference-vocabulary gate before locking a reference-led direction, then run the full acceptance workflow after the direction is locked.
+`docs-source/guides/design.md` covers widget sizes, layout rules, legibility and content, animation stability, and buttons. `docs-source/guides/resources.md` covers local SVG, image, and audio assets.
 
 ## Overview
 
