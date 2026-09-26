@@ -10,7 +10,7 @@
 
 ### Widget Size
 
-Size is the first layout constraint. Widgets are much smaller than app screens, so the view must be designed for the widget's actual dimensions. Choose text sizes against the actual widget dimensions and verify that required information remains legible.
+Size is the first layout constraint. Widgets are much smaller than app screens, so the view must be designed for the widget's actual dimensions. Choose text sizes based on those dimensions and verify that required information remains legible.
 
 Widget views are responsive, but most widgets do not need to support every size variant. Use `widgetFamilies` in `Await.define` to declare the sizes the widget supports.
 
@@ -43,10 +43,10 @@ Each additional row or column adds one unit and one spacing, except for the firs
 
 ### Layout Across Families
 
-The unit-and-spacing grid suggests possible relationships between widget sizes, but these relationships are options, not rules. When two families share a dimension, one layout may extend or focus the other. Use this approach only when the content fits; otherwise, give each size its own layout.
+The unit-and-spacing grid can guide related layouts across widget sizes, but each size can also use a separate layout. When two sizes share a width or height, you can keep the primary content consistent and use the additional space for secondary content if it fits.
 
-- `small` and `medium` share height. `medium` is roughly `small` plus one extra width unit — when the content composes well, `small` can contain the primary subset of `medium`.
-- `medium` and `large` share width. `large` is roughly `medium` plus one extra height unit — when the content composes well, `large` can extend `medium` downward with secondary content.
+- `small` and `medium` share height. `medium` adds roughly one width unit. If both show the same content, `small` can show the most important subset.
+- `medium` and `large` share width. `large` adds roughly one height unit, which can hold secondary content below the content shared with `medium`.
 - `small` and `large` are more loosely related. Prefer shared components and a consistent content model over literal layout reuse.
 - `extraLargePortrait` and `extraLarge` continue the same idea with even less obligation to mirror smaller layouts.
 
@@ -127,9 +127,7 @@ Avoid placing `offset` and `scaleEffect` on the same view layer, because that ma
 
 ### Aspect Ratio
 
-`aspectRatio` sizes the view content before the modifier into the view container after the modifier. Modifier order therefore matters.
-
-When an image should fit or fill a specific frame, put `aspectRatio` before `frame`, and append a `clipped` modifier to avoid image overflow:
+Modifier order matters when fitting or filling an image within a frame. Put `aspectRatio` before `frame`, then add `clipped` to prevent image overflow:
 
 ```tsx
 <Image url={image} resizable aspectRatio='fill' frame={{width: 120, height: 80}} clipped />
@@ -161,7 +159,7 @@ If an emoji conveys a state, category, or value, treat it as content and check t
 
 ### Animation Stability
 
-Widget views render from entry content. iOS WidgetKit automatically computes the view tree diff between two rendered entries. Property interpolation works only when the target view stays at the same position in the view tree and keeps the same `id` value, or when both old and new `id` values are empty. Otherwise, WidgetKit treats the old and new views as unrelated.
+Widget views render from entry content. WidgetKit compares the view trees of successive entries. A view can interpolate property changes only if it stays at the same position in both trees. Its `id` must also stay the same; two empty `id` values satisfy this condition. Otherwise, WidgetKit treats the old and new views as unrelated.
 
 ### Buttons
 

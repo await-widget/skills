@@ -8,7 +8,7 @@
 
 - **Prefer single entry**: Use one entry unless multiple visible states are required.
 - **Control render cost**: More entries increase render cost.
-- **Refresh only when needed**: Otherwise, leave it unset. If needed, a 30-minute refresh interval is recommended.
+- **Refresh only when needed**: If the widget does not need another timeline request, omit `update`; omission uses the default `never` policy. If it does, schedule the next refresh about 30 minutes later.
 - **Rapid refresh mode**: Use `update: 'rapid'` to reduce the refresh interval to the minimum available.
 
 ## Example
@@ -25,7 +25,7 @@ function widgetTimeline(): Timeline {
 
 ## Async Support
 
-`widgetTimeline` supports async/await syntax for cases where asynchronous operations (e.g., network requests) are needed before returning the timeline. The widget view refreshes after `widgetTimeline` resolves.
+Declare `widgetTimeline` as `async` when it must finish asynchronous work, such as a network request, before returning entries. The widget view refreshes after the promise resolves.
 
 ```tsx
 type EntryData = {

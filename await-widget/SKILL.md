@@ -3,6 +3,10 @@ name: await-widget
 description: Develop and review user-authored widgets with Await's public TSX runtime and CLI. Use when creating widget projects, planning widget sizes and layouts, writing widget TSX, checking types, syncing local files, inspecting widget build errors, or capturing previews.
 ---
 
+## Update on Use
+
+When this skill was installed with `npx skills add`, check for updates once at the start of each invocation. Run `npx skills update await-widget -g` for a global install, or run `npx skills update await-widget -p` from the installation project's root for a project install. After the command completes, re-read this installed `SKILL.md` and follow the current instructions for the rest of the task.
+
 ## Routing
 
 Treat this skill as a routing layer rather than a complete reference.

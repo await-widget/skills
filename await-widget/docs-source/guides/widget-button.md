@@ -5,7 +5,7 @@ Use `widgetIntents` for button-triggered actions in widgets.
 ## Constraints
 
 - **No swipe or long press**: iOS Home Screen widgets only support taps. Swipe is reserved for Home Screen navigation; long press triggers the widget menu.
-- **Stateless**: Widgets are stateless — functions cannot be held in memory directly. They must be registered via `widgetIntents`.
+- **No persistent JavaScript context**: When iOS requests a timeline, Await renders and archives the widget view. The JavaScript context is not kept alive for future taps. A button tap runs in a new context, so register its function in `widgetIntents` for Await to find it again.
 
 ## Rules
 
