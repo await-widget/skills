@@ -24,6 +24,7 @@ export type Data = Notes & {
 };
 
 /* eslint-disable @stylistic/array-element-newline -- Keep piano note maps readable by octave. */
+// prettier-ignore
 export const allWhiteNotes = [
 	undefined,
 	21, 23,
@@ -38,6 +39,7 @@ export const allWhiteNotes = [
 	undefined,
 ];
 
+// prettier-ignore
 export const allBlackNotes = [
 	undefined,
 	undefined, 22,
