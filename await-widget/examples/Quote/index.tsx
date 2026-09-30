@@ -1,12 +1,19 @@
 import {
-	Text,
+	FullButton,
 	Image,
-	Button,
+	Text,
+	ZStack,
 	Icon,
 } from 'await';
 
-// @panel {title:'Text',title_zh:'文本'}
-const value = 'A little calm awaits.';
+// @panel {type:'strings',min:1,title:'Text',title_zh:'文本'}
+const value = [
+	'A soft start awaits',
+];
+// @panel {type:'strings',min:1,title:'Background Image',title_zh:'背景图'}
+const imageURL = [
+	'',
+];
 // @panel {type:'color',title:'Text Color',title_zh:'文本颜色'}
 const foreground = 'fff';
 // @panel {type:'slider',min:8,max:72,step:1,title:'Font Size',title_zh:'字体大小'}
@@ -19,44 +26,49 @@ const fontDesign = 'monospaced';
 const fontURL = '';
 // @panel {type:'menu',items:['center','leading','trailing'],title:'Text Alignment',title_zh:'文字对齐'}
 const textAlignment = 'center';
-// @panel {type:'slider',min:0,max:32,step:1,title:'Padding',title_zh:'边距'}
+// @panel {type:'slider',min:-16,max:32,step:1,title:'Padding',title_zh:'边距'}
 const padding = 16;
 
-const font: Mods = fontURL === ''
-	? {
-		fontSize,
-		fontWeight,
-		fontDesign,
-	}
-	: {
-		font: {url: fontURL, size: fontSize, wght: fontWeight},
-	};
+const font: Mods =
+	fontURL === ''
+		? {
+			fontSize,
+			fontWeight,
+			fontDesign,
+		}
+		: {
+			font: {url: fontURL, size: fontSize, wght: fontWeight},
+		};
 
-function quote(size?: Size) {
-	const content = <Text
-		value={value}
-		minimumScaleFactor={1 / fontSize}
-		textAlignment={textAlignment}
-		{...font}
-		padding={padding}
-		frame={size}
-		foreground={foreground}
-	/>;
-	return fontURL === '' ? content : <Image resizable aspectRatio='fit'>{content}</Image>;
+function Quote({size}: {size?: Size}) {
+	const content = (
+		<Text
+			value={value[AwaitEnv.tag - 1]}
+			{...font}
+			textAlignment={textAlignment}
+			foreground={foreground}
+			frame={size}
+		/>
+	);
+	return fontURL === '' ? content : <Image accented='fullColor'>{content}</Image>;
 }
 
-function widget({size}: WidgetEntry) {
+function widget({size}: {size: Size}) {
+	const contentSize = {width: size.width - padding * 2, height: size.height - padding * 2};
 	return (
-		<Button intent={app.toggleLive()} live>
-			{quote(size)}
-		</Button>
+		<ZStack>
+			<Image accented='fullColor' url={imageURL[AwaitEnv.tag - 1]} resizable aspectRatio='fill' />
+			<Quote size={contentSize}/>
+			<FullButton intent={app.toggleLive()} live/>
+		</ZStack>
 	);
 }
 
 async function toggleLive() {
+	const content = <Quote/>;
 	await AwaitLive.start({
-		lockscreen: quote(),
-		center: quote(),
+		lockscreen: content,
+		bottom: content,
 		compactLeading: <Icon value='quote.opening' fontSize={17}/>,
 	});
 	AwaitUI.goHome();
@@ -65,4 +77,5 @@ async function toggleLive() {
 const app = Await.define({
 	widget,
 	widgetIntents: {toggleLive},
+	autoAccented: false,
 });

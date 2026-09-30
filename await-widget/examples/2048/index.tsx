@@ -1,9 +1,9 @@
 import {
 	Button,
-	Color,
+	Capsule,
+	FullButton,
 	HStack,
-	Rectangle,
-	Spacer,
+	RoundedRectangle,
 	Text,
 	VStack,
 	ZStack,
@@ -22,36 +22,107 @@ type RenderTile = Tile & {
 	zIndex: number;
 };
 type LayoutMetrics = {
-	outer: number;
+	pad: number;
 	gap: number;
-	headerHeight: number;
-	headerWidth: number;
-	boardSide: number;
-	titleSize: number;
-	statusSize: number;
-	statWidth: number;
-	resetWidth: number;
+	contentWidth: number;
+	bodyHeight: number;
+	sidebarWidth: number;
+	titleHeight: number;
+	scoreHeight: number;
+	newHeight: number;
+	boardWidth: number;
+	boardHeight: number;
+	boardRadius: number;
+	cellGap: number;
+	cellWidth: number;
+	cellHeight: number;
+	cellRadius: number;
+	innerWidth: number;
+	innerHeight: number;
+	stepX: number;
+	stepY: number;
+	originX: number;
+	originY: number;
 };
 type EntryData = {
 	renderTiles: RenderTile[];
 	score: number;
 	best: number;
-	moves: number;
 	won: boolean;
 	gameOver: boolean;
-	openCells: number;
 };
-type GameState = {
+type GameState = EntryData & {
 	tiles: Tile[];
-	renderTiles: RenderTile[];
 	nextTileId: Encodable;
-	score: number;
-	best: number;
 	moves: number;
-	won: boolean;
-	gameOver: boolean;
 };
-type StoredGameState = GameState;
+type ThemeColors = Record<string, Color>;
+
+// @panel {type:'menu',items:['Y2K','VOLT'],title_zh:'配色',title_en:'Theme'}
+const theme: 'Y2K' | 'VOLT' = 'Y2K';
+// @panel {type:'menu',items:['LEFT','RIGHT'],title_zh:'侧栏位置',title_en:'Sidebar side'}
+const padSide: 'LEFT' | 'RIGHT' = 'RIGHT';
+
+const themes: Record<string, ThemeColors> = {
+	Y2K: {
+		bgTop: '#FFE1F5',
+		bgMid: '#E9DFFF',
+		bgBottom: '#DEF2FF',
+		board: '#D6C5FF',
+		cell: '#F3ECFF',
+		card: '#FFFFFF',
+		scoreInk: '#33204A',
+		action1: '#1E90FF',
+		action2: '#A78BFF',
+		action3: '#FF9ED8',
+		action4: '#FFCBA4',
+		actionInk: '#33204A',
+		scrim: ['#33204A', 0.4],
+		overlayInk: '#FFFFFF',
+		ink: '#33204A',
+		inkLight: '#FFFFFF',
+		tile2: '#E3F7FF',
+		tile4: '#C9EDFF',
+		tile8: '#ABE1FF',
+		tile16: '#CFBBFF',
+		tile32: '#B295FF',
+		tile64: '#8F6BFF',
+		tile128: '#FFB3E8',
+		tile256: '#FF8FDD',
+		tile512: '#FF63CB',
+		tile1024: '#FF3DBE',
+		tile2048: '#E01BFF',
+		tileHigh: '#5B2BB8',
+	},
+	VOLT: {
+		bgTop: '#1A1C22',
+		bgMid: '#121318',
+		bgBottom: '#0A0B0E',
+		board: '#1C1F26',
+		cell: '#282C35',
+		card: '#1E2128',
+		scoreInk: '#E8EAED',
+		action1: '#E2FF52',
+		action2: '#9BE81F',
+		actionInk: '#131408',
+		scrim: ['#000000', 0.55],
+		overlayInk: '#FFFFFF',
+		ink: '#14151A',
+		inkLight: '#F2F4F8',
+		tile2: '#2E323C',
+		tile4: '#3A4150',
+		tile8: '#4A5263',
+		tile16: '#5C6678',
+		tile32: '#707B8F',
+		tile64: '#8A95A8',
+		tile128: '#FF8A3D',
+		tile256: '#FF6B2B',
+		tile512: '#FF4D2B',
+		tile1024: '#FF2D55',
+		tile2048: '#C6FF3D',
+		tileHigh: '#FFD500',
+	},
+};
 
 const duration = 0.15;
 const GRID_SIZE = 4;
@@ -60,163 +131,349 @@ const TILE_Z_INDEX = 2;
 const NEW_TILE_Z_INDEX = 3;
 const GHOST_TILE_Z_INDEX = 1;
 const FADE_TILE_Z_INDEX = 0;
-const ROOT_FILL: LinearGradient = {
-	gradient: 'linear',
-	colors: ['FAF8EF', 'F3EEE4'],
-	startPoint: 'top',
-	endPoint: 'bottom',
-};
-const BOARD_FILL = 'BBADA0';
-const EMPTY_FILL = 'CDC1B4';
-const ACTION_FILL = '8F7A66';
-const ACTION_FOREGROUND = 'F9F6F2';
-const TEXT_PRIMARY = '776E65';
-const TEXT_MUTED = '8A8178';
+const OVERLAY_Z_INDEX = 9;
+const PAD = 8;
+const GAP = 8;
+const SIDEBAR_WIDTH = 72;
+const BOARD_PAD = 8;
+const WIDGET_RADIUS = 86 / 3;
+const BOARD_RADIUS = WIDGET_RADIUS - PAD;
+const CELL_RADIUS = BOARD_RADIUS - BOARD_PAD;
+const TILE_HEIGHT_FACTORS = [0, 0.52, 0.5, 0.4, 0.31, 0.25];
 
-function makeTileId(): Encodable {
-	return Math.random().toString();
+function actionFill(colors: ThemeColors): ShapeStyle {
+	return {
+		gradient: 'linear',
+		colors: [colors.action1, colors.action2, colors.action3, colors.action4].filter(Boolean),
+		startPoint: 'top',
+		endPoint: 'bottom',
+	};
+}
+
+function rootFill(colors: ThemeColors): ShapeStyle {
+	return {
+		gradient: 'linear',
+		colors: [colors.bgTop, colors.bgMid, colors.bgBottom],
+		startPoint: 'topLeading',
+		endPoint: 'bottomTrailing',
+	};
+}
+
+function tileColor(colors: ThemeColors, value: number): Color {
+	return colors[`tile${value}`] ?? colors.tileHigh;
+}
+
+function tileFill(colors: ThemeColors, value: number): ShapeStyle {
+	return {gradient: 'linear', color: tileColor(colors, value)};
+}
+
+function tileInk(colors: ThemeColors, value: number): Color {
+	return hexLuminance(tileColor(colors, value)) > 145 ? colors.ink : colors.inkLight;
+}
+
+function hexLuminance(color: Color): number {
+	if (typeof color !== 'string') {
+		return 0;
+	}
+
+	const hex = color.replace('#', '').padStart(6, '0');
+	const red = Number.parseInt(hex.slice(0, 2), 16);
+	const green = Number.parseInt(hex.slice(2, 4), 16);
+	const blue = Number.parseInt(hex.slice(4, 6), 16);
+	return 0.299 * red + 0.587 * green + 0.114 * blue;
 }
 
 function widget(entry: WidgetEntry<EntryData>) {
-	const isSmall = entry.size.width < 200 || entry.size.height < 200;
-	const layout = getLayoutMetrics(isSmall, entry.size);
-	return (
-		<VStack padding={layout.outer} maxSides buttonStyle='borderless' background={ROOT_FILL}>
-			{isSmall ? undefined : <HeaderBar state={entry} layout={layout}/>}
-			<BoardView tiles={entry.renderTiles} side={layout.boardSide}/>
-		</VStack>
+	const layout = getLayoutMetrics(entry.size);
+	const colors = themes[theme] ?? themes.Y2K;
+	const sidebar = <SideRail state={entry} layout={layout} colors={colors}/>;
+	const board = (
+		<BoardView
+			tiles={entry.renderTiles}
+			gameOver={entry.gameOver}
+			layout={layout}
+			colors={colors}
+		/>
 	);
-}
 
-function getLayoutMetrics(small: boolean, size: Size): LayoutMetrics {
-	const outer = small ? 0 : 12;
-	const gap = small ? 2 : 6;
-	const headerHeight = small ? 0 : 30;
-	const innerWidth = size.width - outer * 2;
-	const innerHeight = size.height - outer * 2;
-	const maxBoardSide = Math.max(0, Math.min(innerWidth, innerHeight - headerHeight - gap));
-	const {boardSide} = getBoardMetrics(maxBoardSide);
-	return {
-		outer,
-		gap,
-		headerHeight,
-		headerWidth: boardSide,
-		boardSide,
-		titleSize: 22,
-		statusSize: 10,
-		statWidth: 48,
-		resetWidth: 48,
-	};
-}
-
-function getBoardMetrics(maxSide: number) {
-	const maxGap = Math.floor(maxSide / (GRID_SIZE + 1));
-	const preferredGap = Math.max(4, Math.ceil(maxSide * 0.04));
-	const gap = Math.min(preferredGap, maxGap);
-	const cellSide = Math.ceil((maxSide - gap * (GRID_SIZE + 1)) / GRID_SIZE);
-	const innerSide = cellSide * GRID_SIZE + gap * (GRID_SIZE - 1);
-	const boardSide = innerSide + gap * 2;
-	return {
-		boardSide,
-		gap,
-		innerSide,
-		cellSide,
-	};
-}
-
-function HeaderBar({state, layout}: {state: EntryData; layout: LayoutMetrics}) {
 	return (
-		<HStack frame={{width: layout.headerWidth, height: layout.headerHeight}} spacing={layout.gap} padding={{bottom: layout.gap}}>
-			<VStack alignment='leading' spacing={0}>
-				<Text
-					value='2048'
-					fontSize={layout.titleSize}
-					fontWeight={900}
-					foreground={TEXT_PRIMARY}
-					lineLimit={1}
-					minimumScaleFactor={0.1}
-				/>
-				<Text
-					value={headerStatus(state)}
-					fontSize={layout.statusSize}
-					fontWeight={700}
-					foreground={TEXT_MUTED}
-					lineLimit={1}
-					minimumScaleFactor={0.1}
-				/>
+		<ZStack
+			maxSides
+			buttonStyle='borderless'
+			background={rootFill(colors)}
+			ignoresSafeArea
+		>
+			<VStack padding={layout.pad} maxSides>
+				<HStack
+					spacing={layout.gap}
+					frame={{
+						width: layout.contentWidth,
+						height: layout.bodyHeight,
+					}}
+				>
+					{padSide === 'LEFT' ? sidebar : board}
+					{padSide === 'LEFT' ? board : sidebar}
+				</HStack>
 			</VStack>
-			<Spacer/>
-			<StatCard label='S' value={state.score} width={layout.statWidth} height={layout.headerHeight}/>
-			<StatCard label='B' value={state.best} width={layout.statWidth} height={layout.headerHeight}/>
-			<CompactButton label='NEW' intent={app.reset()} width={layout.resetWidth} height={layout.headerHeight}/>
-		</HStack>
-	);
-}
-
-function BoardView({tiles, side}: {tiles: RenderTile[]; side: number}) {
-	const {boardSide, gap, innerSide, cellSide} = getBoardMetrics(side);
-	return (
-		<ZStack frame={{width: boardSide, height: boardSide}} zIndex={-1}>
-			<Rectangle fill={BOARD_FILL}/>
-			<VStack frame={{width: innerSide, height: innerSide}} spacing={gap}>
-				{Array.from({length: GRID_SIZE}, i => (
-					<HStack spacing={gap}>
-						{Array.from({length: GRID_SIZE}, j => (
-							<Rectangle fill={EMPTY_FILL} frame={{width: cellSide, height: cellSide}}/>
-						))}
-					</HStack>
-				))}
-			</VStack>
-			<ZStack frame={{width: innerSide, height: innerSide}}>
-				{sortRenderTiles(tiles).map(tile => (
-					<TileView
-						tile={tile}
-						side={cellSide}
-						gap={gap}
-						innerSide={innerSide}
-					/>
-				))}
-			</ZStack>
-			<BoardControls/>
 		</ZStack>
 	);
 }
 
-function BoardControls() {
+function getLayoutMetrics(size: Size): LayoutMetrics {
+	const contentWidth = size.width - PAD * 2;
+	const bodyHeight = size.height - PAD * 2;
+	const boardWidth = contentWidth - SIDEBAR_WIDTH - GAP;
+	const cellWidth =
+		(boardWidth - BOARD_PAD * 2 - GAP * (GRID_SIZE - 1)) / GRID_SIZE;
+	const cellHeight =
+		(bodyHeight - BOARD_PAD * 2 - GAP * (GRID_SIZE - 1)) / GRID_SIZE;
+	const innerWidth = cellWidth * GRID_SIZE + GAP * (GRID_SIZE - 1);
+	const innerHeight = cellHeight * GRID_SIZE + GAP * (GRID_SIZE - 1);
+	const unit = (bodyHeight - GAP * 2) / 4;
+
+	return {
+		pad: PAD,
+		gap: GAP,
+		contentWidth,
+		bodyHeight,
+		sidebarWidth: SIDEBAR_WIDTH,
+		titleHeight: unit,
+		scoreHeight: unit,
+		newHeight: unit * 2,
+		boardWidth,
+		boardHeight: bodyHeight,
+		boardRadius: BOARD_RADIUS,
+		cellGap: GAP,
+		cellWidth,
+		cellHeight,
+		cellRadius: CELL_RADIUS,
+		innerWidth,
+		innerHeight,
+		stepX: cellWidth + GAP,
+		stepY: cellHeight + GAP,
+		originX: -innerWidth / 2 + cellWidth / 2,
+		originY: -innerHeight / 2 + cellHeight / 2,
+	};
+}
+
+function SideRail({
+	state,
+	layout,
+	colors,
+}: {
+	state: EntryData;
+	layout: LayoutMetrics;
+	colors: ThemeColors;
+}) {
+	const width = layout.sidebarWidth;
 	return (
-		<VStack geometryGroup scaleEffect={2} rotationEffect={45}>
-			<HStack>
-				<Button intent={app.move('up')}><Color value=''/></Button>
-				<Button intent={app.move('right')}><Color value=''/></Button>
-			</HStack>
-			<HStack>
-				<Button intent={app.move('left')}><Color value=''/></Button>
-				<Button intent={app.move('down')}><Color value=''/></Button>
-			</HStack>
+		<VStack
+			spacing={layout.gap}
+			frame={{width, height: layout.bodyHeight}}
+			zIndex={1}
+		>
+			<Button intent={app.reset()}>
+				<ZStack frame={{width, height: layout.newHeight}}>
+					<RoundedRectangle
+						rectRadius={layout.boardRadius}
+						fill={actionFill(colors)}
+					/>
+					<Text
+						value='NEW'
+						fontSize={40}
+						fontWeight={900}
+						fontDesign='rounded'
+						foreground={colors.actionInk}
+						lineLimit={1}
+						minimumScaleFactor={0.1}
+						padding={6}
+					/>
+				</ZStack>
+			</Button>
+			<ZStack frame={{width, height: layout.scoreHeight}}>
+				<RoundedRectangle
+					rectRadius={layout.boardRadius}
+					fill={colors.card}
+				/>
+				<Text
+					value={`${state.score}\n\n${state.best}`}
+					fontSize={18}
+					fontWeight={900}
+					fontDesign='rounded'
+					lineLimit={3}
+					monospacedDigit
+					contentTransition='numericText'
+					textAlignment='center'
+					overlay={<Capsule frame={{height: 3.5, width: 14}} rotationEffect={-60}/>}
+					foreground={colors.scoreInk}
+					minimumScaleFactor={0.1}
+					padding={6}
+				/>
+			</ZStack>
+			<ZStack frame={{width, height: layout.titleHeight}}>
+				<RoundedRectangle
+					rectRadius={layout.boardRadius}
+					fill={colors.card}
+				/>
+				<Text
+					value='2048'
+					fontSize={24}
+					fontWeight={900}
+					fontDesign='rounded'
+					foreground={colors.scoreInk}
+					lineLimit={1}
+					minimumScaleFactor={0.1}
+					padding={6}
+				/>
+			</ZStack>
 		</VStack>
+	);
+}
+
+function BoardView({
+	tiles,
+	gameOver,
+	layout,
+	colors,
+}: {
+	tiles: RenderTile[];
+	gameOver: boolean;
+	layout: LayoutMetrics;
+	colors: ThemeColors;
+}) {
+	const {innerWidth, innerHeight} = layout;
+
+	return (
+		<ZStack
+			frame={{width: layout.boardWidth, height: layout.boardHeight}}
+		>
+			<RoundedRectangle
+				rectRadius={layout.boardRadius}
+				fill={colors.board}
+			/>
+			<VStack spacing={layout.cellGap}>
+				{Array.from({length: GRID_SIZE}, () => (
+					<HStack spacing={layout.cellGap}>
+						{Array.from({length: GRID_SIZE}, () => (
+							<RoundedRectangle
+								rectRadius={layout.cellRadius}
+								fill={colors.cell}
+								frame={{
+									width: layout.cellWidth,
+									height: layout.cellHeight,
+								}}
+							/>
+						))}
+					</HStack>
+				))}
+			</VStack>
+			<ZStack frame={{width: innerWidth, height: innerHeight}}>
+				{sortRenderTiles(tiles).map(tile => (
+					<TileView tile={tile} layout={layout} colors={colors}/>
+				))}
+			</ZStack>
+			<BoardControls
+				width={layout.boardWidth}
+				height={layout.boardHeight}
+			/>
+			{gameOver
+				? (
+					<GameOverOverlay layout={layout} colors={colors}/>
+				)
+				: undefined}
+		</ZStack>
+	);
+}
+
+function BoardControls({
+	width,
+	height,
+}: {
+	width: number;
+	height: number;
+}) {
+	const side = width;
+	const x = (height - width) / 2;
+	const offset = x / Math.sqrt(2);
+	const offsetX = (padSide === 'LEFT' ? -1 : 1) * (width + GAP);
+	return (
+		<ZStack frame={{width, height}}>
+			<HStack>
+				<FullButton intent={app.move('left')}/>
+				<FullButton intent={app.move('right')}/>
+			</HStack>
+			<ZStack
+				sides={side}
+				geometryGroup
+				rotationEffect={45}
+			>
+				<ZStack offset={-offset}>
+					<FullButton intent={app.move('up')} position={{x: 0, y: 0}}/>
+					<FullButton intent={app.move('left')} position={{x: 0, y: side}}/>
+					<FullButton intent={app.move('right')} position={{x: side, y: 0}}/>
+				</ZStack>
+				<ZStack offset={offset}>
+					<FullButton intent={app.move('left')} position={{x: 0, y: side}}/>
+					<FullButton intent={app.move('right')} position={{x: side, y: 0}}/>
+					<FullButton intent={app.move('down')} position={{x: side, y: side}}/>
+				</ZStack>
+			</ZStack>
+			<FullButton height={height + GAP * 2} offsetX={offsetX}/>
+		</ZStack>
+	);
+}
+
+function GameOverOverlay({
+	layout,
+	colors,
+}: {
+	layout: LayoutMetrics;
+	colors: ThemeColors;
+}) {
+	return (
+		<ZStack
+			frame={{
+				width: layout.boardWidth,
+				height: layout.boardHeight,
+			}}
+			zIndex={OVERLAY_Z_INDEX}
+		>
+			<RoundedRectangle
+				rectRadius={layout.boardRadius}
+				fill={colors.scrim}
+			/>
+			<VStack spacing={2}>
+				<Text
+					value='GAME OVER'
+					fontSize={24}
+					fontWeight={900}
+					fontDesign='rounded'
+					foreground={colors.overlayInk}
+					lineLimit={1}
+				/>
+			</VStack>
+		</ZStack>
 	);
 }
 
 function TileView({
 	tile,
-	side,
-	gap,
-	innerSide,
+	layout,
+	colors,
 }: {
 	tile: RenderTile;
-	side: number;
-	gap: number;
-	innerSide: number;
+	layout: LayoutMetrics;
+	colors: ThemeColors;
 }) {
-	const step = side + gap;
-	const origin = -innerSide / 2 + side / 2;
+	const {cellWidth, cellHeight, cellRadius, stepX, stepY, originX, originY} = layout;
 	const offset = {
-		x: origin + tile.x * step,
-		y: origin + tile.y * step,
+		x: originX + tile.x * stepX,
+		y: originY + tile.y * stepY,
 	};
+
 	return (
 		<ZStack
-			frame={{width: side, height: side}}
+			frame={{width: cellWidth, height: cellHeight}}
 			zIndex={tile.zIndex}
 			geometryGroup
 			offset={offset}
@@ -226,85 +483,32 @@ function TileView({
 		>
 			<Text
 				value={tile.value}
-				fontSize={tileFontSize(tile.value, side)}
+				fontSize={tileFontSize(tile.value, cellWidth, cellHeight)}
 				fontWeight={900}
-				foreground={tileForeground(tile.value)}
+				fontDesign='rounded'
+				foreground={tileInk(colors, tile.value)}
 				lineLimit={1}
 				minimumScaleFactor={0.1}
+				padding={4}
 				maxSides
-				background={tileFill(tile.value)}
+				background={
+					<RoundedRectangle
+						rectRadius={cellRadius}
+						fill={tileFill(colors, tile.value)}
+					/>
+				}
 				contentTransition='numericText'
 				animation={{duration, type: 'smooth', value: tile.value}}
 				geometryGroup
 				scaleEffect={tile.scale}
 				animation_={{
-					delay: duration, duration, type: 'smooth', value: tile.scale,
+					delay: duration,
+					duration,
+					type: 'smooth',
+					value: tile.scale,
 				}}
 			/>
 		</ZStack>
-	);
-}
-
-function StatCard({
-	label,
-	value,
-	width,
-	height,
-}: {
-	label: string;
-	value: number;
-	width: number;
-	height: number;
-}) {
-	return (
-		<ZStack frame={{width, height}}>
-			<Rectangle fill={BOARD_FILL}/>
-			<VStack spacing={1}>
-				<Text
-					value={label}
-					fontSize={9}
-					fontWeight={700}
-					foreground={ACTION_FOREGROUND}
-					lineLimit={1}
-				/>
-				<Text
-					value={value}
-					fontSize={Math.min(height * 0.48, 22)}
-					fontWeight={900}
-					foreground={ACTION_FOREGROUND}
-					lineLimit={1}
-					minimumScaleFactor={0.1}
-				/>
-			</VStack>
-		</ZStack>
-	);
-}
-
-function CompactButton({
-	label,
-	intent,
-	width,
-	height,
-}: {
-	label: string;
-	intent: IntentInfo;
-	width: number;
-	height: number;
-}) {
-	return (
-		<Button intent={intent}>
-			<ZStack frame={{width, height}}>
-				<Rectangle fill={ACTION_FILL}/>
-				<Text
-					value={label}
-					fontSize={Math.min(height * 0.48, 22)}
-					fontWeight={800}
-					foreground={ACTION_FOREGROUND}
-					lineLimit={1}
-					minimumScaleFactor={0.1}
-				/>
-			</ZStack>
-		</Button>
 	);
 }
 
@@ -326,97 +530,20 @@ function entryFromState(state: GameState): EntryData {
 		renderTiles: state.renderTiles,
 		score: state.score,
 		best: state.best,
-		moves: state.moves,
 		won: state.won,
 		gameOver: state.gameOver,
-		openCells: countEmpty(state.tiles),
 	};
 }
 
-function headerStatus(state: EntryData) {
-	if (state.gameOver) {
-		return 'STUCK';
-	}
-
-	if (state.won) {
-		return `WIN ${state.openCells}`;
-	}
-
-	return `MOVE ${state.moves} · ${state.openCells} OPEN`;
-}
-
-function tileFill(value: number): Color {
-	switch (value) {
-		case 2: {
-			return 'EEE4DA';
-		}
-
-		case 4: {
-			return 'EDE0C8';
-		}
-
-		case 8: {
-			return 'F2B179';
-		}
-
-		case 16: {
-			return 'F59563';
-		}
-
-		case 32: {
-			return 'F67C5F';
-		}
-
-		case 64: {
-			return 'F65E3B';
-		}
-
-		case 128: {
-			return 'EDCF72';
-		}
-
-		case 256: {
-			return 'EDCC61';
-		}
-
-		case 512: {
-			return 'EDC850';
-		}
-
-		case 1024: {
-			return 'EDC53F';
-		}
-
-		case 2048: {
-			return 'EDC22E';
-		}
-
-		default: {
-			return '3C3A32';
-		}
-	}
-}
-
-function tileForeground(value: number): Color {
-	return value <= 4 ? TEXT_PRIMARY : ACTION_FOREGROUND;
-}
-
-function tileFontSize(value: number, side: number) {
+function tileFontSize(value: number, cellWidth: number, cellHeight: number) {
 	const digits = String(value).length;
+	const heightFactor = TILE_HEIGHT_FACTORS[digits] ?? 0.22;
+	const widthBudget = cellWidth * 0.78;
+	return Math.min(cellHeight * heightFactor, widthBudget / (digits * 0.62));
+}
 
-	if (digits <= 2) {
-		return side * 0.38;
-	}
-
-	if (digits === 3) {
-		return side * 0.3;
-	}
-
-	if (digits === 4) {
-		return side * 0.22;
-	}
-
-	return side * 0.18;
+function makeTileId(): Encodable {
+	return Math.random().toString();
 }
 
 function getCurrentState(): GameState {
@@ -431,7 +558,7 @@ function getCurrentState(): GameState {
 }
 
 function writeState(state: GameState) {
-	AwaitStore.set(STORE_STATE_KEY, normalizeState(state));
+	AwaitStore.set(STORE_STATE_KEY, state);
 }
 
 function reset() {
@@ -448,18 +575,15 @@ function move(direction: Direction) {
 }
 
 function createInitialState(best = 0): GameState {
-	let tiles: Tile[] = [];
 	const nextTileId = makeTileId();
-
-	tiles = spawnRandomTile(tiles);
-	tiles = spawnRandomTile(tiles);
+	const tiles = spawnRandomTile(spawnRandomTile([]));
 
 	return {
 		tiles,
 		renderTiles: buildRenderTiles(tiles, nextTileId),
 		nextTileId,
 		score: 0,
-		best,
+		best: Math.max(best, 0),
 		moves: 0,
 		won: false,
 		gameOver: false,
@@ -477,20 +601,24 @@ function applyMove(state: GameState, direction: Direction) {
 	}
 
 	const score = state.score + moveResult.gained;
-	const best = Math.max(state.best, score);
 	const nextTiles = spawnRandomTile(moveResult.tiles, state.nextTileId);
 	const nextTileId = makeTileId();
 
-	return normalizeState({
+	return {
 		tiles: nextTiles,
-		renderTiles: buildRenderTiles(nextTiles, nextTileId, moveResult.ghostTiles, state.renderTiles),
+		renderTiles: buildRenderTiles(
+			nextTiles,
+			nextTileId,
+			moveResult.ghostTiles,
+			state.renderTiles,
+		),
 		nextTileId,
 		score,
-		best,
+		best: Math.max(state.best, score),
 		moves: state.moves + 1,
-		won: state.won,
-		gameOver: false,
-	});
+		won: state.won || nextTiles.some(tile => tile.value >= 2048),
+		gameOver: !hasMoves(nextTiles),
+	};
 }
 
 function moveTiles(tiles: Tile[], direction: Direction) {
@@ -500,7 +628,11 @@ function moveTiles(tiles: Tile[], direction: Direction) {
 	const ghostTiles: Tile[] = [];
 
 	for (let lane = 0; lane < GRID_SIZE; lane += 1) {
-		const lineResult = moveLine(getLineTiles(tiles, direction, lane), direction, lane);
+		const lineResult = moveLine(
+			getLineTiles(tiles, direction, lane),
+			direction,
+			lane,
+		);
 		isMoved ||= lineResult.moved;
 		gained += lineResult.gained;
 		nextTiles.push(...lineResult.tiles);
@@ -510,8 +642,8 @@ function moveTiles(tiles: Tile[], direction: Direction) {
 	return {
 		moved: isMoved,
 		gained,
-		tiles: sortTiles(nextTiles),
-		ghostTiles: sortTiles(ghostTiles),
+		tiles: nextTiles,
+		ghostTiles,
 	};
 }
 
@@ -520,7 +652,7 @@ function getLineTiles(tiles: Tile[], direction: Direction, lane: number) {
 	const lineTiles = tiles.filter(tile => (isVertical ? tile.x : tile.y) === lane);
 	const isTowardStart = direction === 'left' || direction === 'up';
 
-	return [...lineTiles].toSorted((left, right) => {
+	return lineTiles.toSorted((left, right) => {
 		const leftAxis = isVertical ? left.y : left.x;
 		const rightAxis = isVertical ? right.y : right.x;
 		return isTowardStart ? leftAxis - rightAxis : rightAxis - leftAxis;
@@ -538,26 +670,18 @@ function moveLine(lineTiles: Tile[], direction: Direction, lane: number) {
 	for (let index = 0; index < lineTiles.length; index += 1) {
 		const current = lineTiles[index];
 		const next = lineTiles[index + 1];
+		const tile = placeTile(current, direction, lane, targetAxis);
+		isMoved ||= tileAxis(current, direction) !== targetAxis;
 
 		if (current.value === next?.value) {
-			const survivor = placeTile(current, direction, lane, targetAxis);
-			const merged = {
-				...survivor,
-				value: current.value * 2,
-			};
-			const ghost = placeTile(next, direction, lane, targetAxis);
-
-			tiles.push(merged);
-			ghostTiles.push(ghost);
-			gained += merged.value;
-			isMoved ||= tileAxis(current, direction) !== targetAxis || tileAxis(next, direction) !== targetAxis;
+			tile.value *= 2;
+			ghostTiles.push(placeTile(next, direction, lane, targetAxis));
+			gained += tile.value;
+			isMoved ||= tileAxis(next, direction) !== targetAxis;
 			index += 1;
-		} else {
-			const tile = placeTile(current, direction, lane, targetAxis);
-			tiles.push(tile);
-			isMoved ||= tileAxis(current, direction) !== targetAxis;
 		}
 
+		tiles.push(tile);
 		targetAxis += isTowardStart ? 1 : -1;
 	}
 
@@ -569,21 +693,18 @@ function moveLine(lineTiles: Tile[], direction: Direction, lane: number) {
 	};
 }
 
-function placeTile(tile: Tile, direction: Direction, lane: number, axis: number): Tile {
-	if (direction === 'left' || direction === 'right') {
-		return {
-			id: tile.id,
-			value: tile.value,
-			x: axis,
-			y: lane,
-		};
-	}
-
+function placeTile(
+	tile: Tile,
+	direction: Direction,
+	lane: number,
+	axis: number,
+): Tile {
+	const isVertical = direction === 'up' || direction === 'down';
 	return {
 		id: tile.id,
 		value: tile.value,
-		x: lane,
-		y: axis,
+		x: isVertical ? lane : axis,
+		y: isVertical ? axis : lane,
 	};
 }
 
@@ -618,6 +739,15 @@ function spawnRandomTile(tiles: Tile[], id = makeTileId()) {
 	return sortTiles([...tiles, tile]);
 }
 
+function createRenderTile(tile: Tile, zIndex: number, scale = 1, opacity = 1): RenderTile {
+	return {
+		...tile,
+		scale,
+		opacity,
+		zIndex,
+	};
+}
+
 function buildRenderTiles(
 	tiles: Tile[],
 	nextTileId: Encodable,
@@ -625,96 +755,51 @@ function buildRenderTiles(
 	previousRenderTiles: RenderTile[] = [],
 ) {
 	const previousTiles = new Map(previousRenderTiles.map(tile => [tile.id, tile]));
-	const activeTileIds = new Set(tiles.map(tile => tile.id));
-	const activeGhostIds = new Set(ghostTiles.map(tile => tile.id));
-	const currentTiles = [...ghostTiles, ...tiles];
-	const currentTilesById = new Map(currentTiles.map(tile => [tile.id, tile]));
+	const currentTilesById = new Map([...ghostTiles, ...tiles].map(tile => [tile.id, tile]));
 	const previousHostsByCell = new Map(previousRenderTiles
 		.filter(tile => tile.zIndex >= TILE_Z_INDEX && tile.scale === 1)
 		.map(tile => [`${tile.x}:${tile.y}`, tile] as const));
-	const createRenderTile = (
-		tile: Tile,
-		options: {
-			scale: number;
-			opacity: number;
-			zIndex: number;
-		},
-	): RenderTile => ({
-		...tile,
-		scale: options.scale,
-		opacity: options.opacity,
-		zIndex: options.zIndex,
-	});
 	const fadingGhostTiles: RenderTile[] = previousRenderTiles
-		.filter(tile => (
+		.filter(tile =>
 			tile.zIndex === GHOST_TILE_Z_INDEX
 			&& tile.opacity !== 0
-			&& !activeTileIds.has(tile.id)
-			&& !activeGhostIds.has(tile.id)
-		))
+			&& !currentTilesById.has(tile.id))
 		.map(tile => {
 			const host = previousHostsByCell.get(`${tile.x}:${tile.y}`);
 			const target = host ? currentTilesById.get(host.id) : undefined;
-			return createRenderTile({
-				...tile,
-				x: target?.x ?? tile.x,
-				y: target?.y ?? tile.y,
-			}, {
-				scale: 1,
-				opacity: 0,
-				zIndex: FADE_TILE_Z_INDEX,
-			});
+			return createRenderTile(
+				{
+					...tile,
+					x: target?.x ?? tile.x,
+					y: target?.y ?? tile.y,
+				},
+				FADE_TILE_Z_INDEX,
+				1,
+				0,
+			);
 		});
-	const existingTiles: RenderTile[] = [
-		...fadingGhostTiles,
-		...ghostTiles.map(tile => createRenderTile(tile, {
-			scale: 1,
-			opacity: 1,
-			zIndex: GHOST_TILE_Z_INDEX,
-		})),
-		...tiles.map(tile => createRenderTile(tile, {
-			scale: 1,
-			opacity: 1,
-			zIndex: previousTiles.get(tile.id)?.scale === 1
-				? TILE_Z_INDEX
-				: NEW_TILE_Z_INDEX,
-		})),
-	];
-	const reservedTile = createRenderTile({
-		id: nextTileId,
-		value: 2,
-		x: 0,
-		y: 0,
-	}, {
-		zIndex: NEW_TILE_Z_INDEX,
-		scale: 0,
-		opacity: 1,
-	});
 
-	return sortRenderTiles([...existingTiles, reservedTile]);
+	return sortRenderTiles([
+		...fadingGhostTiles,
+		...ghostTiles.map(tile => createRenderTile(tile, GHOST_TILE_Z_INDEX)),
+		...tiles.map(tile =>
+			createRenderTile(tile, previousTiles.get(tile.id)?.scale === 1 ? TILE_Z_INDEX : NEW_TILE_Z_INDEX)),
+		createRenderTile({
+			id: nextTileId,
+			value: 2,
+			x: 0,
+			y: 0,
+		}, NEW_TILE_Z_INDEX, 0),
+	]);
 }
 
 function sortTiles(tiles: Tile[]) {
-	return [...tiles].toSorted((left, right) => (
-		left.y - right.y
-		|| left.x - right.x
-	));
+	return tiles.toSorted((left, right) => left.y - right.y || left.x - right.x);
 }
 
 function sortRenderTiles(tiles: RenderTile[]) {
-	return [...tiles].toSorted((left, right) => (
-		left.zIndex - right.zIndex
-		|| left.y - right.y
-		|| left.x - right.x
-	));
-}
-
-function countEmpty(tiles: Tile[]) {
-	return GRID_SIZE * GRID_SIZE - tiles.length;
-}
-
-function hasWinningTile(tiles: Tile[]) {
-	return tiles.some(tile => tile.value >= 2048);
+	return tiles.toSorted((left, right) =>
+		left.zIndex - right.zIndex || left.y - right.y || left.x - right.x);
 }
 
 function hasMoves(tiles: Tile[]) {
@@ -722,7 +807,11 @@ function hasMoves(tiles: Tile[]) {
 		return true;
 	}
 
-	const board = boardFromTiles(tiles);
+	const board = Array.from({length: GRID_SIZE}, () =>
+		Array.from({length: GRID_SIZE}, () => 0));
+	for (const tile of tiles) {
+		board[tile.y][tile.x] = tile.value;
+	}
 
 	for (let y = 0; y < GRID_SIZE; y += 1) {
 		for (let x = 0; x < GRID_SIZE; x += 1) {
@@ -736,33 +825,9 @@ function hasMoves(tiles: Tile[]) {
 	return false;
 }
 
-function boardFromTiles(tiles: Tile[]) {
-	const board = Array.from({length: GRID_SIZE}, () => Array.from({length: GRID_SIZE}, () => 0));
-
-	for (const tile of tiles) {
-		board[tile.y][tile.x] = tile.value;
-	}
-
-	return board;
-}
-
-function normalizeState(state: StoredGameState): GameState {
-	const tiles = sortTiles(state.tiles);
-	const renderTiles = sortRenderTiles(state.renderTiles);
-
-	return {
-		...state,
-		tiles,
-		renderTiles,
-		nextTileId: state.nextTileId,
-		best: Math.max(state.best, state.score),
-		won: state.won || hasWinningTile(tiles),
-		gameOver: !hasMoves(tiles),
-	};
-}
-
 const app = Await.define({
 	widget,
+	widgetFamilies: ['large'],
 	widgetTimeline,
 	widgetIntents: {
 		move,

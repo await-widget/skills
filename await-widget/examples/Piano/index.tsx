@@ -42,7 +42,7 @@ function widget(entry: WidgetEntry) {
 	const blackKeysWidth = whiteKeysWidth + keyWidthWithPadding;
 	const keyHeight = height - topHeight;
 	const blackKeyHeight = keyHeight / 2;
-	const title = `${sound.name}${shift === 0 ? '' : (shift > 0 ? ` +${shift}` : ` ${shift}`)}`;
+	const title = `${sound.isChord ? 'CHRD' : 'MONO'}${shift === 0 ? '' : (shift > 0 ? ` +${shift}` : ` ${shift}`)}`;
 
 	const data: Data = {
 		whiteKeysWidth,
@@ -282,7 +282,7 @@ function BlackKeys(data: Data) {
 function widgetTimeline() {
 	return {
 		entries: [{date: new Date()}],
-		skipOnPlayingNote: Date.now() - AwaitStore.num('ttl') > 500,
+		skipOnPlayingNote: Date.now() - AwaitStore.num('ttl') > 500 && AwaitEnv.host === 'widget',
 	};
 }
 

@@ -4,7 +4,6 @@ import {
 
 export type Sound = {
 	path: string;
-	name: string;
 	velocity: number;
 	isChord: boolean;
 };
@@ -55,7 +54,6 @@ export const allBlackNotes = [
 	undefined,
 ];
 // Uses the same index as the white key and represents the black key on its left. Since there is one extra black-key position, the array has an extra element at the end.
-
 /* eslint-enable @stylistic/array-element-newline */
 
 export const defaultIndex = 23;
@@ -92,17 +90,16 @@ export const chords: Record<number, number[] | undefined> = {
 	9: [0, 3, 7], // A
 };
 
+// @panel {type:'menu',items:['Gran','Elec','Harp','Music Box'],title:'Sound',title_zh:'音色'}
+const sound = 'Gran';
+
+const path = `/assets/sounds/${sound}.sf2`;
+
 export const sounds: Sound[] = [
 	{
-		path: '/assets/sounds/Gran.sf2', velocity: 127, name: 'GRAN', isChord: false,
+		path, velocity: 127, isChord: false,
 	},
 	{
-		path: '/assets/sounds/Gran.sf2', velocity: 127, name: 'GRAN CH', isChord: true,
-	},
-	{
-		path: '/assets/sounds/Elec.sf2', velocity: 64, name: 'ELEC', isChord: false,
-	},
-	{
-		path: '/assets/sounds/Elec.sf2', velocity: 64, name: 'ELEC CH', isChord: true,
+		path, velocity: 127, isChord: true,
 	},
 ];
