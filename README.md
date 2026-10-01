@@ -32,3 +32,5 @@ Read await-widget/SKILL.md before writing code.
 ## License
 
 MIT
+
+If you closely reproduce a visual or interaction design from this project, attribution to **Maundy / Await** as the original inspiration would be appreciated.
