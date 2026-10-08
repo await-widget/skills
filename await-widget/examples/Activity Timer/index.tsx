@@ -6,7 +6,6 @@ import {
 	Spacer,
 	Text,
 	Time,
-	VStack,
 	ZStack,
 } from 'await';
 
@@ -58,19 +57,57 @@ const palettes: Record<string, {paper?: Color; ink: Color}> = {
 	透明: {ink: [1, 0.9]},
 };
 const {paper, ink} = palettes[theme];
-const onInk = paper ?? 'background';
+const onInk = paper ?? ink;
 const spaceGrotesk = (fontSize: number, fontWeight: number): Font => ({
 	name: 'Space Grotesk',
 	size: fontSize,
 	wght: fontWeight,
 });
 
-function widget(entry: WidgetEntry) {
-	const {width, height} = entry.size;
-	const small = entry.family === 'small';
-	const compact = small || entry.family === 'medium';
-	const grid = (steps: number) => steps * 4;
-	const typeSize = (step: number) => 6.5 * 1.5 ** step;
+const grid = (steps: number) => steps * 4;
+const typeSize = (step: number) => 6.5 * 1.5 ** step;
+
+type Layout = {
+	width: number;
+	small: boolean;
+	compact: boolean;
+	contentWidth: number;
+	headerHeight: number;
+	headerRuleY: number;
+	rowTop: number;
+	rowHeight: number;
+	rowBoxHeight: number;
+	rowCapacity: number;
+	itemFontSize: number;
+	itemDotSize: number;
+	tableWidth: number;
+	tableHeaderY: number;
+	numberTextWidth: number;
+	nameTextWidth: number;
+	timeTextWidth: number;
+	numberCellX: number;
+	nameCellX: number;
+	timeCellX: number;
+	numberDividerX: number;
+	timeDividerX: number;
+	footerHeight: number;
+	footerTop: number;
+};
+
+type EntryData = {
+	layout: Layout;
+};
+
+type Row = {
+	name: string;
+	start: number;
+	elapsed: number;
+};
+
+function makeLayout({size, family}: TimelineContext): Layout {
+	const {width, height} = size;
+	const small = family === 'small';
+	const compact = small || family === 'medium';
 	const margin = sidePadding * (small ? 4 : 7) / 7;
 	const contentWidth = width - margin * 2;
 	const tableBandRatio = 2 / 3;
@@ -81,33 +118,85 @@ function widget(entry: WidgetEntry) {
 	const tableBandCount = compact ? 1 : 2;
 	const rowCapacity = Math.floor(availableTableHeight / minimumItemRowHeight - headerRowCount - tableBandCount * tableBandRatio);
 	const rowHeight = availableTableHeight / (rowCapacity + headerRowCount + tableBandCount * tableBandRatio);
-	const itemFontSize = typeSize(2) * itemFontScale;
 	const tableHeaderHeight = compact ? 0 : rowHeight * tableBandRatio + tableHeaderExtra;
 	const footerHeight = rowHeight * tableBandRatio;
 	const footerTop = height - footerHeight;
 	const headerHeight = compact ? rowHeight : largeHeaderHeight;
 	const headerRuleY = headerHeight;
 	const rowTop = headerRuleY + tableHeaderHeight;
-	const visibleNames = names.slice(0, rowCapacity);
 	const tableHeaderY = (headerRuleY + rowTop) / 2;
-	const tableLeft = margin;
 	const tableWidth = contentWidth;
 	const [numberRatio, nameRatio, timeRatio] = columnRatios;
 	const columnUnit = tableWidth / (numberRatio + nameRatio + timeRatio);
-	const numberDividerX = small ? tableLeft : tableLeft + columnUnit * numberRatio;
-	const timeDividerX = tableLeft + (small ? tableWidth / 2 : columnUnit * (numberRatio + nameRatio));
-	const numberCellWidth = numberDividerX - tableLeft;
+	const numberDividerX = small ? margin : margin + columnUnit * numberRatio;
+	const timeDividerX = margin + (small ? tableWidth / 2 : columnUnit * (numberRatio + nameRatio));
+	const numberCellWidth = numberDividerX - margin;
 	const nameCellWidth = timeDividerX - numberDividerX;
-	const timeCellWidth = tableLeft + tableWidth - timeDividerX;
-	const numberCellX = tableLeft + numberCellWidth / 2;
+	const timeCellWidth = margin + tableWidth - timeDividerX;
+	const numberCellX = margin + numberCellWidth / 2;
 	const nameCellX = numberDividerX + nameCellWidth / 2;
 	const timeCellX = timeDividerX + timeCellWidth / 2;
-	const numberTextWidth = numberCellWidth - cellInset * 2;
-	const nameTextWidth = nameCellWidth - cellInset * 2;
-	const timeTextWidth = timeCellWidth - cellInset * 2;
-	const itemDotSize = rowHeight * 0.16;
-	const rowBoxHeight = rowHeight + 1;
-	const headerTitleRow = small
+
+	return {
+		width,
+		small,
+		compact,
+		contentWidth,
+		headerHeight,
+		headerRuleY,
+		rowTop,
+		rowHeight,
+		rowBoxHeight: rowHeight + 1,
+		rowCapacity,
+		itemFontSize: typeSize(2) * itemFontScale,
+		itemDotSize: rowHeight * 0.16,
+		tableWidth,
+		tableHeaderY,
+		numberTextWidth: numberCellWidth - cellInset * 2,
+		nameTextWidth: nameCellWidth - cellInset * 2,
+		timeTextWidth: timeCellWidth - cellInset * 2,
+		numberCellX,
+		nameCellX,
+		timeCellX,
+		numberDividerX,
+		timeDividerX,
+		footerHeight,
+		footerTop,
+	};
+}
+
+function widgetTimeline(context: TimelineContext) {
+	return {
+		entries: [{date: new Date(), layout: makeLayout(context)}],
+	};
+}
+
+function widget(entry: WidgetEntry<EntryData>) {
+	const {layout, renderingMode} = entry;
+	const rows = names.slice(0, layout.rowCapacity).map((name, index) => ({
+		name,
+		start: AwaitStore.num(`timeReceipt.start.${index}`, 0),
+		elapsed: AwaitStore.num(`timeReceipt.elapsed.${index}`, 0),
+	}));
+
+	return (
+		<ZStack frame={entry.size} background={paper}>
+			<Header layout={layout}/>
+			<RowHighlights rows={rows} layout={layout} renderingMode={renderingMode}/>
+			<TableRules layout={layout}/>
+			<TableHeader layout={layout}/>
+			<ColumnRules layout={layout}/>
+			<Footer layout={layout}/>
+			{rows.map((row, index) => (
+				<TimerRow row={row} index={index} layout={layout}/>
+			))}
+		</ZStack>
+	);
+}
+
+function Header({layout}: {layout: Layout}) {
+	const {width, small, compact, contentWidth, headerHeight} = layout;
+	const content = small
 		? (
 			<Text
 				value={title}
@@ -147,169 +236,214 @@ function widget(entry: WidgetEntry) {
 		);
 
 	return (
-		<ZStack frame={entry.size} background={paper}>
-			<ZStack frame={{width: contentWidth, height: headerHeight}} position={{x: width / 2, y: headerHeight / 2}}>
-				{headerTitleRow}
-			</ZStack>
-			{visibleNames.map((_, index) => (
+		<ZStack frame={{width: contentWidth, height: headerHeight}} position={{x: width / 2, y: headerHeight / 2}}>
+			{content}
+		</ZStack>
+	);
+}
+
+function RowHighlights({
+	rows,
+	layout,
+	renderingMode,
+}: {
+	rows: Row[];
+	layout: Layout;
+	renderingMode: RenderingMode;
+}) {
+	const {width, tableWidth, rowTop, rowHeight, rowBoxHeight} = layout;
+	const highlightOpacity = renderingMode !== 'fullColor' || theme as string === '透明' ? 0.5 : 1;
+	return rows.map((row, index) => (
+		<Rectangle
+			id={`active-row-${index}`}
+			fill={ink}
+			opacity={row.start > 0 ? highlightOpacity : 0}
+			frame={{width: tableWidth, height: rowBoxHeight}}
+			position={{x: width / 2, y: rowTop + rowHeight * (index + 0.5) - 0.5}}
+		/>
+	));
+}
+
+function TableRules({layout}: {layout: Layout}) {
+	const {width, compact, tableWidth, headerRuleY, rowTop, rowHeight, rowCapacity} = layout;
+	return [
+		<Rectangle
+			fill={ink}
+			opacity={1}
+			frame={{width: tableWidth, height: 1}}
+			frame_={{width: tableWidth, height: 0, alignment: 'bottom'}}
+			position={{x: width / 2, y: headerRuleY}}
+		/>,
+		compact
+			? undefined
+			: (
 				<Rectangle
-					id={`active-row-${index}`}
-					fill={ink}
-					opacity={AwaitStore.num(`timeReceipt.start.${index}`, 0) > 0 ? 1 : 0}
-					frame={{width: tableWidth, height: rowBoxHeight}}
-					position={{x: width / 2, y: rowTop + rowHeight * (index + 0.5) - 0.5}}
-				/>))}
-			<Rectangle
-				fill={ink}
-				opacity={1}
-				frame={{width: tableWidth, height: 1}}
-				frame_={{width: tableWidth, height: 0, alignment: 'bottom'}}
-				position={{x: width / 2, y: headerRuleY}}
-			/>
-			{compact
-				? undefined
-				: (
-					<Rectangle
-						fill={ink}
-						opacity={0.35}
-						frame={{width: tableWidth, height: 1}}
-						frame_={{width: tableWidth, height: 0, alignment: 'bottom'}}
-						position={{x: width / 2, y: rowTop}}
-					/>
-				)}
-			{compact
-				? undefined
-				: (
-					<Text
-						value={numberColumnLabel}
-						font={spaceGrotesk(typeSize(1), 700)}
-						textAlignment='leading'
-						foreground={ink}
-						frame={{width: numberTextWidth, height: grid(3), alignment: 'leading'}}
-						position={{x: numberCellX, y: tableHeaderY}}
-					/>
-				)}
-			{compact
-				? undefined
-				: (
-					<Text
-						value={activityColumnLabel}
-						font={spaceGrotesk(typeSize(1), 700)}
-						textAlignment='leading'
-						foreground={ink}
-						frame={{width: nameTextWidth, height: grid(3), alignment: 'leading'}}
-						position={{x: nameCellX, y: tableHeaderY}}
-					/>
-				)}
-			{compact
-				? undefined
-				: (
-					<Text
-						value={elapsedColumnLabel}
-						font={spaceGrotesk(typeSize(1), 700)}
-						textAlignment='trailing'
-						foreground={ink}
-						frame={{width: timeTextWidth, height: grid(3), alignment: 'trailing'}}
-						position={{x: timeCellX, y: tableHeaderY}}
-					/>
-				)}
-			{Array.from({length: rowCapacity}, (_, index) => (
-				<Rectangle
-					id={`separator-${index}`}
 					fill={ink}
 					opacity={0.35}
 					frame={{width: tableWidth, height: 1}}
 					frame_={{width: tableWidth, height: 0, alignment: 'bottom'}}
-					position={{x: width / 2, y: rowTop + rowHeight * (index + 1)}}
-				/>))}
-			{showColumnRules
-				? (small ? [timeDividerX] : [numberDividerX, timeDividerX]).map((x, index) => (
-					<Rectangle
-						id={`column-rule-${index}`}
-						fill={ink}
-						opacity={0.35}
-						frame={{width: 1, height: footerTop - headerRuleY}}
-						position={{x, y: (headerRuleY + footerTop) / 2}}
-					/>))
-				: undefined}
-			<Text
-				value={footerText}
-				font={spaceGrotesk(typeSize(0), 700)}
-				textAlignment='center'
-				foreground={ink}
-				frame={{width: contentWidth, height: footerHeight, alignment: 'center'}}
-				position={{x: width / 2, y: footerTop + footerHeight / 2}}
+					position={{x: width / 2, y: rowTop}}
+				/>
+			),
+		...Array.from({length: rowCapacity}, (_, index) => (
+			<Rectangle
+				id={`separator-${index}`}
+				fill={ink}
+				opacity={0.35}
+				frame={{width: tableWidth, height: 1}}
+				frame_={{width: tableWidth, height: 0, alignment: 'bottom'}}
+				position={{x: width / 2, y: rowTop + rowHeight * (index + 1)}}
 			/>
-			{visibleNames.map((name, index) => {
-				const start = AwaitStore.num(`timeReceipt.start.${index}`, 0);
-				const elapsed = AwaitStore.num(`timeReceipt.elapsed.${index}`, 0);
-				const active = start > 0;
-				const centerY = rowTop + rowHeight * (index + 0.5) - 0.5;
-				return (
-					<ZStack id={`timer-${index}`} frame={{width, height: rowBoxHeight}} position={{x: width / 2, y: centerY}}>
-						{small
-							? undefined
-							: (
-								<ZStack frame={{width: numberTextWidth, height: rowHeight, alignment: 'leading'}} position={{x: numberCellX, y: rowBoxHeight / 2}}>
-									<Text
-										value={String(index + 1).padStart(2, '0')}
-										font={spaceGrotesk(itemFontSize, 700)}
-										foreground={ink}
-										opacity={active ? 0 : 1}
-									/>
-									<Circle
-										fill={onInk}
-										opacity={active ? 1 : 0}
-										frame={{width: itemDotSize, height: itemDotSize}}
-									/>
-								</ZStack>
-							)}
+		)),
+	];
+}
+
+function TableHeader({layout}: {layout: Layout}) {
+	if (layout.compact) {
+		return undefined;
+	}
+
+	const {tableHeaderY, numberTextWidth, nameTextWidth, timeTextWidth, numberCellX, nameCellX, timeCellX} = layout;
+	return [
+		<Text
+			value={numberColumnLabel}
+			font={spaceGrotesk(typeSize(1), 700)}
+			textAlignment='leading'
+			foreground={ink}
+			frame={{width: numberTextWidth, height: grid(3), alignment: 'leading'}}
+			position={{x: numberCellX, y: tableHeaderY}}
+		/>,
+		<Text
+			value={activityColumnLabel}
+			font={spaceGrotesk(typeSize(1), 700)}
+			textAlignment='leading'
+			foreground={ink}
+			frame={{width: nameTextWidth, height: grid(3), alignment: 'leading'}}
+			position={{x: nameCellX, y: tableHeaderY}}
+		/>,
+		<Text
+			value={elapsedColumnLabel}
+			font={spaceGrotesk(typeSize(1), 700)}
+			textAlignment='trailing'
+			foreground={ink}
+			frame={{width: timeTextWidth, height: grid(3), alignment: 'trailing'}}
+			position={{x: timeCellX, y: tableHeaderY}}
+		/>,
+	];
+}
+
+function ColumnRules({layout}: {layout: Layout}) {
+	if (!showColumnRules) {
+		return undefined;
+	}
+
+	const {small, headerRuleY, footerTop, numberDividerX, timeDividerX} = layout;
+	return (small ? [timeDividerX] : [numberDividerX, timeDividerX]).map((x, index) => (
+		<Rectangle
+			id={`column-rule-${index}`}
+			fill={ink}
+			opacity={0.35}
+			frame={{width: 1, height: footerTop - headerRuleY}}
+			position={{x, y: (headerRuleY + footerTop) / 2}}
+		/>
+	));
+}
+
+function Footer({layout}: {layout: Layout}) {
+	const {width, contentWidth, footerHeight, footerTop} = layout;
+	return (
+		<Text
+			value={footerText}
+			font={spaceGrotesk(typeSize(0), 700)}
+			textAlignment='center'
+			foreground={ink}
+			frame={{width: contentWidth, height: footerHeight, alignment: 'center'}}
+			position={{x: width / 2, y: footerTop + footerHeight / 2}}
+		/>
+	);
+}
+
+function TimerRow({row, index, layout}: {row: Row; index: number; layout: Layout}) {
+	const {
+		width,
+		small,
+		rowTop,
+		rowHeight,
+		rowBoxHeight,
+		numberTextWidth,
+		nameTextWidth,
+		timeTextWidth,
+		numberCellX,
+		nameCellX,
+		timeCellX,
+		itemFontSize,
+		itemDotSize,
+	} = layout;
+	const active = row.start > 0;
+	const centerY = rowTop + rowHeight * (index + 0.5) - 0.5;
+
+	return (
+		<ZStack id={`timer-${index}`} frame={{width, height: rowBoxHeight}} position={{x: width / 2, y: centerY}}>
+			{small
+				? undefined
+				: (
+					<ZStack frame={{width: numberTextWidth, height: rowHeight, alignment: 'leading'}} position={{x: numberCellX, y: rowBoxHeight / 2}}>
 						<Text
-							value={name}
+							value={String(index + 1).padStart(2, '0')}
 							font={spaceGrotesk(itemFontSize, 700)}
-							textAlignment='leading'
-							foreground={active ? onInk : ink}
-							lineLimit={1}
-							frame={{width: nameTextWidth, height: rowHeight, alignment: 'leading'}}
-							position={{x: nameCellX, y: rowBoxHeight / 2}}
+							foreground={ink}
+							opacity={active ? 0 : 1}
 						/>
-						{active
-							? (
-								<Time
-									date={new Date(start)}
-									format={{
-										type: 'stopwatch',
-										showsHours: true,
-										maxFieldCount: 3,
-										maxPrecision: 1,
-									}}
-									font={spaceGrotesk(itemFontSize, 700)}
-									monospacedDigit
-									textAlignment='trailing'
-									foreground={onInk}
-									frame={{width: timeTextWidth, height: rowHeight, alignment: 'trailing'}}
-									position={{x: timeCellX, y: rowBoxHeight / 2}}
-								/>
-							)
-							: (
-								<Text
-									value={formatElapsed(elapsed)}
-									font={spaceGrotesk(itemFontSize, 700)}
-									monospacedDigit
-									textAlignment='trailing'
-									foreground={ink}
-									opacity={0.8}
-									frame={{width: timeTextWidth, height: rowHeight, alignment: 'trailing'}}
-									position={{x: timeCellX, y: rowBoxHeight / 2}}
-								/>
-							)}
-						<FullButton
-							intent={app.toggle(index)}
-							frame={{width, height: rowBoxHeight}}
+						<Circle
+							fill={onInk}
+							opacity={active ? 1 : 0}
+							frame={{width: itemDotSize, height: itemDotSize}}
 						/>
 					</ZStack>
-				);
-			})}
+				)}
+			<Text
+				value={row.name}
+				font={spaceGrotesk(itemFontSize, 700)}
+				textAlignment='leading'
+				foreground={active ? onInk : ink}
+				lineLimit={1}
+				frame={{width: nameTextWidth, height: rowHeight, alignment: 'leading'}}
+				position={{x: nameCellX, y: rowBoxHeight / 2}}
+			/>
+			{active
+				? (
+					<Time
+						date={new Date(row.start)}
+						format={{
+							type: 'stopwatch',
+							showsHours: true,
+							maxFieldCount: 3,
+							maxPrecision: 1,
+						}}
+						font={spaceGrotesk(itemFontSize, 700)}
+						monospacedDigit
+						textAlignment='trailing'
+						foreground={onInk}
+						frame={{width: timeTextWidth, height: rowHeight, alignment: 'trailing'}}
+						position={{x: timeCellX, y: rowBoxHeight / 2}}
+					/>
+				)
+				: (
+					<Text
+						value={formatElapsed(row.elapsed)}
+						font={spaceGrotesk(itemFontSize, 700)}
+						monospacedDigit
+						textAlignment='trailing'
+						foreground={ink}
+						opacity={0.8}
+						frame={{width: timeTextWidth, height: rowHeight, alignment: 'trailing'}}
+						position={{x: timeCellX, y: rowBoxHeight / 2}}
+					/>
+				)}
+			<FullButton
+				intent={app.toggle(index)}
+				frame={{width, height: rowBoxHeight}}
+			/>
 		</ZStack>
 	);
 }
@@ -333,21 +467,13 @@ function toggle(index: number) {
 		return;
 	}
 
-	for (let other = 0; other < names.length; other++) {
-		const otherStartKey = `timeReceipt.start.${other}`;
-		const otherStart = AwaitStore.num(otherStartKey, 0);
-		if (otherStart > 0) {
-			AwaitStore.set(`timeReceipt.elapsed.${other}`, now - otherStart);
-			AwaitStore.delete(otherStartKey);
-		}
-	}
-
 	AwaitStore.set(`timeReceipt.elapsed.${index}`, 0);
 	AwaitStore.set(currentStartKey, now);
 }
 
 const app = Await.define({
 	widget,
+	widgetTimeline,
 	widgetFamilies: ['small', 'medium', 'large', 'extraLargePortrait'],
 	widgetIntents: {toggle},
 });

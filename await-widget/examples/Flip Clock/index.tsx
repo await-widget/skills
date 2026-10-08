@@ -1,18 +1,18 @@
 import {
 	Text,
+	Time,
 	ZStack,
 	Color,
 	HStack,
 	VFlip,
 	Group,
 	FullButton,
-	Image,
 } from 'await';
 
 // @panel {type:'slider',min:0,max:4,step:1,title:'Page Spacing',title_zh:'页片间距'}
-const flipSpacing = 3;
+const flipSpacing = 4;
 // @panel {type:'slider',min:1,max:150,step:1,title:'Font Size',title_zh:'字体大小'}
-const fontSize = 150;
+const fontSize = 100;
 // @panel {type:'slider',min:300,max:700,step:1,title:'Font Weight',title_zh:'字体粗细'}
 const fontWeight = 700;
 // @panel {type:'color',title:'Background',title_zh:'背景'}
@@ -27,8 +27,6 @@ const useTransparent = false;
 const use24Hour = false;
 // @panel {title:'Open Clock',title_zh:'打开时钟'}
 const openClock = true;
-// @panel {title:'Font URL',title_zh:'字体路径'}
-const fontURL = '';
 
 const monospacedDigit = true;
 
@@ -36,13 +34,9 @@ const padding = 12;
 const cornerRadius = 86 / 3 - padding;
 
 const font: Mods = {
-	font: fontURL
-		? {
-			url: fontURL, size: fontSize, wght: fontWeight,
-		}
-		: {
-			name: 'Space Grotesk', size: fontSize, wght: fontWeight,
-		},
+	font: {
+		name: 'Space Grotesk', size: fontSize, wght: fontWeight,
+	},
 	monospacedDigit,
 	minimumScaleFactor: 0.1,
 };
@@ -72,11 +66,27 @@ function clockText(num: number) {
 	return String(num).padStart(2, '0');
 }
 
-function pageContent(num: number, size: Size) {
+function pageContent(num: number, size: Size, showSeconds: boolean) {
 	return (
-		<Image background={background}
+		<ZStack background={background}
 			reverseMask={<Color value={0} height={flipSpacing} />}
-			cornerRadius={cornerRadius}>
+			cornerRadius={cornerRadius}
+			overlay={showSeconds
+				? {
+					alignment: 'bottomTrailing',
+					content: (
+						<Time
+							format={[{field: 'second', style: 'twoDigits'}]}
+							font={{name: 'Space Grotesk', size: 14, wght: fontWeight}}
+							monospacedDigit
+							foreground={foreground}
+							contentTransition='identity'
+							padding={{right: 12, bottom: 8}}
+							textAlignment='trailing'
+						/>
+					),
+				}
+				: undefined}>
 			<Text
 				contentTransition='identity'
 				{...font}
@@ -85,7 +95,7 @@ function pageContent(num: number, size: Size) {
 				frame={size}
 				foreground={foreground}
 			/>
-		</Image>
+		</ZStack>
 	);
 }
 
@@ -96,14 +106,15 @@ function makePage(
 	infoNext: Info,
 	delta: number,
 	size: Size,
+	showSeconds: boolean,
 ): PageData {
 	const index = info[0];
 	const currNum = info[1];
 	const prevNum = infoPrev[1];
 	const nextNum = infoNext[1];
 	const changed = currNum !== prevNum || currNum !== nextNum;
-	const curr = pageContent(currNum, size);
-	const prev = pageContent(prevNum, size);
+	const curr = pageContent(currNum, size, showSeconds);
+	const prev = pageContent(prevNum, size, showSeconds);
 	return {
 		index,
 		curr,
@@ -130,7 +141,7 @@ function makePages({curr, prev, next}: EntryData, size: Size): PageData[] {
 	const infoNext = getClockInfo(next);
 	const delta = next > curr ? 1 : -1;
 	return infoCurr.map((info, index) =>
-		makePage(info, infoPrev[index], infoNext[index], delta, size));
+		makePage(info, infoPrev[index], infoNext[index], delta, size, index === 1));
 }
 
 function Page({data, size}: PageViewData) {
@@ -165,7 +176,7 @@ function widget(entry: WidgetEntry<EntryData>) {
 		renderingMode,
 	} = entry;
 	const w_total = Math.floor(width / 2 - padding) * 2;
-	const pageSpacing = 6;
+	const pageSpacing = 12;
 	const w = (w_total - pageSpacing) / 2;
 	let h = Math.min(w, height - padding * 2);
 	h = Math.floor(h / 2) * 2;
@@ -220,6 +231,6 @@ function tap() {
 const app = Await.define({
 	widget,
 	widgetTimeline,
-	widgetFamilies: ['small', 'medium'],
+	widgetFamilies: ['medium'],
 	widgetIntents: {tap},
 });

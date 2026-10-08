@@ -3,6 +3,7 @@ import {
 	Circle,
 	Color,
 	HStack,
+	Modifier,
 	Svg,
 	Text,
 	UnevenRoundedRectangle,
@@ -16,17 +17,29 @@ import {
 	sounds,
 	allBlackNotes,
 	allWhiteNotes,
-	blackKeyStyle,
 	chords,
 	defaultIndex,
 	topHeight,
+	blackKeyStyle,
 	whiteKeyStyle,
 } from './constants';
 
-const darkest = 0.05;
-
 // @panel {type:'slider',min:0,max:0.5,title:'Chord Separation',title_zh:'和弦分离'}
 const delay = 0;
+
+const colors = {
+	base: '#1B1C24',
+	surface: '#343543',
+	light: '#E4E5EF',
+	toolbarSeparator: '#922C3A',
+	whiteKeyFace: '#F7F7FD',
+	blackKeyBevel: '#4B4D60',
+	blackKeyFace: '#434558',
+};
+
+const shadow: Shadow = {
+	color: [colors.base, 0.2], blur: 2, y: 4,
+};
 
 function widget(entry: WidgetEntry) {
 	const {
@@ -42,7 +55,7 @@ function widget(entry: WidgetEntry) {
 	const blackKeysWidth = whiteKeysWidth + keyWidthWithPadding;
 	const keyHeight = height - topHeight;
 	const blackKeyHeight = keyHeight / 2;
-	const title = `${sound.isChord ? 'CHRD' : 'MONO'}${shift === 0 ? '' : (shift > 0 ? ` +${shift}` : ` ${shift}`)}`;
+	const title = `${sound.isChord ? 'CHORD' : 'PIANO'}${shift === 0 ? '' : (shift > 0 ? ` +${shift}` : ` ${shift}`)}`;
 
 	const data: Data = {
 		whiteKeysWidth,
@@ -55,7 +68,7 @@ function widget(entry: WidgetEntry) {
 		blackNotes,
 	};
 	return (
-		<VStack background={darkest}>
+		<VStack background={colors.base}>
 			<Buttons width={width} title={title} />
 			<ZStack alignment='top'>
 				<WhiteKeys {...data} />
@@ -140,9 +153,9 @@ function switchSound() {
 function SmallButton({intent, icon}: {intent: IntentInfo; icon: string}) {
 	return (
 		<Button intent={intent}>
-			<ZStack width={36} maxHeight>
-				<Circle fill={darkest} sides={28} />
-				<Circle fill={0.15} sides={24} />
+			<ZStack width={32} maxHeight>
+				<Circle fill={colors.base} sides={26} />
+				<Circle fill={colors.surface} sides={22} />
 				<Svg url={icon} sides={24} />
 			</ZStack>
 		</Button>
@@ -163,22 +176,25 @@ function Buttons({title, width}: {title: string; width: number}) {
 	return (
 		<HStack
 			padding={{horizontal: 12}}
-			background={0.15}
+			background={colors.surface}
 			padding_={{bottom: 2}}
+			background_={colors.toolbarSeparator}
 			frame={{width, height: topHeight}}
 			buttonStyle='borderless'
-			fontSize={14}
-			fontDesign='monospaced'
-			fontWeight={800}
-			foreground={0.9}
+			fontSize={12}
+			fontDesign='rounded'
+			fontWeight={900}
+			foreground={colors.light}
 			zIndex={1}
+			compositingGroup
+			shadow={shadow}
 		>
 			{left.map(({intent, icon}) => (
 				<SmallButton intent={intent} icon={icon} />
 			))}
 			<Button intent={app.switchSound()} audio>
 				<ZStack padding={{horizontal: 8}} maxHeight>
-					<Text value={title} maxSides contentTransition='numericText' />
+					<Text value={title} maxSides contentTransition='opacity' />
 				</ZStack>
 			</Button>
 			{right.map(({intent, icon}) => (
@@ -207,11 +223,11 @@ function WhiteKeys(data: Data) {
 						>
 							<ZStack padding={{horizontal: 1}}>
 								<UnevenRoundedRectangle
-									fill={{gradient: 'linear', colors: [0.9 * 0.9, 1 * 0.9]}}
+									fill={colors.light}
 									rectRadius={{bottom: 4}}
 								/>
 								<UnevenRoundedRectangle
-									fill={{gradient: 'linear', colors: [0.9, 1]}}
+									fill={colors.whiteKeyFace}
 									rectRadius={{bottom: 2}}
 									padding={{horizontal: 2, bottom: 2}}
 								/>
@@ -231,9 +247,8 @@ function BlackKeys(data: Data) {
 		shift,
 		sound,
 	} = data;
-	const x = blackKeyHeight / (blackKeyHeight + 10);
 	return (
-		<HStack frame={{height: blackKeyHeight, width: blackKeysWidth}}>
+		<HStack frame={{height: blackKeyHeight, width: blackKeysWidth}} compositingGroup shadow={shadow}>
 			{blackNotes.map(note =>
 				note === undefined
 					? (
@@ -249,26 +264,16 @@ function BlackKeys(data: Data) {
 						>
 							<ZStack alignment='bottom' width={blackKeyWidth} maxWidth>
 								<UnevenRoundedRectangle
-									fill={{
-										gradient: 'linear',
-										stops: [
-											[[darkest, 0.15], x],
-											[[darkest, 0], 1],
-										],
-									}}
-									padding={{bottom: -10}}
-								/>
-								<UnevenRoundedRectangle
-									fill={darkest}
+									fill={colors.base}
 									rectRadius={{bottom: 8}}
 								/>
 								<UnevenRoundedRectangle
-									fill={{gradient: 'linear', colors: [0.2, 0.3]}}
+									fill={colors.blackKeyBevel}
 									rectRadius={{bottom: 4}}
 									padding={{horizontal: 4, bottom: 4}}
 								/>
 								<UnevenRoundedRectangle
-									fill={{gradient: 'linear', colors: [0.2 * 0.9, 0.3 * 0.9]}}
+									fill={colors.blackKeyFace}
 									rectRadius={{bottom: 2}}
 									padding={{horizontal: 6, bottom: 6}}
 								/>
