@@ -95,7 +95,7 @@ function makePage(data: RawPageData): Page {
 	const backPageIndex = Math.ceil(bookSize / pageSize) + 1;
 	const pageIndex = dataIndex >= bookSize + 1 ? backPageIndex : (dataIndex <= 0 ? 0 : Math.ceil(dataIndex / pageSize));
 	const prevIndex = pageIndex - delta;
-	const texts = AwaitFile.readTextByPages(bookPath, [pageIndex - 1, pageIndex - delta - 1], pageSize).map(v => v?.trim().replaceAll(/[\n\r]{3,}/g, '\n\n') ?? '');
+	const texts = AwaitFile.readTextByPages(bookPath, [pageIndex - 1, pageIndex - delta - 1], pageSize).map(v => v?.trim().replaceAll(/[\n\r]{2,}/g, '\n') ?? '');
 	return {
 		backPageIndex,
 		cornerRadius: 86 / 3 - padding,
