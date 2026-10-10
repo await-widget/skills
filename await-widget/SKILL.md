@@ -2,7 +2,7 @@
 name: await-widget
 description: Develop and review user-authored widgets with Await's public TSX runtime and CLI. Use when creating widget projects, planning widget sizes and layouts, writing widget TSX, checking types, syncing local files, inspecting widget build errors, or capturing previews.
 metadata:
-  version: "1.0.3"
+  version: "1.0.4"
 ---
 
 ## Update on Use
