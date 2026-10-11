@@ -2,10 +2,6 @@
 
 Use the computer bridge to sync a local widget folder with Await or to run app commands for previews and debugging.
 
-## Project Shape
-
-Use the workspace layout from [Create A Widget](create-a-widget.md). Running `npx await-widget` from the package root opens a directory selector. Running it from a first-level widget folder connects that widget directly.
-
 ## Start And Connect
 
 1. Start the bridge:
