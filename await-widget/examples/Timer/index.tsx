@@ -8,6 +8,7 @@ import {
 	ZStack,
 	Circle,
 	Modifier,
+	Image,
 } from 'await';
 
 // @panel {type:'strings',min:1,title:'Preset Durations',title_zh:'预设时长'}
@@ -117,7 +118,14 @@ function widget(entry: WidgetEntry<Frame>) {
 			/>
 			<Time
 				date={new Date(entry.deadline)}
-				showsHours={minutes(entry.selected) === 0 ? undefined : false}
+				format={minutes(entry.selected) === 0
+					? undefined
+					: {
+						type: 'timer',
+						showsHours: false,
+						maxFieldCount: 3,
+						maxPrecision: 1,
+					}}
 				fontSize={countdownSize}
 				textAlignment='center'
 				contentTransition='identity'
@@ -171,7 +179,11 @@ function widget(entry: WidgetEntry<Frame>) {
 			{active
 				? <FullButton intent={app.reset()} id='reset'/>
 				: <Button intent={app.startTimer()} id='start' audio>
-					<Circle sides={buttonSize} sides_={unit} overlay={<Text value={buttonText} fontSize={presetSize} foreground={0}/>}/>
+					<Circle sides={buttonSize} sides_={unit} overlay={(
+						<Image accented='fullColor'>
+							<Text value={buttonText} fontSize={presetSize} foreground={0}/>
+						</Image>
+					)}/>
 				</Button>}
 		</ZStack>
 	);
@@ -217,5 +229,5 @@ function reset() {
 }
 
 const app = Await.define({
-	widget, widgetTimeline, widgetIntents: {choose, startTimer, reset},
+	widget, widgetTimeline, widgetIntents: {choose, startTimer, reset}, autoAccented: false,
 });
