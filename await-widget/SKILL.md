@@ -5,6 +5,14 @@ metadata:
   version: "1.0.5"
 ---
 
+## Install the Skill
+
+These docs accompany the `await-widget` skill for building Await widgets with an AI coding agent. Install the skill before getting started:
+
+```bash
+npx skills add await-widget/skills
+```
+
 ## Update on Use
 
 When this skill was installed with `npx skills add`, check for updates once at the start of each invocation. Run `npx skills update await-widget -g` for a global install, or run `npx skills update await-widget -p` from the installation project's root for a project install. After the command completes, re-read this installed `SKILL.md` and follow the current instructions for the rest of the task.
