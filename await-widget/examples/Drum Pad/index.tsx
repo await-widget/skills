@@ -52,7 +52,9 @@ function Cell({note}: {note: number}) {
 }
 
 function widgetTimeline() {
-	return {entries: [{date: new Date()}], skipOnPlayingNote: true};
+	const [major, minor = 0, patch = 0] = AwaitEnv.version.split('.').map(Number);
+	const canSkipOnPlayingNote = major < 27 || (major === 27 && minor === 0 && patch <= 1);
+	return {entries: [{date: new Date()}], skipOnPlayingNote: canSkipOnPlayingNote};
 }
 
 const app = Await.define({

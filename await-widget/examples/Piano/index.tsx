@@ -284,9 +284,11 @@ function BlackKeys(data: Data) {
 }
 
 function widgetTimeline() {
+	const [major, minor = 0, patch = 0] = AwaitEnv.version.split('.').map(Number);
+	const canSkipOnPlayingNote = major < 27 || (major === 27 && minor === 0 && patch <= 1);
 	return {
 		entries: [{date: new Date()}],
-		skipOnPlayingNote: Date.now() - AwaitStore.num('ttl') > 500 && AwaitEnv.host === 'widget',
+		skipOnPlayingNote: canSkipOnPlayingNote && Date.now() - AwaitStore.num('ttl') > 500 && AwaitEnv.host === 'widget',
 	};
 }
 
