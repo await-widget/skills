@@ -1,0 +1,198 @@
+import {
+	FullButton,
+	HFlip,
+	HStack,
+	Text,
+	ZStack,
+	Color,
+	Group,
+	Image,
+} from 'await';
+
+// @panel {title:'Book Path',title_zh:'书籍路径'}
+const bookPath = 'sample.txt';
+// @panel {type:'slider',min:0,max:1,step:0.05,title:'Background',title_zh:'背景'}
+const background = 0.1;
+// @panel {type:'slider',min:0,max:1,step:0.05,title:'Foreground',title_zh:'前景'}
+const foreground = 0.9;
+// @panel {type:'slider',min:1,max:3,step:0.1,title:'Font Scale',title_zh:'字体缩放'}
+const fontSizeFactor = 2;
+// @panel {type:'slider',min:0,max:16,step:1,title:'Line Spacing',title_zh:'行间距'}
+const lineSpacing = 0;
+// @panel {type:'slider',min:100,max:800,step:100,title:'Font Weight',title_zh:'字体粗细'}
+const fontWeight = 700;
+// @panel {title:'With Padding',title_zh:'启用边距'}
+const withPadding = true;
+// @panel {title:'Use Transparent',title_zh:'启用透明'}
+const useTransparent = false;
+// @panel {title:'Font URL',title_zh:'字体路径'}
+const fontURL = '';
+
+const animation: NativeAnimation = {duration: 0.6, type: 'smooth'};
+const pagePadding = {top: 16, horizontal: 16, bottom: 24};
+const padding = withPadding ? 12 : 0;
+const font: Mods = fontURL === ''
+	? {
+		fontSize: 32,
+		fontWeight,
+		lineSpacing,
+		minimumScaleFactor: 1 / 32,
+	}
+	: {
+		font: {url: fontURL, size: 32, wght: fontWeight},
+		lineSpacing,
+		minimumScaleFactor: 1 / 32,
+	};
+const fontSmall: Mods = {
+	fontDesign: 'monospaced',
+	fontSize: 10,
+	fontWeight: 600,
+	monospacedDigit: true,
+};
+
+type EntryData = {
+	dataIndex: number;
+	delta: number;
+	pageSize: number;
+	bookSize: number;
+	pageFrame: Size;
+	offset: number;
+	page: Page;
+};
+
+type RawPageData = {
+	bookSize: number;
+	dataIndex: number;
+	delta: number;
+	pageSize: number;
+	size: Size;
+};
+
+type Page = {
+	backPageIndex: number;
+	cornerRadius: number;
+	currContent: NativeView;
+	pageIndex: number;
+	prevContent: NativeView;
+	delta: number;
+};
+
+function pageContent(index: number, text: string, backPageIndex: number, size: Size) {
+	const content = <Text foreground={foreground} {...font} value={text} padding={pagePadding} frame={size}/>;
+	return (index <= 0 || index >= backPageIndex)
+		? <Color value={background}/>
+		: <Color
+			value={background}
+			overlay={fontURL === '' ? content : <Image>{content}</Image>}
+			overlay_={{
+				alignment: 'bottomTrailing',
+				content: <Text value={`${index}/${backPageIndex - 1}`} {...fontSmall} foreground={[foreground, 0.5]} padding={10}/>,
+			}}/>;
+}
+
+function makePage(data: RawPageData): Page {
+	const {bookSize, pageSize, dataIndex, delta, size} = data;
+	const backPageIndex = Math.ceil(bookSize / pageSize) + 1;
+	const pageIndex = dataIndex >= bookSize + 1 ? backPageIndex : (dataIndex <= 0 ? 0 : Math.ceil(dataIndex / pageSize));
+	const prevIndex = pageIndex - delta;
+	const texts = AwaitFile.readTextByPages(bookPath, [pageIndex - 1, pageIndex - delta - 1], pageSize).map(v => v?.trim().replaceAll(/[\n\r]{2,}/g, '\n') ?? '');
+	return {
+		backPageIndex,
+		cornerRadius: 86 / 3 - padding,
+		currContent: pageContent(pageIndex, texts[0], backPageIndex, size),
+		pageIndex,
+		prevContent: pageContent(prevIndex, texts[1], backPageIndex, size),
+		delta,
+	};
+}
+
+function Book({page}: {page: Page}) {
+	const {currContent, prevContent, cornerRadius, backPageIndex, delta, pageIndex} = page;
+	const topFlag = delta === -1 && pageIndex >= backPageIndex - 1 || delta === 1 && pageIndex >= backPageIndex;
+	const bottomFlag = delta === 1 && pageIndex <= 1 || delta === -1 && pageIndex <= 0;
+	return (
+		<HFlip
+			index={pageIndex}
+			delta={delta}
+			curr={<ZStack cornerRadius={cornerRadius}>{currContent}</ZStack>}
+			leadingHidden={bottomFlag}
+			prev={<ZStack cornerRadius={cornerRadius}>{prevContent}</ZStack>}
+			trailingHidden={topFlag}
+		/>
+	);
+}
+
+function widget(entry: WidgetEntry<EntryData>) {
+	const {pageSize, bookSize, offset, pageFrame, page, renderingMode} = entry;
+	const content = (
+		<ZStack
+			frame={pageFrame}
+			geometryGroup
+			pixelPerfectCenter={{x: offset}}
+			animation_={animation}
+		>
+			<Book page={page}/>
+			<HStack>
+				<FullButton intent={app.change(pageSize, bookSize, -1)}/>
+				<FullButton intent={app.change(pageSize, bookSize, 1)}/>
+			</HStack>
+		</ZStack>
+	);
+	if (renderingMode === 'fullColor' && useTransparent) {
+		return <Group compositingGroup luminanceToAlpha colorInvert>{content}</Group>;
+	}
+
+	return content;
+}
+
+function change(pageSize: number, bookSize: number, diff: number) {
+	const dataIndex = AwaitStore.num('dataIndex');
+	if (dataIndex === bookSize && diff > 0) {
+		AwaitStore.set('dataIndex', bookSize + 1);
+	} else if (dataIndex >= bookSize + 1 && diff < 0) {
+		AwaitStore.set('dataIndex', bookSize);
+	} else if (dataIndex <= 0 && diff > 0) {
+		AwaitStore.set('dataIndex', 1);
+	} else if (dataIndex === 1 && diff < 0) {
+		AwaitStore.set('dataIndex', 0);
+	} else {
+		AwaitStore.set('dataIndex', Math.max(0, Math.min(bookSize + 1, dataIndex + diff * pageSize)));
+	}
+
+	AwaitStore.set('delta', diff > 0 ? 1 : -1);
+}
+
+function widgetTimeline(context: TimelineContext): Timeline<EntryData> {
+	const {width, height} = context.size;
+	let pageWidth = Math.ceil(width / 2) * 2;
+	let pageHeight = Math.ceil(height / 2) * 2;
+	if (withPadding) {
+		pageWidth = Math.floor(width / 2 - padding) * 2;
+		pageHeight = Math.floor(height / 2 - padding) * 2;
+	}
+
+	const pageFrame = {
+		width: pageWidth,
+		height: pageHeight,
+	};
+	const bookSize = AwaitFile.fileSize(bookPath) ?? 0;
+	const pageSize = Math.floor((pageWidth - pagePadding.horizontal) * (pageHeight - pagePadding.bottom - pagePadding.top) / fontSizeFactor / 100);
+	const dataIndex = AwaitStore.num('dataIndex');
+	const delta = dataIndex >= bookSize + 1 ? 1 : (dataIndex <= 0 ? -1 : AwaitStore.num('delta', -1));
+	const page = makePage({
+		bookSize, dataIndex, delta, pageSize, size: pageFrame,
+	});
+	const {pageIndex, backPageIndex} = page;
+	const offset = pageIndex <= 0 ? -pageWidth / 4 : (pageIndex >= backPageIndex ? pageWidth / 4 : 0);
+	const entries = [{
+		date: new Date(), dataIndex, delta, bookSize, pageSize, pageFrame, offset, page,
+	}];
+	return {entries};
+}
+
+const app = Await.define({
+	widget,
+	widgetTimeline,
+	widgetIntents: {change},
+	widgetFamilies: ['small', 'medium', 'large', 'extraLarge', 'extraLargePortrait'],
+});

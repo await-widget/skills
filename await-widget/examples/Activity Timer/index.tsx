@@ -11,50 +11,42 @@ import {
 
 // @panel {type:'strings',min:0,title_zh:'事项',title_en:'Activities'}
 const names: string[] = [
-	'Snoozing',
-	'Commuting',
-	'Working',
-	'Lunch',
-	'Scrolling',
-	'Gaming',
-	'Binge-Watching',
-	'Napping',
+	'Read',
+	'Sport',
+	'Game',
+	'Music',
+	'Work',
 ];
-// @panel {type:'slider',min:0.8,max:1.2,step:0.01,title_zh:'项目字号比例',title_en:'Item font scale'}
+// @panel {type:'slider',min:0.8,max:1.2,step:0.01,title_zh:'字号比例',title_en:'Font scale'}
 const itemFontScale = 1;
-// @panel {type:'menu',items:['红','蓝','紫','黄','绿','灰','透明'],title_zh:'纸张主题',title_en:'Paper theme'}
-const theme = '黄';
-// @panel {type:'slider',min:24,max:40,step:1,title_zh:'最小项目行高',title_en:'Minimum item row height'}
+// @panel {type:'menu',items:['Blue','Purple','Yellow','Green','Transparent'],title_zh:'背景',title_en:'Background'}
+const theme = 'Yellow';
+// @panel {type:'slider',min:24,max:40,step:1,title_zh:'最小行高',title_en:'Minimum row height'}
 const minimumItemRowHeight = 30;
-// @panel {type:'slider',min:44,max:80,step:1,title_zh:'大号表头高度',title_en:'Large header height'}
-const largeHeaderHeight = 48;
+// @panel {type:'slider',min:44,max:80,step:1,title_zh:'表头高度',title_en:'Header height'}
+const largeHeaderHeight = 60;
 // @panel {type:'slider',min:0,max:44,step:1,title_zh:'左右留白',title_en:'Side padding'}
 const sidePadding = 16;
-// @panel {type:'slider',min:0,max:20,step:1,title_zh:'单元留白',title_en:'Cell inset'}
+// @panel {type:'slider',min:0,max:20,step:1,title_zh:'单元留白',title_en:'Cell padding'}
 const cellInset = 8;
-// @panel {title_zh:'竖向分割线',title_en:'Column dividers'}
+// @panel {title_zh:'列分割',title_en:'Column dividers'}
 const showColumnRules = false;
-// @panel {title_zh:'标题',title_en:'Title'}
-const title = 'TIME RECEIPT';
-// @panel {title_zh:'页脚文案',title_en:'Footer text'}
-const footerText = 'COMMON HOUR CO.';
-// @panel {title_zh:'序号列标题',title_en:'Number column label'}
+// @panel {title_zh:'页头',title_en:'Header'}
+const title = 'Time Record';
+// @panel {title_zh:'页尾',title_en:'Footer'}
+const footerText = '';
 const numberColumnLabel = 'NO.';
-// @panel {title_zh:'事项列标题',title_en:'Activity column label'}
-const activityColumnLabel = 'ACTIVITY';
-// @panel {title_zh:'时间列标题',title_en:'Elapsed column label'}
-const elapsedColumnLabel = 'ELAPSED';
+const activityColumnLabel = 'Name';
+const elapsedColumnLabel = 'Time';
 
 const columnRatios: number[] = [1, 2, 2];
 
 const palettes: Record<string, {paper?: Color; ink: Color}> = {
-	红: {paper: '#ECA89F', ink: '#5A2E2D'},
-	蓝: {paper: '#81BFE0', ink: '#123D52'},
-	紫: {paper: '#B5A0E4', ink: '#3C2550'},
-	黄: {paper: '#EFD08F', ink: '#62462E'},
-	绿: {paper: '#9CCB9A', ink: '#26482F'},
-	灰: {paper: '#BFBFBF', ink: '#3E3E3E'},
-	透明: {ink: [1, 0.9]},
+	Blue: {paper: '#87CEFA', ink: '#204760CC'},
+	Purple: {paper: '#E9A1F5', ink: '#4C285ACC'},
+	Yellow: {paper: '#FFD08A', ink: '#5B3920CC'},
+	Green: {paper: '#8CCB75', ink: '#2E4D25CC'},
+	Transparent: {ink: '#FFFFFFCC'},
 };
 const {paper, ink} = palettes[theme];
 const onInk = paper ?? ink;
@@ -252,7 +244,7 @@ function RowHighlights({
 	renderingMode: RenderingMode;
 }) {
 	const {width, tableWidth, rowTop, rowHeight, rowBoxHeight} = layout;
-	const highlightOpacity = renderingMode !== 'fullColor' || theme as string === '透明' ? 0.5 : 1;
+	const highlightOpacity = renderingMode !== 'fullColor' || theme as string === 'Transparent' ? 0.5 : 1;
 	return rows.map((row, index) => (
 		<Rectangle
 			id={`active-row-${index}`}
@@ -435,7 +427,6 @@ function TimerRow({row, index, layout}: {row: Row; index: number; layout: Layout
 						monospacedDigit
 						textAlignment='trailing'
 						foreground={ink}
-						opacity={0.8}
 						frame={{width: timeTextWidth, height: rowHeight, alignment: 'trailing'}}
 						position={{x: timeCellX, y: rowBoxHeight / 2}}
 					/>

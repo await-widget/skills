@@ -34,10 +34,10 @@ const countdownSize = 40;
 const buttonSize = 50;
 // @panel {title:'Use Alarm',title_zh:'启用闹钟'}
 const alarmEnabled = true;
+// @panel {title:'Button',title_zh:'按钮'}
+const buttonText = '🍅';
 
 const unit = Math.floor(circleSize * 2 / 3 / 2) * 2;
-const buttonText = '⏰';
-
 const selectedKey = 'selected';
 const rotationKey = 'rotation';
 const startKey = 'start';
@@ -128,7 +128,6 @@ function widget(entry: WidgetEntry<Frame>) {
 					}}
 				fontSize={countdownSize}
 				textAlignment='center'
-				contentTransition='identity'
 				minimumScaleFactor={1 / countdownSize}
 				padding={25}
 				sides={circleSize * 2}
@@ -174,6 +173,7 @@ function widget(entry: WidgetEntry<Frame>) {
 			monospacedDigit
 			fontWeight={900}
 			buttonStyle=''
+			contentTransition='identity'
 		>
 			{active ? activeView : idleView}
 			{active

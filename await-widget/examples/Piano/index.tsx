@@ -3,7 +3,6 @@ import {
 	Circle,
 	Color,
 	HStack,
-	Modifier,
 	Svg,
 	Text,
 	UnevenRoundedRectangle,
@@ -25,16 +24,16 @@ import {
 } from './constants';
 
 // @panel {type:'slider',min:0,max:0.5,title:'Chord Separation',title_zh:'和弦分离'}
-const delay = 0;
+const delay = 0.151801801802;
 
 const colors = {
-	base: '#1B1C24',
-	surface: '#343543',
-	light: '#E4E5EF',
-	toolbarSeparator: '#922C3A',
-	whiteKeyFace: '#F7F7FD',
-	blackKeyBevel: '#4B4D60',
-	blackKeyFace: '#434558',
+	base: '#0c0c0f', // gray05
+	surface: '#26252a', // gray15
+	light: '#e6e5e5', // gray90
+	toolbarSeparator: '#0c0c0f', // gray05
+	whiteKeyFace: '#f3f2f2', // gray95
+	blackKeyBevel: '#3f3f45', // gray25
+	blackKeyFace: '#333237', // gray20
 };
 
 const shadow: Shadow = {
