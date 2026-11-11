@@ -18,6 +18,8 @@ const foreground = 0.9;
 const fontSize = 20;
 // @panel {type:'slider',min:0,max:24,step:1,title:'Line Spacing',title_zh:'行间距'}
 const lineSpacing = 0;
+// @panel {type:'slider',min:0,max:64,step:1,title:'Paragraph Indent',title_zh:'段首缩进'}
+const paragraphHeadIndent = 0;
 // @panel {type:'slider',min:100,max:900,step:100,title:'Font Weight',title_zh:'字体粗细'}
 const fontWeight = 700;
 // @panel {type:'menu',items:['default','serif','rounded','monospaced'],title:'Font Design',title_zh:'字体风格'}
@@ -198,6 +200,7 @@ function widgetTimeline(context: TimelineContext): Timeline<EntryData> {
 		fontSize,
 		fontWeight,
 		...(lineSpacing > 0 && {lineSpacing}),
+		...(paragraphHeadIndent > 0 && {paragraphHeadIndent}),
 		...(fontURL ? {fontURL} : {fontDesign}),
 	};
 	const state = readState();
